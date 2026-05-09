@@ -1,25 +1,33 @@
 import Phaser from 'phaser';
 
-export class Player extends Phaser.Physics.Arcade.Sprite
+export class Player extends Phaser.Physics.Arcade.Sprite 
 {
     private readonly speed = 260; // Velocidade geral do jogador, usada pra movimentação nas 4 direções
+
+    /* MÉTODOS PRINCIPAIS */
 
     constructor (scene: Phaser.Scene, x: number, y: number, texture: string)
     {
         super(scene, x, y, texture);
-        scene.add.existing(this);
-        scene.physics.add.existing(this);
-
-        this.setCollideWorldBounds(true);
+        scene.add.existing(this); // Adiciona o player à cena que chamar o construtor
+        scene.physics.add.existing(this); // Habilita a física arcade no player
+        this.setCollideWorldBounds(true); // Faz com que o player colida com as bordas da tela
     }
 
     update (cursors: Phaser.Types.Input.Keyboard.CursorKeys)
     {
-        this.processMovement(cursors);
+        this.processMovement(cursors); // Chama o método que processa a movimentação do player.
     }
+
+    /* MÉTODOS AUXILIARES */
 
     processMovement (cursors: Phaser.Types.Input.Keyboard.CursorKeys) : void 
     {
+        /*
+            Esse método é responsável por toda a lógica de movimentação do jogador. 
+            Ele verifica quais teclas estão sendo pressionadas e ajusta a velocidade do jogador de acordo.
+        */
+
         const direction = new Phaser.Math.Vector2(0, 0);
 
         if (cursors.left.isDown)
