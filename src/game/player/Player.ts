@@ -8,6 +8,9 @@ export class Player extends Phaser.Physics.Arcade.Sprite
     private readonly speed = 260; // Velocidade geral do jogador, usada pra movimentação nas 4 direções
     private readonly momentum = 0.9; // Fator de momentum, usado pra suavizar a movimentação do jogador
     private activeWeapon: Weapon = Weapon.PISTOL; // Arma atualmente equipada pelo jogador
+    private shootCooldown: number = 0; // Tempo restante para o próximo disparo, usado para controlar a cadência de tiro
+    private maxCooldown: number = 60; // Tempo mínimo entre disparos, em frames
+
 
     /*                    */
     /* MÉTODOS PRINCIPAIS */
@@ -88,9 +91,16 @@ export class Player extends Phaser.Physics.Arcade.Sprite
 
     private processShooting (cursors: Phaser.Types.Input.Keyboard.CursorKeys, scene: Phaser.Scene) : void 
     {
+        if(this.shootCooldown > 0)
+        {
+            this.shootCooldown--;
+            return; // Se ainda estiver no cooldown, não permite atirar
+        }
+
         if (cursors.space.isDown)
         {
             this.shoot(scene);
+            this.shootCooldown = this.maxCooldown; // Reseta o cooldown para o próximo disparo
         }
     }
 
