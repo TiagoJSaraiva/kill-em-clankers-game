@@ -1,5 +1,7 @@
 import Phaser from 'phaser';
 import Weapon from './weapons/Weapon';
+import PistolProjectile from './projectiles/PistolProjectile';
+import WhipProjectile from './projectiles/WhipProjectile';
 
 export class Player extends Phaser.Physics.Arcade.Sprite 
 {
@@ -94,6 +96,14 @@ export class Player extends Phaser.Physics.Arcade.Sprite
 
     private shoot (scene: Phaser.Scene) : void
     {
-
+        switch (this.activeWeapon)
+        {
+            case Weapon.PISTOL:
+                new PistolProjectile(scene, this.x, this.y - 20); // Dispara um projétil de pistola saindo da posição do player
+                break;
+            case Weapon.WHIP:
+                new WhipProjectile(scene, this.x, this.y - 20); // Dispara um projétil de chicote saindo da posição do player
+                break;
+        }
     }
 }
