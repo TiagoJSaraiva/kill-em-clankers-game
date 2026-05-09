@@ -1,9 +1,11 @@
 import Phaser from 'phaser';
+import Weapon from './weapons/Weapon';
 
 export class Player extends Phaser.Physics.Arcade.Sprite 
 {
     private readonly speed = 260; // Velocidade geral do jogador, usada pra movimentação nas 4 direções
     private readonly momentum = 0.9; // Fator de momentum, usado pra suavizar a movimentação do jogador
+    private activeWeapon: Weapon = Weapon.PISTOL; // Arma atualmente equipada pelo jogador
 
     /*                    */
     /* MÉTODOS PRINCIPAIS */
@@ -18,9 +20,10 @@ export class Player extends Phaser.Physics.Arcade.Sprite
         this.setScale(0.5); // Reduz o tamanho do player para melhor visualização
     }
 
-    update (cursors: Phaser.Types.Input.Keyboard.CursorKeys)
+    update (cursors: Phaser.Types.Input.Keyboard.CursorKeys, scene : Phaser.Scene)
     {
         this.processMovement(cursors); // Chama o método que processa a movimentação do player.
+        this.processShooting(cursors, scene); // Chama o método que processa o disparo de armas do player.
     }
 
     /*                    */
@@ -30,7 +33,7 @@ export class Player extends Phaser.Physics.Arcade.Sprite
     processMovement (cursors: Phaser.Types.Input.Keyboard.CursorKeys) : void 
     {
         /*
-            Esse método é responsável por toda a lógica de movimentação do jogador. 
+            Esse método é responsável por toda a lógica de movimentação do jogador mediante a entrada du usuário. 
             Ele verifica quais teclas estão sendo pressionadas e ajusta a velocidade do jogador de acordo.
         */
 
@@ -64,8 +67,8 @@ export class Player extends Phaser.Physics.Arcade.Sprite
         }
 
         this.setVelocity(
-            hasHorizontalInput ? direction.x : this.applyMomentum(body.velocity.x),
-            hasVerticalInput ? direction.y : this.applyMomentum(body.velocity.y)
+            hasHorizontalInput ? direction.x : this.applyMomentum(body.velocity.x), // Aplica o fator de momentum quando não há input horizontal
+            hasVerticalInput ? direction.y : this.applyMomentum(body.velocity.y) // Aplica o fator de momentum quando não há input vertical
         );
     }
 
@@ -79,5 +82,18 @@ export class Player extends Phaser.Physics.Arcade.Sprite
         const nextVelocity = velocity * this.momentum;
 
         return Math.abs(nextVelocity) < 5 ? 0 : nextVelocity;
+    }
+
+    private processShooting (cursors: Phaser.Types.Input.Keyboard.CursorKeys, scene: Phaser.Scene) : void 
+    {
+        if (cursors.space.isDown)
+        {
+            this.shoot(scene);
+        }
+    }
+
+    private shoot (scene: Phaser.Scene) : void
+    {
+
     }
 }

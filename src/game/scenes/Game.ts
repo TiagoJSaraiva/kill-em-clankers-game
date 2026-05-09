@@ -30,7 +30,7 @@ export class Game extends Scene
     }
 
     update () {
-        this.player.update(this.cursors); // Chama o método de update do player. Olhar a classe player para entender o método
+        this.player.update(this.cursors, this); // Chama o método de update do player. Olhar a classe player para entender o método
     }
 
     /*                    */
