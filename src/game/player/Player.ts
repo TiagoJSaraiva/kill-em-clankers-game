@@ -137,11 +137,11 @@ export class Player extends Phaser.Physics.Arcade.Sprite
         switch (this.activeWeapon)
         {
             case Weapon.PISTOL:
-                new PistolProjectile(scene, this.x, this.y - 20); // Dispara um projétil de pistola saindo da posição do player
+                new PistolProjectile(scene, this.x, this.y - 20, 'pistol-projectile'); // Dispara um projétil de pistola saindo da posição do player
                 break;
             case Weapon.WHIP:
                 new WhipProjectile(scene, this.x, this.y - 20); // Dispara um projétil de chicote saindo da posição do player
                 break;
         }
-    }
+    } 
 }

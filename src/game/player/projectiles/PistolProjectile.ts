@@ -4,9 +4,9 @@ export default class PistolProjectile extends Projectile
 {
     private updateListener: Function;
 
-    constructor (scene: Phaser.Scene, x: number, y: number)
+    constructor (scene: Phaser.Scene, x: number, y: number, texture: string)
     {
-        super(scene, x, y, 'pistol-projectile');
+        super(scene, x, y, texture);
         this.setVelocityX(300); // Define a velocidade do projétil para cima
         this.updateListener = () => this.update();
         this.scene.events.on('update', this.updateListener);

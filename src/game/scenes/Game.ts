@@ -19,6 +19,7 @@ export class Game extends Scene
 
     preload () {
         this.load.image('player', './assets/player/model.png');
+        this.load.image('pistol-projectile', './assets/player/projectiles/pistol-projectile.png');
     }
 
     create ()
