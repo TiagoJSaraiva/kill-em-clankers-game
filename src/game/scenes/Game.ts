@@ -1,27 +1,31 @@
 import { Scene } from 'phaser';
+import { Player } from '../player/Player';
 
 export class Game extends Scene
 {
     camera: Phaser.Cameras.Scene2D.Camera;
     background: Phaser.GameObjects.Image;
-    msg_text : Phaser.GameObjects.Text;
+    player: Player;
+    cursors: Phaser.Types.Input.Keyboard.CursorKeys;
 
     constructor ()
     {
         super('Game');
     }
 
+    preload () {
+        this.load.image('player', 'assets/player.png');
+    }
+
     create ()
     {
         this.camera = this.cameras.main;
         this.camera.setBackgroundColor(0x00ff00);
+        this.player = new Player(this, 100, 450, 'player');
+        this.cursors = this.input.keyboard?.createCursorKeys()!;
+    }
 
-        this.msg_text = this.add.text(0, 0, 'CENA DO JOGO TESTE TESTE', {
-            fontFamily: 'Arial Black', fontSize: 38, color: '#ffffff',
-            stroke: '#000000', strokeThickness: 8,
-            align: 'center'
-        });
-        this.msg_text.setOrigin(0);
-
+    update () {
+        this.player.update(this.cursors);
     }
 }
