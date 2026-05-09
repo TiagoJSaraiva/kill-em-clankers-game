@@ -5,7 +5,9 @@ export class Player extends Phaser.Physics.Arcade.Sprite
     private readonly speed = 260; // Velocidade geral do jogador, usada pra movimentação nas 4 direções
     private readonly momentum = 0.9; // Fator de momentum, usado pra suavizar a movimentação do jogador
 
+    /*                    */
     /* MÉTODOS PRINCIPAIS */
+    /*                    */
 
     constructor (scene: Phaser.Scene, x: number, y: number, texture: string)
     {
@@ -21,7 +23,9 @@ export class Player extends Phaser.Physics.Arcade.Sprite
         this.processMovement(cursors); // Chama o método que processa a movimentação do player.
     }
 
+    /*                    */
     /* MÉTODOS AUXILIARES */
+    /*                    */
 
     processMovement (cursors: Phaser.Types.Input.Keyboard.CursorKeys) : void 
     {
@@ -71,6 +75,7 @@ export class Player extends Phaser.Physics.Arcade.Sprite
             Esse método aplica o fator de momentum à velocidade atual do jogador,
             suavizando a desaceleração quando as teclas são soltas.
         */
+
         const nextVelocity = velocity * this.momentum;
 
         return Math.abs(nextVelocity) < 5 ? 0 : nextVelocity;

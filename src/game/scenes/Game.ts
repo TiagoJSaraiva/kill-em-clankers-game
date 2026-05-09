@@ -8,7 +8,9 @@ export class Game extends Scene
     player: Player;
     cursors: Phaser.Types.Input.Keyboard.CursorKeys;
 
+    /*                    */
     /* MÉTODOS PRINCIPAIS */
+    /*                    */
 
     constructor ()
     {
@@ -31,6 +33,7 @@ export class Game extends Scene
         this.player.update(this.cursors); // Chama o método de update do player. Olhar a classe player para entender o método
     }
 
+    /*                    */
     /* MÉTODOS AUXILIARES */
-    // Ainda nenhum
+    /*                    */
 }
