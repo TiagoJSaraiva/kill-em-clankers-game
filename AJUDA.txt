@@ -1,0 +1,8 @@
+// Ciclo de vida automático:
+this.scene.start('Game')
+  ↓
+// Phaser chama automaticamente, nessa ordem:
+1. init()      // Inicialização
+2. preload()   // Carregamento de assets
+3. create()    // Criação de objetos
+4. update()    // Loop (a cada frame)
