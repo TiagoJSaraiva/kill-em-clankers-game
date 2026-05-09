@@ -12,6 +12,12 @@ const config: Phaser.Types.Core.GameConfig = {
     parent: 'game-container',
     backgroundColor: '#20313e',
     input: { keyboard: true },
+    physics: {
+        default: 'arcade', // Habilitado pra funcionar o Phaser.Physics.Arcade
+        arcade: {
+            debug: false
+        }
+    },
     scene: [
         // MainMenu,
         MainGame,

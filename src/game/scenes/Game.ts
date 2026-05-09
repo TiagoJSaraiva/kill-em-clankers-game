@@ -14,18 +14,18 @@ export class Game extends Scene
     }
 
     preload () {
-        this.load.image('player', 'assets/player.png');
+        this.load.image('player', 'assets/player.png'); // Carrega o sprite do player
     }
 
     create ()
     {
         this.camera = this.cameras.main;
         this.camera.setBackgroundColor(0x00ff00);
-        this.player = new Player(this, 100, 450, 'player');
-        this.cursors = this.input.keyboard?.createCursorKeys()!;
+        this.player = new Player(this, 100, 450, 'player'); // Instancia player na cena do game
+        this.cursors = this.input.keyboard?.createCursorKeys()!; // Habilita o uso do teclado para movimentação do player
     }
 
     update () {
-        this.player.update(this.cursors);
+        this.player.update(this.cursors); // Chama o método de update do player. Olhar a classe player para entender o método
     }
 }
