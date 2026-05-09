@@ -8,6 +8,8 @@ export class Game extends Scene
     player: Player;
     cursors: Phaser.Types.Input.Keyboard.CursorKeys;
 
+    /* MÉTODOS PRINCIPAIS */
+
     constructor ()
     {
         super('Game');
@@ -19,7 +21,7 @@ export class Game extends Scene
 
     create ()
     {
-        this.camera = this.cameras.main;
+        this.camera = this.cameras.main; // Armazena a câmera principal da cena em um atributo para facilitar o acesso
         this.camera.setBackgroundColor(0x00ff00);
         this.player = new Player(this, 100, 450, 'player'); // Instancia player na cena do game
         this.cursors = this.input.keyboard?.createCursorKeys()!; // Habilita o uso do teclado para movimentação do player
@@ -28,4 +30,7 @@ export class Game extends Scene
     update () {
         this.player.update(this.cursors); // Chama o método de update do player. Olhar a classe player para entender o método
     }
+
+    /* MÉTODOS AUXILIARES */
+    // Ainda nenhum
 }
