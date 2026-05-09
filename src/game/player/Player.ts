@@ -18,6 +18,13 @@ export class Player extends Phaser.Physics.Arcade.Sprite
 
     constructor (scene: Phaser.Scene, x: number, y: number, texture: string)
     {
+        /**
+         * @param scene : a cena do Phaser onde o jogador será adicionado. Passado para o construtor do Phaser.Physics.Arcade.Sprite para que o jogador seja adicionado à cena correta.
+         * @param x : posição horizontal inicial do jogador. Passado para o construtor do Phaser.Physics.Arcade.Sprite para posicionar o jogador corretamente.
+         * @param y : posição vertical inicial do jogador. Passado para o construtor do Phaser.Physics.Arcade.Sprite para posicionar o jogador corretamente.
+         * @param texture : chave do sprite a ser usado para representar o jogador. Passado para o construtor do Phaser.Physics.Arcade.Sprite para definir a aparência do jogador.
+         */
+
         super(scene, x, y, texture);
         scene.add.existing(this); // Adiciona o player à cena que chamar o construtor
         scene.physics.add.existing(this); // Habilita a física arcade no player
@@ -37,10 +44,12 @@ export class Player extends Phaser.Physics.Arcade.Sprite
 
     processMovement (cursors: Phaser.Types.Input.Keyboard.CursorKeys) : void 
     {
-        /*
-            Esse método é responsável por toda a lógica de movimentação do jogador mediante a entrada du usuário. 
-            Ele verifica quais teclas estão sendo pressionadas e ajusta a velocidade do jogador de acordo.
-        */
+        /** 
+         *  Esse método é responsável por toda a lógica de movimentação do jogador mediante a entrada du usuário. 
+         *  Ele verifica quais teclas estão sendo pressionadas e ajusta a velocidade do jogador de acordo.
+         * 
+         *  @param cursors : usado para verificar quais teclas de direção estão sendo pressionadas e ajustar a velocidade do jogador
+         */
 
         const direction = new Phaser.Math.Vector2(0, 0);
         const body = this.body as Phaser.Physics.Arcade.Body;
@@ -79,10 +88,13 @@ export class Player extends Phaser.Physics.Arcade.Sprite
 
     private applyMomentum (velocity: number) : number
     {
-        /*
-            Esse método aplica o fator de momentum à velocidade atual do jogador,
-            suavizando a desaceleração quando as teclas são soltas.
-        */
+        /** 
+         *  Esse método aplica o fator de momentum à velocidade atual do jogador,
+         *  suavizando a desaceleração quando as teclas são soltas.
+         * 
+         *  @param velocity : a velocidade atual do jogador em uma direção (x ou y)
+         *  @returns a nova velocidade após aplicar o fator de momentum, ou 0 se a velocidade for muito baixa
+         */
 
         const nextVelocity = velocity * this.momentum;
 
@@ -91,6 +103,15 @@ export class Player extends Phaser.Physics.Arcade.Sprite
 
     private processShooting (cursors: Phaser.Types.Input.Keyboard.CursorKeys, scene: Phaser.Scene) : void 
     {
+
+        /** 
+         *  Esse método é chamado em toda chamada de update() do player e
+         *  é responsável por processar a lógica de disparo de armas.
+         * 
+         *  @param cursors : usado para verificar se a tecla de disparo (espaço) está sendo pressionada
+         *  @param scene : passado para o método de disparo para que os projéteis possam ser adicionados à cena correta
+         */
+
         if(this.shootCooldown > 0)
         {
             this.shootCooldown--;
@@ -106,6 +127,13 @@ export class Player extends Phaser.Physics.Arcade.Sprite
 
     private shoot (scene: Phaser.Scene) : void
     {
+        /** 
+         *  Esse método verifica qual arma está equipada pelo player e 
+         *  instancia o projétil correspondente, saindo da posição do player.
+         *  
+         *  @param scene : passado para o construtor do projétil para que ele possa ser adicionado à cena correta
+         */
+
         switch (this.activeWeapon)
         {
             case Weapon.PISTOL:
