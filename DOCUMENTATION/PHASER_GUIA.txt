@@ -5,4 +5,4 @@ this.scene.start('Game')
 1. init()      // Inicialização
 2. preload()   // Carregamento de assets
 3. create()    // Criação de objetos
-4. update()    // Loop (a cada frame)
+4. update()    // Loop (a cada frame) - Só se aplica a classes que são cenas

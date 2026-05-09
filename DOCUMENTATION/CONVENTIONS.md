@@ -1,0 +1,3 @@
+- TSDoc em comentários
+- Cada classe cuida de suas próprias responsabilidades internas
+- Aninhamento de pasta com padrão feature-based, Inclusive assets dentro de /public/assets

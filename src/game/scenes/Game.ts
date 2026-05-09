@@ -18,7 +18,7 @@ export class Game extends Scene
     }
 
     preload () {
-        this.load.image('player', 'assets/player.png'); // Carrega o sprite do player
+        this.load.image('player', './assets/player/model.png');
     }
 
     create ()
