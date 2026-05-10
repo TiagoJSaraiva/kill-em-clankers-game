@@ -21,8 +21,11 @@ export class Game extends Scene
         // Carrega os assets do jogo previamente para que possam ser usados enquanto a cena estiver ativa.
         this.load.image('player', './assets/player/model.png');
         this.load.image('pistol-projectile', './assets/player/projectiles/pistol-projectile.png');
-        this.load.image('slash-projectile', './assets/player/projectiles/slash-projectile.png');
-        //this.load.image('chakram-projectile', './assets/player/projectiles/chakram-projectile.png');
+        this.load.spritesheet('slash-projectile', './assets/player/projectiles/slash-projectile.png', {
+            frameWidth: 182,
+            frameHeight: 95
+        });
+        this.load.image('arrow-projectile', './assets/player/projectiles/arrow-projectile.png');
         this.load.spritesheet('missile-projectile', './assets/player/projectiles/missile-projectile.png', {
             frameWidth: 73,
             frameHeight: 30

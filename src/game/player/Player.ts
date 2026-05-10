@@ -2,7 +2,7 @@ import Phaser from 'phaser';
 import Weapons from './weapons/Weapons';
 import PistolProjectile from './projectiles/PistolProjectile';
 import SlashProjectile from './projectiles/SlashProjectile';
-import ChakramProjectile from './projectiles/ChakramProjectile';
+import ArrowProjectile from './projectiles/ArrowProjectile';
 import MissileProjectile from './projectiles/MissileProjectile';
 
 export class Player extends Phaser.Physics.Arcade.Sprite 
@@ -192,7 +192,7 @@ export class Player extends Phaser.Physics.Arcade.Sprite
                 new SlashProjectile(scene, this.x, this.y - 20, 'slash-projectile'); // Dispara um projétil de slash saindo da posição do player
                 break;
             case Weapons[2]:
-                new ChakramProjectile(scene, this.x, this.y - 20, 'chakram-projectile'); // Dispara um projétil de chakram saindo da posição do player
+                new ArrowProjectile(scene, this.x, this.y - 20, 'arrow-projectile'); // Dispara um projétil de chakram saindo da posição do player
                 break;
             case Weapons[3]:
                 new MissileProjectile(scene, this.x, this.y - 20, 'missile-projectile'); // Dispara um projétil de míssil saindo da posição do player
