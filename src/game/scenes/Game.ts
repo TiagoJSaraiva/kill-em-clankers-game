@@ -23,7 +23,10 @@ export class Game extends Scene
         this.load.image('pistol-projectile', './assets/player/projectiles/pistol-projectile.png');
         this.load.image('slash-projectile', './assets/player/projectiles/slash-projectile.png');
         //this.load.image('chakram-projectile', './assets/player/projectiles/chakram-projectile.png');
-        //this.load.image('missile-projectile', './assets/player/projectiles/missile-projectile.png');
+        this.load.spritesheet('missile-projectile', './assets/player/projectiles/missile-projectile.png', {
+            frameWidth: 73,
+            frameHeight: 30
+        });
     }
 
     create ()

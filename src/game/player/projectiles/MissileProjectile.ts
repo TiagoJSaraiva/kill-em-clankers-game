@@ -2,14 +2,32 @@ import Projectile from "./Projectile";
 
 export default class MissileProjectile extends Projectile
 {
+    private static readonly animationKey = 'missile-projectile-animation';
     private updateListener: Function;
 
     constructor (scene: Phaser.Scene, x: number, y: number, texture: string)
     {
         super(scene, x, y, texture);
-        this.setVelocityX(200); // Define a velocidade do projétil para cima
+        this.createAnimation(texture);
+        this.play(MissileProjectile.animationKey);
+        this.setVelocityX(200); // Define a velocidade do projetil para cima
         this.updateListener = () => this.update();
         this.scene.events.on('update', this.updateListener);
+    }
+
+    private createAnimation(texture: string): void
+    {
+        if (this.scene.anims.exists(MissileProjectile.animationKey))
+        {
+            return;
+        }
+
+        this.scene.anims.create({
+            key: MissileProjectile.animationKey,
+            frames: this.scene.anims.generateFrameNumbers(texture, { start: 0, end: 1 }),
+            frameRate: 15,
+            repeat: -1
+        });
     }
 
     update(): void
