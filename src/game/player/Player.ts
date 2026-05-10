@@ -1,16 +1,19 @@
 import Phaser from 'phaser';
-import Weapon from './weapons/Weapon';
+import Weapons from './weapons/Weapons';
 import PistolProjectile from './projectiles/PistolProjectile';
 import SlashProjectile from './projectiles/SlashProjectile';
 import ChakramProjectile from './projectiles/ChakramProjectile';
+import MissileProjectile from './projectiles/MissileProjectile';
 
 export class Player extends Phaser.Physics.Arcade.Sprite 
 {
     private readonly speed = 260; // Velocidade geral do jogador, usada pra movimentação nas 4 direções
     private readonly momentum = 0.9; // Fator de momentum, usado pra suavizar a movimentação do jogador
-    private activeWeapon: Weapon = Weapon.PISTOL; // Arma atualmente equipada pelo jogador
+    private activeWeapon: typeof Weapons[number] = Weapons[0]; // Arma atualmente equipada pelo jogador
     private shootCooldown: number = 0; // Tempo restante para o próximo disparo, usado para controlar a cadência de tiro
     private maxCooldown: number = 60; // Tempo mínimo entre disparos, em frames
+    private weaponSwitchCooldown: number = 0; // Tempo restante para a próxima troca de arma, usado para evitar trocas muito rápidas
+    private maxWeaponSwitchCooldown: number = 60; // Tempo mínimo entre trocas de arma, em frames
 
     // Mapeamento de keys
     private keyQ: Phaser.Input.Keyboard.Key;
@@ -57,23 +60,34 @@ export class Player extends Phaser.Physics.Arcade.Sprite
          * 
          *  @param cursors : usado para verificar se as teclas de troca de arma (1, 2, 3) estão sendo pressionadas
          */
+        if(this.weaponSwitchCooldown > 0)
+        {
+            this.weaponSwitchCooldown--;
+            return; // Se ainda estiver no cooldown, não permite trocar de arma
+        }
 
         if (this.keyQ.isDown)
         {
-            this.activeWeapon = Weapon.PISTOL;
+            this.activeWeapon = Weapons[0];
+            this.weaponSwitchCooldown = this.maxWeaponSwitchCooldown; // Reseta o cooldown para a próxima troca de arma
         }
         else if (this.keyW.isDown)
         {
-            this.activeWeapon = Weapon.WHIP;
+            this.activeWeapon = Weapons[1];
+            this.weaponSwitchCooldown = this.maxWeaponSwitchCooldown; // Reseta o cooldown para a próxima troca de arma
         }
         else if (this.keyE.isDown)
         {
-            this.activeWeapon = Weapon.CHAKRAM;
+            this.activeWeapon = Weapons[2];
+            this.weaponSwitchCooldown = this.maxWeaponSwitchCooldown; // Reseta o cooldown para a próxima troca de arma
         }
         else if (this.keyR.isDown)
         {
-            this.activeWeapon = Weapon.MISSILE;
+            this.activeWeapon = Weapons[3];
+            this.weaponSwitchCooldown = this.maxWeaponSwitchCooldown; // Reseta o cooldown para a próxima troca de arma
         }
+
+        this.maxCooldown = this.activeWeapon.attackCooldown;
     }
 
     processMovement (cursors: Phaser.Types.Input.Keyboard.CursorKeys) : void 
@@ -170,14 +184,17 @@ export class Player extends Phaser.Physics.Arcade.Sprite
 
         switch (this.activeWeapon)
         {
-            case Weapon.PISTOL:
+            case Weapons[0]:
                 new PistolProjectile(scene, this.x, this.y - 20, 'pistol-projectile'); // Dispara um projétil de pistola saindo da posição do player
                 break;
-            case Weapon.WHIP:
+            case Weapons[1]:
                 new SlashProjectile(scene, this.x, this.y - 20, 'slash-projectile'); // Dispara um projétil de slash saindo da posição do player
                 break;
-            case Weapon.CHAKRAM:
+            case Weapons[2]:
                 new ChakramProjectile(scene, this.x, this.y - 20, 'chakram-projectile'); // Dispara um projétil de chakram saindo da posição do player
+                break;
+            case Weapons[3]:
+                new MissileProjectile(scene, this.x, this.y - 20, 'missile-projectile'); // Dispara um projétil de míssil saindo da posição do player
                 break;
         }
     } 
