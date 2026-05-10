@@ -27,8 +27,8 @@ export class Game extends Scene
         });
         this.load.image('arrow-projectile', './assets/player/projectiles/arrow-projectile.png');
         this.load.spritesheet('missile-projectile', './assets/player/projectiles/missile-projectile.png', {
-            frameWidth: 73,
-            frameHeight: 30
+            frameWidth: 40,
+            frameHeight: 39
         });
     }
 
