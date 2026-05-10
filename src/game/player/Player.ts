@@ -186,6 +186,7 @@ export class Player extends Phaser.Physics.Arcade.Sprite
         {
             case Weapons[0]:
                 new PistolProjectile(scene, this.x, this.y - 20, 'pistol-projectile'); // Dispara um projétil de pistola saindo da posição do player
+                new PistolProjectile(scene, this.x, this.y + 30, 'pistol-projectile'); // Dispara um projétil de pistola saindo da posição do player
                 break;
             case Weapons[1]:
                 new SlashProjectile(scene, this.x, this.y - 20, 'slash-projectile'); // Dispara um projétil de slash saindo da posição do player
