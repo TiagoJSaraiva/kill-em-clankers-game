@@ -1,7 +1,8 @@
 import Phaser from 'phaser';
 import Weapon from './weapons/Weapon';
 import PistolProjectile from './projectiles/PistolProjectile';
-import WhipProjectile from './projectiles/WhipProjectile';
+import SlashProjectile from './projectiles/SlashProjectile';
+import ChakramProjectile from './projectiles/ChakramProjectile';
 
 export class Player extends Phaser.Physics.Arcade.Sprite 
 {
@@ -11,6 +12,12 @@ export class Player extends Phaser.Physics.Arcade.Sprite
     private shootCooldown: number = 0; // Tempo restante para o próximo disparo, usado para controlar a cadência de tiro
     private maxCooldown: number = 60; // Tempo mínimo entre disparos, em frames
 
+    // Mapeamento de keys
+    private keyQ: Phaser.Input.Keyboard.Key;
+    private keyW: Phaser.Input.Keyboard.Key;
+    private keyE: Phaser.Input.Keyboard.Key;
+    private keyR: Phaser.Input.Keyboard.Key;
+
 
     /*                    */
     /* MÉTODOS PRINCIPAIS */
@@ -18,29 +25,56 @@ export class Player extends Phaser.Physics.Arcade.Sprite
 
     constructor (scene: Phaser.Scene, x: number, y: number, texture: string)
     {
-        /**
-         * @param scene : a cena do Phaser onde o jogador será adicionado. Passado para o construtor do Phaser.Physics.Arcade.Sprite para que o jogador seja adicionado à cena correta.
-         * @param x : posição horizontal inicial do jogador. Passado para o construtor do Phaser.Physics.Arcade.Sprite para posicionar o jogador corretamente.
-         * @param y : posição vertical inicial do jogador. Passado para o construtor do Phaser.Physics.Arcade.Sprite para posicionar o jogador corretamente.
-         * @param texture : chave do sprite a ser usado para representar o jogador. Passado para o construtor do Phaser.Physics.Arcade.Sprite para definir a aparência do jogador.
-         */
-
         super(scene, x, y, texture);
         scene.add.existing(this); // Adiciona o player à cena que chamar o construtor
         scene.physics.add.existing(this); // Habilita a física arcade no player
         this.setCollideWorldBounds(true); // Faz com que o player colida com as bordas da tela
         this.setScale(0.5); // Reduz o tamanho do player para melhor visualização
+
+        this.keyQ = scene.input.keyboard!.addKey(Phaser.Input.Keyboard.KeyCodes.Q);
+        this.keyW = scene.input.keyboard!.addKey(Phaser.Input.Keyboard.KeyCodes.W);
+        this.keyE = scene.input.keyboard!.addKey(Phaser.Input.Keyboard.KeyCodes.E);
+        this.keyR = scene.input.keyboard!.addKey(Phaser.Input.Keyboard.KeyCodes.R);
     }
 
     update (cursors: Phaser.Types.Input.Keyboard.CursorKeys, scene : Phaser.Scene)
     {
         this.processMovement(cursors); // Chama o método que processa a movimentação do player.
         this.processShooting(cursors, scene); // Chama o método que processa o disparo de armas do player.
+        this.processWeaponSwitch(); // Chama o método que processa a troca de armas do player.
     }
 
     /*                    */
     /* MÉTODOS AUXILIARES */
     /*                    */
+
+    processWeaponSwitch() : void 
+    {
+        /** 
+         *  Esse método é responsável por processar a lógica de troca de armas do jogador.
+         *  Ele verifica se as teclas numéricas correspondentes às armas estão sendo pressionadas e
+         *  atualiza a arma ativa do jogador de acordo.
+         * 
+         *  @param cursors : usado para verificar se as teclas de troca de arma (1, 2, 3) estão sendo pressionadas
+         */
+
+        if (this.keyQ.isDown)
+        {
+            this.activeWeapon = Weapon.PISTOL;
+        }
+        else if (this.keyW.isDown)
+        {
+            this.activeWeapon = Weapon.WHIP;
+        }
+        else if (this.keyE.isDown)
+        {
+            this.activeWeapon = Weapon.CHAKRAM;
+        }
+        else if (this.keyR.isDown)
+        {
+            this.activeWeapon = Weapon.MISSILE;
+        }
+    }
 
     processMovement (cursors: Phaser.Types.Input.Keyboard.CursorKeys) : void 
     {
@@ -140,7 +174,10 @@ export class Player extends Phaser.Physics.Arcade.Sprite
                 new PistolProjectile(scene, this.x, this.y - 20, 'pistol-projectile'); // Dispara um projétil de pistola saindo da posição do player
                 break;
             case Weapon.WHIP:
-                new WhipProjectile(scene, this.x, this.y - 20); // Dispara um projétil de chicote saindo da posição do player
+                new SlashProjectile(scene, this.x, this.y - 20, 'slash-projectile'); // Dispara um projétil de slash saindo da posição do player
+                break;
+            case Weapon.CHAKRAM:
+                new ChakramProjectile(scene, this.x, this.y - 20, 'chakram-projectile'); // Dispara um projétil de chakram saindo da posição do player
                 break;
         }
     } 

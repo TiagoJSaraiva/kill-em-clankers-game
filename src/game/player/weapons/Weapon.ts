@@ -1,7 +1,8 @@
 enum Weapon {
     PISTOL = 'PISTOL',
     WHIP = 'WHIP',
-    // RIFLE = 'RIFLE'
+    CHAKRAM  = 'CHAKRAM',
+    MISSILE = 'MISSILE'
 }
 
 export default Weapon;

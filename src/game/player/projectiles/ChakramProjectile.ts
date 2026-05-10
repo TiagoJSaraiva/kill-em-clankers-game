@@ -1,13 +1,13 @@
 import Projectile from "./Projectile";
 
-export default class PistolProjectile extends Projectile
+export default class ChakramProjectile extends Projectile
 {
     private updateListener: Function;
 
     constructor (scene: Phaser.Scene, x: number, y: number, texture: string)
     {
         super(scene, x, y, texture);
-        this.setVelocityX(400); // Define a velocidade do projétil para cima
+        this.setVelocityX(200); // Define a velocidade do projétil para cima
         this.updateListener = () => this.update();
         this.scene.events.on('update', this.updateListener);
     }
