@@ -2,7 +2,7 @@ import Projectile from "./Projectile";
 
 export default class MissileProjectile extends Projectile
 {
-    private static readonly animationKey = 'missile-projectile-animation';
+    private static readonly animationKey = 'missile-projectile-animation'; // Chave da animação do projétil
     private updateListener: Function;
 
     constructor (scene: Phaser.Scene, x: number, y: number, texture: string)
@@ -29,6 +29,12 @@ export default class MissileProjectile extends Projectile
 
     private createAnimation(texture: string): void
     {
+        /** 
+         * @description Cria a animação do projétil 
+         * 
+         * @param texture A textura do projétil, usada para gerar os frames da animação
+         */
+        
         if (this.scene.anims.exists(MissileProjectile.animationKey))
         {
             return;

@@ -47,6 +47,12 @@ export default class SlashProjectile extends Projectile
 
     private createAnimation(texture: string): void
     {
+        /** 
+         * @description Cria a animação do projétil 
+         * 
+         * @param texture A textura do projétil, usada para gerar os frames da animação
+         */
+        
         if (this.scene.anims.exists(SlashProjectile.animationKey))
         {
             return;
