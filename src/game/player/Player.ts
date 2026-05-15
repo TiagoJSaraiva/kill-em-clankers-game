@@ -7,6 +7,15 @@ import MissileProjectile from './projectiles/MissileProjectile';
 
 export class Player extends Phaser.Physics.Arcade.Sprite 
 {
+    private static readonly weaponTextureKeys = new Map<typeof Weapons[number], string>([
+        [Weapons[0], 'player-pistol'],
+        [Weapons[1], 'player-sword'],
+        [Weapons[2], 'player-rifle'],
+        [Weapons[3], 'player-cannon']
+    ]);
+    private static readonly swordAttackTextureKey = 'player-sword-attacking';
+    private static readonly swordAttackTextureDuration = 160;
+
     private readonly speed = 260; // Velocidade geral do jogador, usada pra movimentação nas 4 direções
     private readonly momentum = 0.9; // Fator de momentum, usado pra suavizar a movimentação do jogador
     private activeWeapon: typeof Weapons[number] = Weapons[0]; // Arma atualmente equipada pelo jogador
@@ -14,6 +23,8 @@ export class Player extends Phaser.Physics.Arcade.Sprite
     private maxCooldown: number = 60; // Tempo mínimo entre disparos, em frames
     private weaponSwitchCooldown: number = 0; // Tempo restante para a próxima troca de arma, usado para evitar trocas muito rápidas
     private maxWeaponSwitchCooldown: number = 60; // Tempo mínimo entre trocas de arma, em frames
+
+    private initialBodySize: { width: number; height: number; offsetX: number; offsetY: number };
 
     // Mapeamento de keys
     private keyQ: Phaser.Input.Keyboard.Key;
@@ -33,6 +44,9 @@ export class Player extends Phaser.Physics.Arcade.Sprite
         scene.physics.add.existing(this); // Habilita a física arcade no player
         this.setCollideWorldBounds(true); // Faz com que o player colida com as bordas da tela
         this.setScale(0.8); // Reduz o tamanho do player para melhor visualização
+
+        this.initialBodySize = this.getCurrentBodySize();
+        this.updatePlayerTexture();
 
         this.keyQ = scene.input.keyboard!.addKey(Phaser.Input.Keyboard.KeyCodes.Q);
         this.keyW = scene.input.keyboard!.addKey(Phaser.Input.Keyboard.KeyCodes.W);
@@ -88,6 +102,7 @@ export class Player extends Phaser.Physics.Arcade.Sprite
         }
 
         this.maxCooldown = this.activeWeapon.attackCooldown;
+        this.updatePlayerTexture();
     }
 
     processMovement (cursors: Phaser.Types.Input.Keyboard.CursorKeys) : void 
@@ -189,6 +204,7 @@ export class Player extends Phaser.Physics.Arcade.Sprite
                 new PistolProjectile(scene, this.x, this.y + 30, 'pistol-projectile'); // Dispara um projétil de pistola saindo da posição do player
                 break;
             case Weapons[1]:
+                this.showSwordAttackTexture(scene);
                 new SlashProjectile(scene, this.x, this.y - 20, 'slash-projectile'); // Dispara um projétil de slash saindo da posição do player
                 break;
             case Weapons[2]:
@@ -199,4 +215,50 @@ export class Player extends Phaser.Physics.Arcade.Sprite
                 break;
         }
     } 
+
+    private updatePlayerTexture () : void
+    {
+        const textureKey = Player.weaponTextureKeys.get(this.activeWeapon);
+
+        if (!textureKey || this.texture.key === textureKey)
+        {
+            return;
+        }
+
+        this.setTexture(textureKey);
+        this.restoreInitialBodySize();
+    }
+
+    private showSwordAttackTexture (scene: Phaser.Scene) : void
+    {
+        this.setTexture(Player.swordAttackTextureKey);
+        this.restoreInitialBodySize();
+
+        scene.time.delayedCall(Player.swordAttackTextureDuration, () => {
+            if (this.activeWeapon === Weapons[1])
+            {
+                this.updatePlayerTexture();
+            }
+        });
+    }
+
+    private getCurrentBodySize () : { width: number; height: number; offsetX: number; offsetY: number }
+    {
+        const body = this.body as Phaser.Physics.Arcade.Body;
+
+        return {
+            width: body.width,
+            height: body.height,
+            offsetX: body.offset.x,
+            offsetY: body.offset.y
+        };
+    }
+
+    private restoreInitialBodySize () : void
+    {
+        const body = this.body as Phaser.Physics.Arcade.Body;
+
+        body.setSize(this.initialBodySize.width, this.initialBodySize.height, false);
+        body.setOffset(this.initialBodySize.offsetX, this.initialBodySize.offsetY);
+    }
 }

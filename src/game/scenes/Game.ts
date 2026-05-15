@@ -19,6 +19,11 @@ export class Game extends Scene
 
     preload () {
         this.load.image('player', './assets/player/model.png');
+        this.load.image('player-pistol', './assets/player/model_pistol_mode.png');
+        this.load.image('player-sword', './assets/player/model_sword_mode.png');
+        this.load.image('player-sword-attacking', './assets/player/model_sword_attacking.png');
+        this.load.image('player-rifle', './assets/player/model_rifle_mode.png');
+        this.load.image('player-cannon', './assets/player/model_cannon_mode.png');
         this.load.image('pistol-projectile', './assets/player/projectiles/pistol-projectile.png');
         this.load.spritesheet('slash-projectile', './assets/player/projectiles/slash-projectile.png', {
             frameWidth: 182,
