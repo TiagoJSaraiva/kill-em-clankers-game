@@ -32,7 +32,7 @@ export class Player extends Phaser.Physics.Arcade.Sprite
         scene.add.existing(this); // Adiciona o player à cena que chamar o construtor
         scene.physics.add.existing(this); // Habilita a física arcade no player
         this.setCollideWorldBounds(true); // Faz com que o player colida com as bordas da tela
-        this.setScale(0.5); // Reduz o tamanho do player para melhor visualização
+        this.setScale(0.8); // Reduz o tamanho do player para melhor visualização
 
         this.keyQ = scene.input.keyboard!.addKey(Phaser.Input.Keyboard.KeyCodes.Q);
         this.keyW = scene.input.keyboard!.addKey(Phaser.Input.Keyboard.KeyCodes.W);

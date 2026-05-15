@@ -3,14 +3,14 @@ import { Player } from '../player/Player';
 
 export class Game extends Scene
 {
+    private static readonly PARALLAX_FAR_SPEED = 0.35;
+    private static readonly PARALLAX_NEAR_SPEED = 1.1;
+
     camera: Phaser.Cameras.Scene2D.Camera;
-    background: Phaser.GameObjects.Image;
     player: Player;
     cursors: Phaser.Types.Input.Keyboard.CursorKeys;
-
-    /*                    */
-    /* MÉTODOS PRINCIPAIS */
-    /*                    */
+    backgroundFar: Phaser.GameObjects.TileSprite;
+    backgroundNear: Phaser.GameObjects.TileSprite;
 
     constructor ()
     {
@@ -18,7 +18,6 @@ export class Game extends Scene
     }
 
     preload () {
-        // Carrega os assets do jogo previamente para que possam ser usados enquanto a cena estiver ativa.
         this.load.image('player', './assets/player/model.png');
         this.load.image('pistol-projectile', './assets/player/projectiles/pistol-projectile.png');
         this.load.spritesheet('slash-projectile', './assets/player/projectiles/slash-projectile.png', {
@@ -30,21 +29,35 @@ export class Game extends Scene
             frameWidth: 40,
             frameHeight: 39
         });
+
+        this.load.image('bg-far', './assets/background/bg-far.png');
+        this.load.image('bg-near', './assets/background/bg-near.png');
     }
 
     create ()
     {
-        this.camera = this.cameras.main; // Armazena a câmera principal da cena em um atributo para facilitar o acesso
-        this.camera.setBackgroundColor(0x00ff00);
-        this.player = new Player(this, 100, 450, 'player'); // Instancia player na cena do game
-        this.cursors = this.input.keyboard?.createCursorKeys()!; // Habilita o uso do teclado para movimentação do player
+        this.camera = this.cameras.main;
+        this.camera.setBackgroundColor(0x20313e);
+
+        const { width, height } = this.scale;
+
+        this.backgroundFar = this.add.tileSprite(0, 0, width, height, 'bg-far');
+        this.backgroundFar.setOrigin(0, 0);
+        this.backgroundFar.setDepth(-20);
+
+        this.backgroundNear = this.add.tileSprite(0, 0, width, height, 'bg-near');
+        this.backgroundNear.setOrigin(0, 0);
+        this.backgroundNear.setDepth(-10);
+
+        this.player = new Player(this, 100, 450, 'player');
+        this.player.setDepth(10);
+        this.cursors = this.input.keyboard?.createCursorKeys()!;
     }
 
     update () {
-        this.player.update(this.cursors, this); // Chama o método de update do player. Olhar a classe player para entender o método
-    }
+        this.backgroundFar.tilePositionX += Game.PARALLAX_FAR_SPEED;
+        this.backgroundNear.tilePositionX += Game.PARALLAX_NEAR_SPEED;
 
-    /*                    */
-    /* MÉTODOS AUXILIARES */
-    /*                    */
+        this.player.update(this.cursors, this);
+    }
 }
