@@ -204,18 +204,18 @@ export class Player extends Phaser.Physics.Arcade.Sprite
         switch (this.activeWeapon)
         {
             case Weapons[0]:
-                new PistolProjectile(scene, this.x, this.y - 20, 'pistol-projectile'); // Dispara um projétil de pistola saindo da posição do player
-                new PistolProjectile(scene, this.x, this.y + 30, 'pistol-projectile'); // Dispara um projétil de pistola saindo da posição do player
+                new PistolProjectile(scene, this.x + 50, this.y - 40, 'pistol-projectile'); // Dispara um projétil de pistola saindo da posição do player
+                new PistolProjectile(scene, this.x + 50, this.y - 50, 'pistol-projectile'); // Dispara um projétil de pistola saindo da posição do player
                 break;
             case Weapons[1]:
                 this.showSwordAttackTexture(scene);
-                new SlashProjectile(scene, this.x, this.y - 20, 'slash-projectile'); // Dispara um projétil de slash saindo da posição do player
+                new SlashProjectile(scene, this.x + 100, this.y - 20, 'slash-projectile'); // Dispara um projétil de slash saindo da posição do player
                 break;
             case Weapons[2]:
-                new ArrowProjectile(scene, this.x, this.y - 20, 'arrow-projectile'); // Dispara um projétil de chakram saindo da posição do player
+                new ArrowProjectile(scene, this.x + 70, this.y - 30, 'arrow-projectile'); // Dispara um projétil de flecha saindo da posição do player
                 break;
             case Weapons[3]:
-                new MissileProjectile(scene, this.x, this.y - 20, 'missile-projectile'); // Dispara um projétil de míssil saindo da posição do player
+                new MissileProjectile(scene, this.x + 50, this.y - 40, 'missile-projectile'); // Dispara um projétil de míssil saindo da posição do player
                 break;
         }
     } 

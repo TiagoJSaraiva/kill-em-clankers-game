@@ -4,13 +4,13 @@ export default class SlashProjectile extends Projectile
 {
     private static readonly animationKey = 'slash-projectile-animation';
     private updateListener: Function;
-    private lifespam: number = 20; // Tempo de vida do projétil em frames, usado para destruir o projétil após um certo tempo
+    private lifespam: number = 12; // Tempo de vida do projétil em frames, usado para destruir o projétil após um certo tempo
     private age: number = 0; // Idade atual do projétil em frames, incrementada a cada update
 
     constructor (scene: Phaser.Scene, x: number, y: number, texture: string)
     {
         super(scene, x, y, texture);
-        this.setVelocityX(1000); // Define a velocidade do projétil para cima
+        this.setVelocityX(1500); // Define a velocidade do projétil para cima
         this.updateListener = () => this.update();
         this.scene.events.on('update', this.updateListener);
 
