@@ -27,19 +27,24 @@ export class Game extends Scene
         this.load.image('player-rifle', './assets/player/model_rifle_mode.png');
         this.load.image('player-cannon', './assets/player/model_cannon_mode.png');
 
-        this.load.image('pistol-projectile', './assets/player/projectiles/pistol-projectile.png');
-        this.load.spritesheet('slash-projectile', './assets/player/projectiles/slash-projectile.png', {
+        this.load.image('pistol-projectile', './assets/player/projectiles/pistol_projectile.png');
+        this.load.spritesheet('slash-projectile', './assets/player/projectiles/slash_projectile.png', {
             frameWidth: 182,
             frameHeight: 95
         });
-        this.load.image('arrow-projectile', './assets/player/projectiles/arrow-projectile.png');
-        this.load.spritesheet('missile-projectile', './assets/player/projectiles/missile-projectile.png', {
+        this.load.image('arrow-projectile', './assets/player/projectiles/arrow_projectile.png');
+        this.load.spritesheet('missile-projectile', './assets/player/projectiles/missile_projectile.png', {
             frameWidth: 40,
             frameHeight: 39
         });
 
         this.load.image('bg-far', './assets/background/bg-far.png');
         this.load.image('bg-near', './assets/background/bg-near.png');
+
+        this.load.spritesheet('the-eye', './assets/enemies/the_eye/model.png', {
+            frameWidth: 48,
+            frameHeight: 48
+        });
     }
 
     create ()
