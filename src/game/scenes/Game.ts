@@ -18,12 +18,15 @@ export class Game extends Scene
     }
 
     preload () {
+        // Carregamentos das texturas que serão usadas na cena
+
         this.load.image('player', './assets/player/model.png');
         this.load.image('player-pistol', './assets/player/model_pistol_mode.png');
         this.load.image('player-sword', './assets/player/model_sword_mode.png');
         this.load.image('player-sword-attacking', './assets/player/model_sword_attacking.png');
         this.load.image('player-rifle', './assets/player/model_rifle_mode.png');
         this.load.image('player-cannon', './assets/player/model_cannon_mode.png');
+
         this.load.image('pistol-projectile', './assets/player/projectiles/pistol-projectile.png');
         this.load.spritesheet('slash-projectile', './assets/player/projectiles/slash-projectile.png', {
             frameWidth: 182,
@@ -46,13 +49,14 @@ export class Game extends Scene
 
         const { width, height } = this.scale;
 
+        // Criação dos backgrounds com efeito de parallax
         this.backgroundFar = this.add.tileSprite(0, 0, width, height, 'bg-far');
         this.backgroundFar.setOrigin(0, 0);
-        this.backgroundFar.setDepth(-20);
+        this.backgroundFar.setDepth(-20); // Camada mais "longe"
 
         this.backgroundNear = this.add.tileSprite(0, 0, width, height, 'bg-near');
         this.backgroundNear.setOrigin(0, 0);
-        this.backgroundNear.setDepth(-10);
+        this.backgroundNear.setDepth(-10); // Camada mais "perto"
 
         this.player = new Player(this, 100, 450, 'player');
         this.player.setDepth(10);
@@ -60,6 +64,7 @@ export class Game extends Scene
     }
 
     update () {
+        // Atualização do parallax
         this.backgroundFar.tilePositionX += Game.PARALLAX_FAR_SPEED;
         this.backgroundNear.tilePositionX += Game.PARALLAX_NEAR_SPEED;
 
