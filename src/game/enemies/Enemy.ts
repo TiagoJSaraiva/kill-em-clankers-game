@@ -19,3 +19,4 @@ export default abstract class Enemy extends Phaser.Physics.Arcade.Sprite {
         this.collisionDamage = _collisionDamage;
     }
 }
+
