@@ -1,9 +1,5 @@
 import Phaser from 'phaser';
 import Weapons from './weapons/Weapons';
-import PistolProjectile from './projectiles/PistolProjectile';
-import SlashProjectile from './projectiles/SlashProjectile';
-import ArrowProjectile from './projectiles/ArrowProjectile';
-import MissileProjectile from './projectiles/MissileProjectile';
 
 export class Player extends Phaser.Physics.Arcade.Sprite 
 {
@@ -178,39 +174,10 @@ export class Player extends Phaser.Physics.Arcade.Sprite
 
         if (cursors.space.isDown)
         {
-            this.shoot(scene);
+            this.activeWeapon.shoot(scene, this);
             this.shootCooldown = this.maxCooldown; // Reseta o cooldown para o próximo disparo
         }
     }
-
-    private shoot (scene: Phaser.Scene) : void
-    {
-        /** 
-         *  @description Esse método verifica qual arma está equipada pelo player e 
-         *  instancia o projétil correspondente, saindo da posição do player.
-         *  
-         *  @param scene : passado para o construtor do projétil para que ele possa ser adicionado 
-         *  à cena correta
-         */
-
-        switch (this.activeWeapon)
-        {
-            case Weapons[0]:
-                new PistolProjectile(scene, this.x + 50, this.y - 40, 'pistol-projectile'); // Dispara um projétil de pistola saindo da posição do player
-                new PistolProjectile(scene, this.x + 50, this.y - 50, 'pistol-projectile'); // Dispara um projétil de pistola saindo da posição do player
-                break;
-            case Weapons[1]:
-                this.showSwordAttackTexture(scene);
-                new SlashProjectile(scene, this.x + 100, this.y - 20, 'slash-projectile'); // Dispara um projétil de slash saindo da posição do player
-                break;
-            case Weapons[2]:
-                new ArrowProjectile(scene, this.x + 70, this.y - 30, 'arrow-projectile'); // Dispara um projétil de flecha saindo da posição do player
-                break;
-            case Weapons[3]:
-                new MissileProjectile(scene, this.x + 50, this.y - 40, 'missile-projectile'); // Dispara um projétil de míssil saindo da posição do player
-                break;
-        }
-    } 
 
     private updatePlayerTexture () : void
     {
@@ -234,7 +201,7 @@ export class Player extends Phaser.Physics.Arcade.Sprite
         this.restoreInitialBodySize(); // Restaura o tamanho original do corpo do player, caso a textura nova tenha um tamanho diferente que possa ter alterado o corpo do player em alguma troca anterior
     }
 
-    private showSwordAttackTexture (scene: Phaser.Scene) : void
+    protected showSwordAttackTexture (scene: Phaser.Scene) : void
     {
         /** 
          *  @description Esse método mostra a textura de ataque da espada por um período determinado.
