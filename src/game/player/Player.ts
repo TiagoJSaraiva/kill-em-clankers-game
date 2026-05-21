@@ -7,14 +7,6 @@ import MissileProjectile from './projectiles/MissileProjectile';
 
 export class Player extends Phaser.Physics.Arcade.Sprite 
 {
-    // Mapeamento de armas para as texturas correspondentes do player, usado para atualizar a aparência do player conforme a arma equipada
-    private static readonly weaponTextureKeys = new Map<typeof Weapons[number], string>([
-        [Weapons[0], 'player-pistol'],
-        [Weapons[1], 'player-sword'],
-        [Weapons[2], 'player-rifle'],
-        [Weapons[3], 'player-cannon']
-    ]);
-
     // Chave do sprite de ataque da espada, usada para mostrar uma animação de ataque quando a espada é usada para atacar
     private static readonly swordAttackTextureKey = 'player-sword-attacking'; 
     private static readonly swordAttackTextureDuration = 160;
@@ -226,7 +218,7 @@ export class Player extends Phaser.Physics.Arcade.Sprite
          *  @description Esse método atualiza a textura do player de acordo com a arma atualmente equipada.
          */
 
-        const textureKey = Player.weaponTextureKeys.get(this.activeWeapon); // Obtém a chave da textura correspondente à arma ativa do player
+        const textureKey = this.activeWeapon.spriteName; // Obtém a chave da textura correspondente à arma ativa do player
 
         if (this.isShowingSwordAttackTexture && this.activeWeapon === Weapons[1]) // Se o player estiver mostrando a textura de ataque da espada e a arma ativa for a espada, não atualiza a textura para evitar sobrescrever a animação de ataque
         {

@@ -1,4 +1,11 @@
+// Funções auxiliares pra serem usados pelas classes de inimigos.
+
 export function createEnemyLevels(name: string, healthPoints: number, collisionDamage: number, moveSpeed: number, spriteName: string) {
+    /**
+     * @description Factory function de EnemyLevels, que é um array que vai existir para cada classe de inimigo
+     * e que contém objetos definindo cada variação desse inimigo, cada uma possuindo atributos e sprite diferentes.
+     */
+
     return {
         name,
         healthPoints,
