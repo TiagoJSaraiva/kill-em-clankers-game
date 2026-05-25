@@ -18,5 +18,16 @@ export default abstract class Enemy extends Phaser.Physics.Arcade.Sprite {
         this.speed = _speed;
         this.collisionDamage = _collisionDamage;
     }
-}
 
+    move(target: Phaser.GameObjects.Sprite): void {
+        const direction = new Phaser.Math.Vector2(
+            target.x - this.x,
+            target.y - this.y
+        );
+
+        if (direction.lengthSq() > 0) {
+            direction.normalize().scale(this.speed);
+            this.setVelocity(direction.x, direction.y);
+        }
+    } 
+}

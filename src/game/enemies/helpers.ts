@@ -1,6 +1,6 @@
 // Funções auxiliares pra serem usados pelas classes de inimigos.
 
-export function createEnemyLevels(name: string, healthPoints: number, collisionDamage: number, moveSpeed: number, spriteName: string) {
+export function createEnemyVariations(name: string, healthPoints: number, collisionDamage: number, moveSpeed: number, spriteName: string) {
     /**
      * @description Factory function de EnemyLevels, que é um array que vai existir para cada classe de inimigo
      * e que contém objetos definindo cada variação desse inimigo, cada uma possuindo atributos e sprite diferentes.
@@ -15,7 +15,7 @@ export function createEnemyLevels(name: string, healthPoints: number, collisionD
     }
 }
 
-export function getTexture(level: string, enemyLevels: ReturnType<typeof createEnemyLevels>[]) {
+export function getTexture(level: string, enemyLevels: ReturnType<typeof createEnemyVariations>[]) {
     for(let levelType of enemyLevels) {
         if(levelType.name == level) {
             return levelType.spriteName;
@@ -24,7 +24,7 @@ export function getTexture(level: string, enemyLevels: ReturnType<typeof createE
     return "default";
 }
 
-export function getAttributes(level: string, enemyLevels: ReturnType<typeof createEnemyLevels>[]) {
+export function getAttributes(level: string, enemyLevels: ReturnType<typeof createEnemyVariations>[]) {
     for(let levelType of enemyLevels) {
         if(levelType.name == level) {
             return {
