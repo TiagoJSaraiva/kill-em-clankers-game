@@ -5,7 +5,7 @@ import Phaser from "phaser";
 export default abstract class Enemy extends Phaser.Physics.Arcade.Sprite {
     health: number;
     speed: number;
-    collisionDamage: number;
+    damage: number;
 
     constructor(scene: Phaser.Scene, x: number, y: number, texture: string) {
         super(scene, x, y, texture);
@@ -13,10 +13,10 @@ export default abstract class Enemy extends Phaser.Physics.Arcade.Sprite {
         scene.physics.add.existing(this);
     }
 
-    init(_health: number, _speed: number, _collisionDamage: number) {
+    init(_health: number, _speed: number, _damage: number) {
         this.health = _health;
         this.speed = _speed;
-        this.collisionDamage = _collisionDamage;
+        this.damage = _damage;
     }
 
     move(target: Phaser.GameObjects.Sprite): void {

@@ -40,7 +40,11 @@ export class Game extends Scene
             this.load.image('bg-far', './assets/background/bg-far.png');
             this.load.image('bg-near', './assets/background/bg-near.png');
 
-            this.load.image('the-eye', './assets/enemies/eye_enemy/model.png');
+
+            // Carregamento das texturas dos inimigos
+            this.load.image('the-eye-normal', './assets/enemies/eye_enemy/normal.png');
+            this.load.image('the-eye-strong', './assets/enemies/eye_enemy/strong.png');
+            this.load.image('the-eye-impossible', './assets/enemies/eye_enemy/impossible.png');
     }
 
     create ()

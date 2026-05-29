@@ -1,6 +1,6 @@
 // Funções auxiliares pra serem usados pelas classes de inimigos.
 
-export function createEnemyVariations(name: string, healthPoints: number, collisionDamage: number, moveSpeed: number, spriteName: string) {
+export function createEnemyVariations(name: string, healthPoints: number, damage: number, moveSpeed: number, spriteName: string) {
     /**
      * @description Factory function de EnemyLevels, que é um array que vai existir para cada classe de inimigo
      * e que contém objetos definindo cada variação desse inimigo, cada uma possuindo atributos e sprite diferentes.
@@ -9,7 +9,7 @@ export function createEnemyVariations(name: string, healthPoints: number, collis
     return {
         name,
         healthPoints,
-        collisionDamage,
+        damage,
         moveSpeed,
         spriteName
     }
@@ -29,14 +29,14 @@ export function getAttributes(level: string, enemyLevels: ReturnType<typeof crea
         if(levelType.name == level) {
             return {
                 healthPoints: levelType.healthPoints,
-                collisionDamage: levelType.collisionDamage,
+                damage: levelType.damage,
                 moveSpeed: levelType.moveSpeed
             }
         }
     }
     return {
         healthPoints: 0,
-        collisionDamage: 0,
+        damage: 0,
         moveSpeed: 0
     }
 }
