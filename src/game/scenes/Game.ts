@@ -19,32 +19,28 @@ export class Game extends Scene
 
     preload () {
         // Carregamentos das texturas que serão usadas na cena
+            this.load.image('player', './assets/player/model.png');
+            this.load.image('player-pistol', './assets/player/model_pistol_mode.png');
+            this.load.image('player-sword', './assets/player/model_sword_mode.png');
+            this.load.image('player-sword-attacking', './assets/player/model_sword_attacking.png');
+            this.load.image('player-rifle', './assets/player/model_rifle_mode.png');
+            this.load.image('player-cannon', './assets/player/model_cannon_mode.png');
 
-        this.load.image('player', './assets/player/model.png');
-        this.load.image('player-pistol', './assets/player/model_pistol_mode.png');
-        this.load.image('player-sword', './assets/player/model_sword_mode.png');
-        this.load.image('player-sword-attacking', './assets/player/model_sword_attacking.png');
-        this.load.image('player-rifle', './assets/player/model_rifle_mode.png');
-        this.load.image('player-cannon', './assets/player/model_cannon_mode.png');
+            this.load.image('pistol-projectile', './assets/player/projectiles/pistol_projectile.png');
+            this.load.spritesheet('slash-projectile', './assets/player/projectiles/slash_projectile.png', {
+                frameWidth: 182,
+                frameHeight: 95
+            });
+            this.load.image('arrow-projectile', './assets/player/projectiles/arrow_projectile.png');
+            this.load.spritesheet('missile-projectile', './assets/player/projectiles/missile_projectile.png', {
+                frameWidth: 40,
+                frameHeight: 39
+            });
 
-        this.load.image('pistol-projectile', './assets/player/projectiles/pistol_projectile.png');
-        this.load.spritesheet('slash-projectile', './assets/player/projectiles/slash_projectile.png', {
-            frameWidth: 182,
-            frameHeight: 95
-        });
-        this.load.image('arrow-projectile', './assets/player/projectiles/arrow_projectile.png');
-        this.load.spritesheet('missile-projectile', './assets/player/projectiles/missile_projectile.png', {
-            frameWidth: 40,
-            frameHeight: 39
-        });
+            this.load.image('bg-far', './assets/background/bg-far.png');
+            this.load.image('bg-near', './assets/background/bg-near.png');
 
-        this.load.image('bg-far', './assets/background/bg-far.png');
-        this.load.image('bg-near', './assets/background/bg-near.png');
-
-        this.load.spritesheet('the-eye', './assets/enemies/the_eye/model.png', {
-            frameWidth: 48,
-            frameHeight: 48
-        });
+            this.load.image('the-eye', './assets/enemies/eye_enemy/model.png');
     }
 
     create ()
@@ -69,9 +65,9 @@ export class Game extends Scene
     }
 
     update () {
-        // Atualização do parallax
-        this.backgroundFar.tilePositionX += Game.PARALLAX_FAR_SPEED;
-        this.backgroundNear.tilePositionX += Game.PARALLAX_NEAR_SPEED;
+        // Atualização do parallax, da esquerda pra direita
+        this.backgroundFar.tilePositionX -= Game.PARALLAX_FAR_SPEED;
+        this.backgroundNear.tilePositionX -= Game.PARALLAX_NEAR_SPEED;
 
         this.player.update(this.cursors, this);
     }
