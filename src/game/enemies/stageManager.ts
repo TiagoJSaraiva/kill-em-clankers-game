@@ -1,16 +1,18 @@
-import EyeEnemy from "./eye_enemy/EyeEnemy";
+import ShooterRobot from "./shooter-robot/ShooterRobot";
 
 const stageManager = [
+    /* Interface de configuração de cada estágio, onde é possível definir o tempo de início do estágio, o intervalo de spawn dos inimigos e a pool de inimigos que podem aparecer nesse estágio.
+       A pool é um array de objetos, onde cada objeto define o nome da classe do inimigo e a variação desse inimigo (por exemplo, "normal", "strong", "impossible", etc).
+    */
     stage(0, 240, [ 
-        { name: 'EyeEnemy', variation: 'normal' }, 
-        { name: 'EyeEnemy', variation: 'strong' } 
+        { name: 'ShooterRobot', variation: 'normal' }, 
+        { name: 'ShooterRobot', variation: 'strong' } 
     ])
-
 ];
 
 const enemyFactories = {
-    EyeEnemy: (scene: Phaser.Scene, x: number, y: number, variation: string) => {
-        return new EyeEnemy(scene, x, y, variation);
+    ShooterRobot: (scene: Phaser.Scene, x: number, y: number, variation: string) => {
+        return new ShooterRobot(scene, x, y, variation);
     }
 };
 

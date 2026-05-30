@@ -19,21 +19,23 @@ export class Game extends Scene
 
     preload () {
         // Carregamentos das texturas que serão usadas na cena
+        let image = (key: string, path: string) => {return { key, path };};
 
         // Carregamento das imagens
-         let images = [
-            { key: 'player',                 path: './assets/player/model.png' },
-            { key: 'player-pistol',          path: './assets/player/model_pistol_mode.png' },
-            { key: 'player-sword',           path: './assets/player/model_sword_mode.png' },
-            { key: 'player-sword-attacking', path: './assets/player/model_sword_attacking.png' },
-            { key: 'player-rifle',           path: './assets/player/model_rifle_mode.png' },
-            { key: 'player-cannon',          path: './assets/player/model_cannon_mode.png' },
-            { key: 'pistol-projectile',      path: './assets/player/projectiles/pistol_projectile.png' },
-            { key: 'bg-far',                 path: './assets/background/bg-far.png' },
-            { key: 'bg-near',                path: './assets/background/bg-near.png' },
-            { key: 'the-eye-normal',         path: './assets/enemies/eye_enemy/normal.png' },
-            { key: 'the-eye-strong',         path: './assets/enemies/eye_enemy/strong.png' },
-            { key: 'the-eye-impossible',     path: './assets/enemies/eye_enemy/impossible.png' },
+        let images = [
+        //  KEY                             PATH 
+            image('player',                 './assets/player/model.png'),
+            image('player-pistol',          './assets/player/model_pistol_mode.png'),
+            image('player-sword',           './assets/player/model_sword_mode.png'),
+            image('player-sword-attacking', './assets/player/model_sword_attacking.png'),
+            image('player-rifle',           './assets/player/model_rifle_mode.png'),
+            image('player-cannon',          './assets/player/model_cannon_mode.png'),
+            image('pistol-projectile',      './assets/player/projectiles/pistol_projectile.png'),
+            image('bg-far',                 './assets/background/bg-far.png'),
+            image('bg-near',                './assets/background/bg-near.png'),
+            image('shooter-robot-normal',         './assets/enemies/shooter-robot/normal.png'),
+            image('shooter-robot-strong',         './assets/enemies/shooter-robot/strong.png'),
+            image('shooter-robot-impossible',     './assets/enemies/shooter-robot/impossible.png'),
         ];
 
         images.forEach(image => this.load.image(image.key, image.path));

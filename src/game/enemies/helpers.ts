@@ -2,7 +2,7 @@
 
 export function createEnemyVariations(name: string, healthPoints: number, damage: number, moveSpeed: number, spriteName: string) {
     /**
-     * @description Factory function de EnemyLevels, que é um array que vai existir para cada classe de inimigo
+     * @description Factory function de EnemyVariations, que é um array que vai existir para cada classe de inimigo
      * e que contém objetos definindo cada variação desse inimigo, cada uma possuindo atributos e sprite diferentes.
      */
 
@@ -15,22 +15,22 @@ export function createEnemyVariations(name: string, healthPoints: number, damage
     }
 }
 
-export function getTexture(level: string, enemyLevels: ReturnType<typeof createEnemyVariations>[]) {
-    for(let levelType of enemyLevels) {
-        if(levelType.name == level) {
-            return levelType.spriteName;
+export function getTexture(variation: string, enemyVariations: ReturnType<typeof createEnemyVariations>[]) {
+    for(let variationType of enemyVariations) {
+        if(variationType.name == variation) {
+            return variationType.spriteName;
         }
     }
-    return "default";
+    return "Default-Texture";
 }
 
-export function getAttributes(level: string, enemyLevels: ReturnType<typeof createEnemyVariations>[]) {
-    for(let levelType of enemyLevels) {
-        if(levelType.name == level) {
+export function getAttributes(variation: string, enemyVariations: ReturnType<typeof createEnemyVariations>[]) {
+    for(let variationType of enemyVariations) {
+        if(variationType.name == variation) {
             return {
-                healthPoints: levelType.healthPoints,
-                damage: levelType.damage,
-                moveSpeed: levelType.moveSpeed
+                healthPoints: variationType.healthPoints,
+                damage: variationType.damage,
+                moveSpeed: variationType.moveSpeed
             }
         }
     }
