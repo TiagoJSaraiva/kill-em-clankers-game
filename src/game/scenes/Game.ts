@@ -19,32 +19,38 @@ export class Game extends Scene
 
     preload () {
         // Carregamentos das texturas que serão usadas na cena
-            this.load.image('player', './assets/player/model.png');
-            this.load.image('player-pistol', './assets/player/model_pistol_mode.png');
-            this.load.image('player-sword', './assets/player/model_sword_mode.png');
-            this.load.image('player-sword-attacking', './assets/player/model_sword_attacking.png');
-            this.load.image('player-rifle', './assets/player/model_rifle_mode.png');
-            this.load.image('player-cannon', './assets/player/model_cannon_mode.png');
 
-            this.load.image('pistol-projectile', './assets/player/projectiles/pistol_projectile.png');
-            this.load.spritesheet('slash-projectile', './assets/player/projectiles/slash_projectile.png', {
-                frameWidth: 182,
-                frameHeight: 95
-            });
-            this.load.image('arrow-projectile', './assets/player/projectiles/arrow_projectile.png');
-            this.load.spritesheet('missile-projectile', './assets/player/projectiles/missile_projectile.png', {
-                frameWidth: 40,
-                frameHeight: 39
-            });
+        // Carregamento das imagens
+         let images = [
+            { key: 'player',                 path: './assets/player/model.png' },
+            { key: 'player-pistol',          path: './assets/player/model_pistol_mode.png' },
+            { key: 'player-sword',           path: './assets/player/model_sword_mode.png' },
+            { key: 'player-sword-attacking', path: './assets/player/model_sword_attacking.png' },
+            { key: 'player-rifle',           path: './assets/player/model_rifle_mode.png' },
+            { key: 'player-cannon',          path: './assets/player/model_cannon_mode.png' },
+            { key: 'pistol-projectile',      path: './assets/player/projectiles/pistol_projectile.png' },
+            { key: 'bg-far',                 path: './assets/background/bg-far.png' },
+            { key: 'bg-near',                path: './assets/background/bg-near.png' },
+            { key: 'the-eye-normal',         path: './assets/enemies/eye_enemy/normal.png' },
+            { key: 'the-eye-strong',         path: './assets/enemies/eye_enemy/strong.png' },
+            { key: 'the-eye-impossible',     path: './assets/enemies/eye_enemy/impossible.png' },
+        ];
 
-            this.load.image('bg-far', './assets/background/bg-far.png');
-            this.load.image('bg-near', './assets/background/bg-near.png');
+        images.forEach(image => this.load.image(image.key, image.path));
 
 
-            // Carregamento das texturas dos inimigos
-            this.load.image('the-eye-normal', './assets/enemies/eye_enemy/normal.png');
-            this.load.image('the-eye-strong', './assets/enemies/eye_enemy/strong.png');
-            this.load.image('the-eye-impossible', './assets/enemies/eye_enemy/impossible.png');
+        
+        // Carregamento dos spritesheets
+        this.load.spritesheet('slash-projectile', './assets/player/projectiles/slash_projectile.png', {
+            frameWidth: 182,
+            frameHeight: 95
+        });
+
+        this.load.spritesheet('missile-projectile', './assets/player/projectiles/missile_projectile.png', {
+            frameWidth: 40,
+            frameHeight: 39
+        });
+
     }
 
     create ()
