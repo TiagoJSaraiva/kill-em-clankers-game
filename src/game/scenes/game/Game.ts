@@ -1,5 +1,6 @@
 import { Scene } from 'phaser';
-import { Player } from '../player/Player';
+import { Player } from '../../player/Player';
+import manageSpawn from './service/spawnService';
 
 export class Game extends Scene
 {
@@ -11,6 +12,7 @@ export class Game extends Scene
     cursors: Phaser.Types.Input.Keyboard.CursorKeys;
     backgroundFar: Phaser.GameObjects.TileSprite;
     backgroundNear: Phaser.GameObjects.TileSprite;
+    elapsedTime: number;
 
     constructor ()
     {
@@ -31,6 +33,7 @@ export class Game extends Scene
             image('player-rifle',           './assets/player/model_rifle_mode.png'),
             image('player-cannon',          './assets/player/model_cannon_mode.png'),
             image('pistol-projectile',      './assets/player/projectiles/pistol_projectile.png'),
+            image('arrow-projectile',       './assets/player/projectiles/arrow_projectile.png'),
             image('bg-far',                 './assets/background/bg-far.png'),
             image('bg-near',                './assets/background/bg-near.png'),
             image('shooter-robot-normal',         './assets/enemies/shooter-robot/normal.png'),
@@ -39,7 +42,6 @@ export class Game extends Scene
         ];
 
         images.forEach(image => this.load.image(image.key, image.path));
-
 
         
         // Carregamento dos spritesheets
@@ -57,6 +59,7 @@ export class Game extends Scene
 
     create ()
     {
+        this.elapsedTime = 0;
         this.camera = this.cameras.main;
         this.camera.setBackgroundColor(0x20313e);
 
@@ -76,11 +79,12 @@ export class Game extends Scene
         this.cursors = this.input.keyboard?.createCursorKeys()!;
     }
 
-    update () {
+    update (time: number, delta: number) {
+        this.elapsedTime += delta;
         // Atualização do parallax, da esquerda pra direita
-        this.backgroundFar.tilePositionX -= Game.PARALLAX_FAR_SPEED;
-        this.backgroundNear.tilePositionX -= Game.PARALLAX_NEAR_SPEED;
-
+        this.backgroundFar.tilePositionX += Game.PARALLAX_FAR_SPEED;
+        this.backgroundNear.tilePositionX += Game.PARALLAX_NEAR_SPEED;
+        manageSpawn(this, this.elapsedTime);
         this.player.update(this.cursors, this);
     }
 }
