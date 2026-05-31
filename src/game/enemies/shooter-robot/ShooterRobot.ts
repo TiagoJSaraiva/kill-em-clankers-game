@@ -3,9 +3,9 @@ import { enemyVariation, getTexture, getAttributes } from "../helpers";
 import { Attributes, EnemyVariation } from "../types";
 
 const enemyVariations = [
-    enemyVariation("normal",     40, 30, 20, "shooter-robot-normal"),
-    enemyVariation("strong",     40, 30, 20, "shooter-robot-strong"),
-    enemyVariation("impossible", 40, 30, 20, "shooter-robot-impossible"),
+    enemyVariation("shooter-robot-normal",     40, 30, 20),
+    enemyVariation("shooter-robot-strong",     40, 30, 20),
+    enemyVariation("shooter-robot-impossible", 40, 30, 20),
                                     //  HP, MS, CD
                                     //  HP = Health Points, MS = Move Speed, CD = Collision Damage
 ] as EnemyVariation[]
@@ -22,7 +22,7 @@ export default class ShooterRobot extends Enemy {
         this.init(attributes.healthPoints, attributes.moveSpeed, attributes.damage);
     }
 
-    enemyAI(player: Phaser.GameObjects.Sprite): void {
-        this.move(player);
+    enemyAI(target: Phaser.GameObjects.Sprite): void {
+        this.move(target);
     }
 }

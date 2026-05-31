@@ -3,7 +3,6 @@ export type EnemyVariation = {
     healthPoints: number,
     damage: number,
     moveSpeed: number,
-    spriteName: string
 }
 
 export type Attributes = {
