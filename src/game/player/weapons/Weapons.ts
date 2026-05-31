@@ -5,7 +5,18 @@ import Phaser from "phaser";
 import SlashProjectile from "../projectiles/SlashProjectile";
 import { Player } from "../Player";
 
-function createWeapon(name: string, attackCooldown: number, spriteName: string, shoot: (scene: Phaser.Scene, player: any) => void) {
+type Name = "Pistol" | "Sword" | "Rifle" | "Cannon";
+
+type Weapon = {
+    name: Name,
+    attackCooldown: number,
+    spriteName: string,
+    shoot: (scene: Phaser.Scene, player: Player) => void
+}
+
+type Weapons = Weapon[]
+
+function createWeapon(name: Name, attackCooldown: number, spriteName: string, shoot: (scene: Phaser.Scene, player: Player) => void): Weapon {
     return { 
         name,
         attackCooldown,
@@ -14,7 +25,7 @@ function createWeapon(name: string, attackCooldown: number, spriteName: string, 
     };
 }
 
-const Weapons = [
+const weapons = [
     createWeapon('Pistol', 25, 'player-pistol', (scene: Phaser.Scene, player: Player) => {
         new PistolProjectile(scene, player.x + 50, player.y - 40, 'pistol-projectile'); // Dispara um projétil de pistola saindo da posição do player
         new PistolProjectile(scene, player.x + 50, player.y - 50, 'pistol-projectile'); // Dispara um projétil de pistola saindo da posição do player
@@ -29,6 +40,6 @@ const Weapons = [
     createWeapon('Cannon', 100, 'player-cannon', (scene: Phaser.Scene, player: Player) => {
         new MissileProjectile(scene, player.x + 50, player.y - 40, 'missile-projectile'); // Dispara um projétil de míssil saindo da posição do player
     })
-]
+] as Weapons
 
-export default Weapons;
+export default weapons;

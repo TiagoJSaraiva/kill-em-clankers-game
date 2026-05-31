@@ -1,5 +1,5 @@
 import ShooterRobot from "../../enemies/shooter-robot/ShooterRobot";
-import { StageService } from "./stageTypes";
+import { Stage, Pool, UnitSpawnController } from "./types";
 
 const enemyFactories = {
     ShooterRobot: (scene: Phaser.Scene, x: number, y: number, variation: string) => {
@@ -24,11 +24,11 @@ export const stages = [
         { name: 'ShooterRobot', variation: 'normal', weight: 1 }, 
         { name: 'ShooterRobot', variation: 'strong', weight: 1 } 
     ])
-] as StageService.Stages;
+] as Stage[];
 
 /* FUNÇÕES */
 
-function stage(startTime: number, spawnInterval: number, poolConfig: unitSpawnConfig[] ): StageService.Stage
+function stage(startTime: number, spawnInterval: number, poolConfig: unitSpawnConfig[] ): Stage
 {
     /**
      * @description Construtor usado para gerar os objetos que representam cada estágio do jogo. 
@@ -39,7 +39,7 @@ function stage(startTime: number, spawnInterval: number, poolConfig: unitSpawnCo
      *                      dinâmicamente a função de spawn da unidade, com base no nome e na variante dela.      
      */
 
-    let pool: StageService.Pool = []; // Variável que vai armazenar de fato a pool referente a um Stage, criada com base em @var poolConfig
+    let pool: Pool = []; // Variável que vai armazenar de fato a pool referente a um Stage, criada com base em @var poolConfig
 
     for (let item of poolConfig) {
         const factory = enemyFactories[item.name];
@@ -53,7 +53,7 @@ function stage(startTime: number, spawnInterval: number, poolConfig: unitSpawnCo
 
             weight = item.weight;
 
-            pool.push({ spawnFunction, weight } as StageService.UnitSpawnController)
+            pool.push({ spawnFunction, weight } as UnitSpawnController)
         }
     }
 
