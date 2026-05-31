@@ -79,8 +79,9 @@ export class Game extends Scene
         this.cursors = this.input.keyboard?.createCursorKeys()!;
     }
 
-    update (time: number, delta: number) {
+    update (_time: number, delta: number) { // Adicionado _ em _time para ser ignorado pelo lint
         this.elapsedTime += delta;
+
         // Atualização do parallax, da esquerda pra direita
         this.backgroundFar.tilePositionX += Game.PARALLAX_FAR_SPEED;
         this.backgroundNear.tilePositionX += Game.PARALLAX_NEAR_SPEED;
