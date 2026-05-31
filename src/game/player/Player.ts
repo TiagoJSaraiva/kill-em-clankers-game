@@ -201,7 +201,7 @@ export class Player extends Phaser.Physics.Arcade.Sprite
         this.restoreInitialBodySize(); // Restaura o tamanho original do corpo do player, caso a textura nova tenha um tamanho diferente que possa ter alterado o corpo do player em alguma troca anterior
     }
 
-    protected showSwordAttackTexture (scene: Phaser.Scene) : void
+    public showSwordAttackTexture (scene: Phaser.Scene) : void
     {
         /** 
          *  @description Esse método mostra a textura de ataque da espada por um período determinado.

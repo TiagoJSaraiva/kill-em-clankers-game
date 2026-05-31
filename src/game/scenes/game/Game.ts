@@ -1,6 +1,6 @@
 import { Scene } from 'phaser';
 import { Player } from '../../player/Player';
-import manageSpawn from './service/spawnService';
+import manageSpawn from '../../services/spawn/spawnService';
 
 export class Game extends Scene
 {

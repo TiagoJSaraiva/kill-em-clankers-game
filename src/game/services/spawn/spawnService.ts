@@ -1,9 +1,8 @@
-import stages from "./stageManager";
-
-type Stage = typeof stages[any];
+import { stages } from "../stage/createStageService";
+import { StageService } from "../stage/stageTypes";
 
 let nextStageChange: number = 0;
-let activeStage: Stage;
+let activeStage: StageService.Stage;
 
 export default function manageSpawn(scene: Phaser.Scene, elapsedTime: number) {
     /**
@@ -20,8 +19,8 @@ function getNextStageChange(): number {
     return 0;
 }
 
-function getCurrentStage(elapsedTime: number): Stage {
-    let stage: Stage;
+function getCurrentStage(elapsedTime: number): StageService.Stage {
+    let stage: StageService.Stage;
     for(stage of stages) {
         if(stage.startTime == elapsedTime) {
             return stage;
