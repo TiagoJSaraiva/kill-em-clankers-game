@@ -146,6 +146,7 @@ export class Player extends Phaser.Physics.Arcade.Sprite
          *  suavizando a desaceleração quando as teclas são soltas.
          * 
          *  @param velocity : a velocidade atual do jogador em uma direção (x ou y)
+         * 
          *  @returns a nova velocidade após aplicar o fator de momentum, ou 0 se a velocidade for muito baixa
          */
 
