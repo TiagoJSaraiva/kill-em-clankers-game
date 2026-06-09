@@ -23,7 +23,11 @@ export const stages = [
     stage(0, 60, [ 
         { name: 'ShooterRobot', variation: 'normal', weight: 1 }, 
         { name: 'ShooterRobot', variation: 'strong', weight: 1 } 
-    ])
+    ]),
+    stage(30, 50, [
+        { name: 'ShooterRobot', variation: 'normal', weight: 1 }, 
+        { name: 'ShooterRobot', variation: 'strong', weight: 1 } 
+    ]),
 ] as Stage[];
 
 /* FUNÇÕES */
