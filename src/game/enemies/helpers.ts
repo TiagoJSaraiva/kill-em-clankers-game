@@ -1,33 +1,34 @@
 // Funções auxiliares pra serem usados pelas classes de inimigos.
 
-import { EnemyVariation, Attributes } from "./types";
+import { EnemyVariation, Attributes, VariationName } from "./types";
 
-export function enemyVariation(name: string, healthPoints: number, damage: number, moveSpeed: number): EnemyVariation {
+export function enemyVariation(variationName: VariationName, texture: string, healthPoints: number, damage: number, moveSpeed: number): EnemyVariation {
     /**
      * @description Factory function de EnemyVariations, que é um array que vai existir para cada classe de inimigo
      * e que contém objetos definindo cada variação desse inimigo, cada uma possuindo atributos e sprite diferentes.
      */
 
     return {
-        name,
+        variationName,
+        texture,
         healthPoints,
         damage,
         moveSpeed,
     }
 }
 
-export function getTexture(variation: string, enemyVariations: EnemyVariation[]): string {
+export function getTexture(variation: VariationName, enemyVariations: EnemyVariation[]): string {
     for(let variationType of enemyVariations) {
-        if(variationType.name == variation) {
-            return variationType.name;
+        if(variationType.variationName === variation) {
+            return variationType.texture;
         }
     }
     return "Default-Texture";
 }
 
-export function getAttributes(variation: string, enemyVariations: EnemyVariation[]): Attributes {
+export function getAttributes(variation: VariationName, enemyVariations: EnemyVariation[]): Attributes {
     for(let variationType of enemyVariations) {
-        if(variationType.name == variation) {
+        if(variationType.variationName == variation) {
             return {
                 healthPoints: variationType.healthPoints,
                 damage: variationType.damage,

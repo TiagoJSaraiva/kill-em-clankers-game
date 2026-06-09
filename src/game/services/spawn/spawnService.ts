@@ -2,6 +2,7 @@ import { stages } from "../stage/createStageService";
 import { Stage } from "../stage/types";
 
 let nextStageStartingTime: number = 0;
+let nextSpawnTime: number = 0;
 let currentStageIndex: number = 0; 
 
 // Variável que vai armazenar o estágio ativo, ou seja, o estágio que deve ser usado para spawnar os inimigos.
@@ -21,8 +22,9 @@ export default function manageSpawn(scene: Phaser.Scene, elapsedTime: number) {
         currentStageIndex++;
     }   
 
-    if(elapsedTime % activeStage.spawnInterval == 0) { // Se o tempo que já passou no jogo for um múltiplo do intervalo de spawn do estágio ativo, é hora de spawnar as unidades.
+    if(elapsedTime >= nextSpawnTime) { // Se o tempo que já passou no jogo for maior ou igual ao próximo tempo de spawn, é hora de spawnar as unidades.
         spawnUnits(scene);
+        nextSpawnTime = elapsedTime + activeStage.spawnInterval;
     }
 }
 
@@ -45,5 +47,33 @@ function spawnUnits(scene: Phaser.Scene) {
      *              A função de spawn de cada unidade é chamada, e o tipo da unidade a ser spawnada é definido com base no peso de cada unidade na pool.
      *              Quanto maior o peso de uma unidade, mais chances ela tem de ser spawnada.
      */
-    
+    const pool = activeStage.pool;
+
+    if(pool.length === 0) {
+        return;
+    }
+
+    const totalWeight = pool.reduce((sum, unit) => {
+        return unit.weight > 0 ? sum + unit.weight : sum;
+    }, 0);
+
+    if(totalWeight <= 0) {
+        return;
+    }
+
+    const randomWeight = Math.random() * totalWeight;
+    let accumulatedWeight = 0;
+
+    for(let unit of pool) {
+        if(unit.weight <= 0) {
+            continue;
+        }
+
+        accumulatedWeight += unit.weight;
+
+        if(randomWeight < accumulatedWeight) {
+            unit.spawnFunction(scene, 0, 0);
+            return;
+        }
+    }
 }

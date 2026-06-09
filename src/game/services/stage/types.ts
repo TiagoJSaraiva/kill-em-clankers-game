@@ -1,6 +1,6 @@
 
 export type UnitSpawnController = {
-    spawnFunction: (scene: Phaser.Scene, x: number, y: number, variation: string) => any,
+    spawnFunction: (scene: Phaser.Scene, x: number, y: number) => any,
     weight: number
 }
 

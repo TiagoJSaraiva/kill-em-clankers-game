@@ -1,9 +1,12 @@
 export type EnemyVariation = {
-    name: string, 
+    variationName: VariationName,
+    texture: string,
     healthPoints: number,
     damage: number,
     moveSpeed: number,
 }
+
+export type VariationName = "normal" | "strong" | "impossible";
 
 export type Attributes = {
     healthPoints: number,

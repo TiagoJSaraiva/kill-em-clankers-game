@@ -47,7 +47,7 @@ function stage(startTime: number, spawnInterval: number, poolConfig: unitSpawnCo
 
     for (let item of poolConfig) {
         const factory = enemyFactories[item.name];
-        let spawnFunction: Function;
+        let spawnFunction: UnitSpawnController["spawnFunction"];
         let weight: number;
 
         if (factory) {
