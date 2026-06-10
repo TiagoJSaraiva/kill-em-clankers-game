@@ -2,6 +2,5 @@
 - Cada classe cuida de suas próprias responsabilidades internas
 - Aninhamento de pasta com padrão feature-based, Inclusive assets dentro de /public/assets
 - POO e data driven
-- Arquivos dentro de /config usados pra interfaces de configuração
 - Contratos de escopo local dentro do arquivo que o usa
 - Contratos que podem ser usados globalmente guardado em namespace em arquivo dedicado

@@ -1,8 +1,9 @@
-import ShooterRobot from "../../enemies/shooter-robot/ShooterRobot";
+import ShooterRobot from "../../../../enemies/shooter-robot/ShooterRobot";
 import { Stage, Pool, UnitSpawnController } from "./types";
+import { VariationName } from "../../../../enemies/types";
 
 const enemyFactories = {
-    ShooterRobot: (scene: Phaser.Scene, x: number, y: number, variation: string) => {
+    ShooterRobot: (scene: Phaser.Scene, x: number, y: number, variation: VariationName) => {
         return new ShooterRobot(scene, x, y, variation);
     }
 };
@@ -11,7 +12,7 @@ const enemyFactories = {
 
 type unitSpawnConfig = {
     name: keyof typeof enemyFactories, 
-    variation: string, 
+    variation: VariationName, 
     weight: number
 }
 
