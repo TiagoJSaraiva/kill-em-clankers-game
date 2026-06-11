@@ -2,7 +2,7 @@ import Projectile from "./Projectile";
 
 export default class MissileProjectile extends Projectile
 {
-    private static readonly animationKey = 'missile-projectile-animation'; // Chave da animação do projétil
+    private static readonly animationKey = 'player-cannon-projectile-animation'; // Chave da animação do projétil
     private updateListener: Function;
 
     constructor (scene: Phaser.Scene, x: number, y: number, texture: string)

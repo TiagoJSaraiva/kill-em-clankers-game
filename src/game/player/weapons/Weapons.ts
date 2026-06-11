@@ -35,10 +35,10 @@ const weapons = [
         new SlashProjectile(scene, player.x + 100, player.y - 20, 'slash-projectile'); // Dispara um projétil de slash saindo da posição do player
     }),
     createWeapon('Rifle', 70, 'player-crossbow-model', (scene: Phaser.Scene, player: Player) => {
-        new ArrowProjectile(scene, player.x + 70, player.y - 30, 'arrow-projectile'); // Dispara um projétil de flecha saindo da posição do player
+        new ArrowProjectile(scene, player.x + 70, player.y - 30, 'player-crossbow-projectile'); // Dispara um projétil de flecha saindo da posição do player
     }),
-    createWeapon('Cannon', 100, 'player-cannon', (scene: Phaser.Scene, player: Player) => {
-        new MissileProjectile(scene, player.x + 50, player.y - 40, 'missile-projectile'); // Dispara um projétil de míssil saindo da posição do player
+    createWeapon('Cannon', 100, 'player-cannon-model', (scene: Phaser.Scene, player: Player) => {
+        new MissileProjectile(scene, player.x + 50, player.y - 40, 'player-cannon-projectile'); // Dispara um projétil de míssil saindo da posição do player
     })
 ] as Weapons
 
