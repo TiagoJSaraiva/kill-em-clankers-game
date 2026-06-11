@@ -4,7 +4,7 @@ import Weapons from './weapons/Weapons';
 export class Player extends Phaser.Physics.Arcade.Sprite 
 {
     // Chave do sprite de ataque da espada, usada para mostrar uma animação de ataque quando a espada é usada para atacar
-    private static readonly swordAttackTextureKey = 'player-sword-attacking'; 
+    private static readonly swordAttackTextureKey = 'player-sword-model-attacking'; 
     private static readonly swordAttackTextureDuration = 160;
     private isShowingSwordAttackTexture: boolean = false;
 

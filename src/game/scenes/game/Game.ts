@@ -1,6 +1,8 @@
 import { Scene } from 'phaser';
 import { Player } from '../../player/Player';
-import manageSpawn from '../../services/spawn/spawnService';
+import manageSpawn from './services/spawn/spawnService';
+import { loadAssets } from './services/assetLoader/assetLoaderService';
+import Phaser from 'phaser';
 
 export class Game extends Scene
 {
@@ -19,40 +21,8 @@ export class Game extends Scene
     }
 
     preload () {
-        // Carregamentos das texturas que serão usadas na cena
-        let image = (key: string, path: string) => {return { key, path };};
-
-        // Carregamento das imagens
-        let images = [
-        //  KEY                             PATH 
-            image('player',                 './assets/player/model.png'),
-            image('player-pistol',          './assets/player/model_pistol_mode.png'),
-            image('player-sword',           './assets/player/model_sword_mode.png'),
-            image('player-sword-attacking', './assets/player/model_sword_attacking.png'),
-            image('player-rifle',           './assets/player/model_rifle_mode.png'),
-            image('player-cannon',          './assets/player/model_cannon_mode.png'),
-            image('pistol-projectile',      './assets/player/projectiles/pistol_projectile.png'),
-            image('arrow-projectile',       './assets/player/projectiles/arrow_projectile.png'),
-            image('bg-far',                 './assets/background/bg-far.png'),
-            image('bg-near',                './assets/background/bg-near.png'),
-            image('shooter-robot-normal',         './assets/enemies/shooter-robot/normal.png'),
-            image('shooter-robot-strong',         './assets/enemies/shooter-robot/strong.png'),
-            image('shooter-robot-impossible',     './assets/enemies/shooter-robot/impossible.png'),
-        ];
-
-        images.forEach(image => this.load.image(image.key, image.path));
-
-        
-        // Carregamento dos spritesheets
-        this.load.spritesheet('slash-projectile', './assets/player/projectiles/slash_projectile.png', {
-            frameWidth: 182,
-            frameHeight: 95
-        });
-
-        this.load.spritesheet('missile-projectile', './assets/player/projectiles/missile_projectile.png', {
-            frameWidth: 40,
-            frameHeight: 39
-        });
+        // Método para carregar os assets do jogo, como imagens, spritesheets, sons, etc.
+        loadAssets(this);
 
     }
 
