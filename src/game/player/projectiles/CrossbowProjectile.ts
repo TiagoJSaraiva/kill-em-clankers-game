@@ -1,6 +1,6 @@
 import Projectile from "./Projectile";
 
-export default class ArrowProjectile extends Projectile
+export default class CrossbowProjectile extends Projectile
 {
     private updateListener: Function;
 

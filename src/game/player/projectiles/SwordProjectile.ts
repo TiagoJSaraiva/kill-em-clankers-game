@@ -1,19 +1,21 @@
 import Projectile from "./Projectile";
 
-export default class MissileProjectile extends Projectile
+export default class SwordProjectile extends Projectile
 {
-    private static readonly animationKey = 'player-cannon-projectile-animation'; // Chave da animação do projétil
+    private static readonly animationKey = 'slash-projectile-animation';
     private updateListener: Function;
+    private lifespam: number = 12; // Tempo de vida do projétil em frames, usado para destruir o projétil após um certo tempo
+    private age: number = 0; // Idade atual do projétil em frames, incrementada a cada update
 
     constructor (scene: Phaser.Scene, x: number, y: number, texture: string)
     {
         super(scene, x, y, texture);
-        this.setVelocityX(200); // Define a velocidade do projetil para cima
+        this.setVelocityX(1500); // Define a velocidade do projétil para cima
         this.updateListener = () => this.update();
         this.scene.events.on('update', this.updateListener);
 
         this.createAnimation(texture);
-        this.play(MissileProjectile.animationKey);
+        this.play(SwordProjectile.animationKey);
     }
 
     update(): void
@@ -22,6 +24,22 @@ export default class MissileProjectile extends Projectile
         if (this.y < -50 || this.y > 770 || this.x < -50 || this.x > 1350)
         {
             console.log("destroyed!");
+            this.scene.events.off('update', this.updateListener);
+            this.destroy();
+        } else {
+            this.processLifespam()
+        }
+    }
+
+    processLifespam(): void
+    {
+        /** 
+         *  Esse método é chamado em toda chamada de update() do projétil e
+         *  é responsável por controlar o tempo de vida do projétil, destruindo-o após um certo tempo.
+         */
+        this.age++;
+        if (this.age >= this.lifespam)
+        {
             this.scene.events.off('update', this.updateListener);
             this.destroy();
         }
@@ -35,13 +53,13 @@ export default class MissileProjectile extends Projectile
          * @param texture A textura do projétil, usada para gerar os frames da animação
          */
         
-        if (this.scene.anims.exists(MissileProjectile.animationKey))
+        if (this.scene.anims.exists(SwordProjectile.animationKey))
         {
             return;
         }
 
         this.scene.anims.create({
-            key: MissileProjectile.animationKey,
+            key: SwordProjectile.animationKey,
             frames: this.scene.anims.generateFrameNumbers(texture, { start: 0, end: 1 }),
             frameRate: 15,
             repeat: -1
