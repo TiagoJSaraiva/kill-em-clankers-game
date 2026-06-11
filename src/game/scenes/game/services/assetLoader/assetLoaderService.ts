@@ -38,9 +38,12 @@ export function loadAssets(scene: Phaser.Scene): void {
 
     /// RELATIVAS A INIMIGOS ///
 
-    scene.load.image('shooter-robot-normal', './assets/enemies/shooter-robot/normal.png');
-    scene.load.image('shooter-robot-strong', './assets/enemies/shooter-robot/strong.png');
-    scene.load.image('shooter-robot-impossible', './assets/enemies/shooter-robot/impossible.png');
+    scene.load.image('shooter-robot-arm', './assets/enemies/shooter-robot/model-arm.png');
+    scene.load.image('shooter-robot-cloak', './assets/enemies/shooter-robot/model-cloak.png');
+    scene.load.spritesheet('shooter-robot-body', './assets/enemies/shooter-robot/model-body.png', {
+        frameWidth: 421,
+        frameHeight: 194
+    });
 
     
     
