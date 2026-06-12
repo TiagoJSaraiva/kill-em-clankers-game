@@ -44,6 +44,7 @@ export function loadAssets(scene: Phaser.Scene): void {
         frameWidth: 421,
         frameHeight: 194
     });
+    scene.load.image('shooter-robot-shoot-vfx', './assets/enemies/shooter-robot/shoot-vfx.png');
 
     
     

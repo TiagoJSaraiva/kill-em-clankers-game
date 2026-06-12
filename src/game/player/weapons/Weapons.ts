@@ -1,8 +1,8 @@
-import CrossbowProjectile from "../projectiles/CrossbowProjectile";
 import CannonProjectile from "../projectiles/CannonProjectile";
 import PistolProjectile from "../projectiles/PistolProjectile";
-import Phaser from "phaser";
+import CrossbowProjectile from "../projectiles/CrossbowProjectile";
 import SwordProjectile from "../projectiles/SwordProjectile";
+import Phaser from "phaser";
 import { Weapons } from "./types";
 import { Player } from "../Player";
     

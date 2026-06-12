@@ -1,6 +1,6 @@
 import Phaser from 'phaser';
 import weapons from './weapons/Weapons';
-import { Weapons, Weapon } from './weapons/types';
+import { Weapon } from './weapons/types';
 
 
 export class Player extends Phaser.Physics.Arcade.Sprite 
