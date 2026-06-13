@@ -4,6 +4,10 @@ export function loadAssets(scene: Phaser.Scene): void {
 
     scene.load.image('player', './assets/player/model.png');
 
+    // UI
+
+    scene.load.image('item-slot', './assets/ui/item-slot.png');
+
     // PLAYER PISTOL
     scene.load.image('player-pistol-model', './assets/player/pistol/pistol-model.png');
     scene.load.image('player-pistol-projectile', './assets/player/pistol/pistol-projectile.png');
