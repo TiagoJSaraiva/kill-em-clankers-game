@@ -1,13 +1,12 @@
 import Phaser from 'phaser';
-
-export type WeaponName = 'Pistol' | 'Sword' | 'Crossbow' | 'Cannon';
+import { WeaponName } from '../player/weapons/types';
 
 const weaponTextureKeys: Record<WeaponName, string> = {
     Pistol: 'player-pistol-model',
     Sword: 'player-sword-model',
     Crossbow: 'player-crossbow-model',
     Cannon: 'player-cannon-model'
-};
+}; // Catálogo de nome de texturas para cada arma, usado para atualizar a textura do PlayerWeaponVisual quando o jogador troca de arma
 
 export default class PlayerWeaponVisual extends Phaser.GameObjects.Container
 {
@@ -29,6 +28,53 @@ export default class PlayerWeaponVisual extends Phaser.GameObjects.Container
         this.setSize(this.weaponImage.width, this.weaponImage.height);
 
         scene.add.existing(this);
+    }
+
+    public applyRecoil() {
+        let recoilDistance = -12;
+        let recoilDuration = 45;
+        let recoverDuration = 90;
+
+        switch (this.currentWeaponName) {
+            case 'Pistol':
+                recoilDistance = -5;
+                recoilDuration = 30;
+                recoverDuration = 20;
+                break;
+            case 'Sword':
+                recoilDistance = -3;
+                recoilDuration = 50;
+                recoverDuration = 50;
+                break;
+            case 'Crossbow':
+                recoilDistance = -5;
+                recoilDuration = 70;
+                recoverDuration = 50;
+                break;
+            case 'Cannon':
+                recoilDistance = -7;
+                recoilDuration = 70;
+                recoverDuration = 120;
+                break;
+        }
+
+        this.scene.tweens.killTweensOf(this.weaponImage);
+        this.weaponImage.setX(0);
+
+        this.scene.tweens.add({
+            targets: this.weaponImage,
+            x: recoilDistance,
+            duration: recoilDuration,
+            ease: 'Quad.easeOut',
+            onComplete: () => {
+                this.scene.tweens.add({
+                    targets: this.weaponImage,
+                    x: 0,
+                    duration: recoverDuration,
+                    ease: 'Back.easeOut'
+                });
+            }
+        });
     }
 
     public equip (weaponName: WeaponName) : void

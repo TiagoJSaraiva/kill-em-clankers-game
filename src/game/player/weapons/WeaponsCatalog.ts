@@ -4,7 +4,7 @@ import CrossbowProjectile from "../projectiles/CrossbowProjectile";
 import SwordProjectile from "../projectiles/SwordProjectile";
 import Phaser from "phaser";
 import type { Player } from "../Player";
-import type { WeaponName } from "../PlayerWeaponVisual";
+import type { WeaponName } from "./types";
 import Weapon from "./Weapon";
 
 export function Weapons() : Record<WeaponName, Weapon> {

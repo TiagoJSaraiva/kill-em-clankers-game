@@ -4,11 +4,12 @@ import type Weapon from './weapons/Weapon';
 import { ItemSlot } from '../UI/ItemSlot';
 import { HealthBar } from '../UI/HealthBar';
 import { EnergyBar } from '../UI/EnergyBar';
-import PlayerWeaponVisual, { type WeaponName } from './PlayerWeaponVisual';
+import PlayerWeaponVisual from './PlayerWeaponVisual';
+import type { WeaponName } from './weapons/types';
 
 export class Player extends Phaser.Physics.Arcade.Sprite
 {
-    private readonly speed = 260; // Velocidade geral do jogador, usada pra movimentacao nas 4 direcoes
+    private readonly speed = 200; // Velocidade geral do jogador, usada pra movimentacao nas 4 direcoes
     private readonly momentum = 0.9; // Fator de momentum, usado pra suavizar a movimentacao do jogador
 
     readonly maxHealthPoints: number = 100; // Pontos de vida do jogador, quando chegam a 0 o jogador morre
@@ -91,7 +92,10 @@ export class Player extends Phaser.Physics.Arcade.Sprite
     {
         if (cursors.space.isDown)
         {
-            this.activeWeapon.tryShoot(scene, this);
+            let shotFired = this.activeWeapon.tryShoot(scene, this);
+            if (shotFired) {
+                this.weaponVisual.applyRecoil();
+            }
         }
     }
 

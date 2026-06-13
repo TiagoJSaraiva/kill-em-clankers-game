@@ -1,7 +1,7 @@
 
 import Phaser from 'phaser';
 import type { Player } from '../Player';
-import type { WeaponName } from '../PlayerWeaponVisual';
+import type { WeaponName } from './types';
 
 export default class Weapon {
     private energyRegenRate: number = 0.05; // Quantidade de energia regenerada por frame quando a arma não está equipada
@@ -42,16 +42,17 @@ export default class Weapon {
         this.currentEnergy = Math.min(this.maxEnergy, this.currentEnergy + this.energyRegenRate);
     }
 
-    tryShoot(scene: Phaser.Scene, player: Player) {
+    tryShoot(scene: Phaser.Scene, player: Player): boolean {
         if (this.attackCooldownTimer > 0) {
-            return; // Ainda está no cooldown, não pode atirar
+            return false; // Ainda está no cooldown, não pode atirar
         }
         if(this.currentEnergy < this.energySpentPerShot) {
             console.log("Not enough energy to shoot!"); // ISSO AQUI VAI VIRAR A CHAMADA DE UMA FUNÇÃO DE FEEDBACK DE QUANDO O PLAYER NÃO PODE ATIRAR COM A ARMA EQUIPADA
-            return; // Se não houver energia suficiente para atirar, não permite atirar
+            return false; // Se não houver energia suficiente para atirar, não permite atirar
         }
         this.spendEnergy();
         this.emitProjectile(scene, player);
         this.attackCooldownTimer = this.attackCooldown; // Reseta o cooldown para a próxima tentativa de disparo
+        return true;
     }
 }
