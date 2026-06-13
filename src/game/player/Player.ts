@@ -8,8 +8,6 @@ import { EnergyBar } from '../UI/EnergyBar';
 export class Player extends Phaser.Physics.Arcade.Sprite 
 {
     // Chave do sprite de ataque da espada, usada para mostrar uma animação de ataque quando a espada é usada para atacar
-    private static readonly swordAttackTextureKey = 'player-sword-model-attacking'; 
-    private static readonly swordAttackTextureDuration = 160;
     private isShowingSwordAttackTexture: boolean = false;
 
     private readonly speed = 260; // Velocidade geral do jogador, usada pra movimentação nas 4 direções
@@ -27,8 +25,6 @@ export class Player extends Phaser.Physics.Arcade.Sprite
     private healthBar: HealthBar; // Barra de vida do jogador, usada para mostrar a quantidade de vida restante
     private energyBar: EnergyBar; // Barra de energia do jogador, usada para mostrar a quantidade de energia restante para usar as armas
 
-    private initialBodySize: { width: number; height: number; offsetX: number; offsetY: number };
-
     // Mapeamento de keys do teclado, usado para processar a troca de armas
     private keyQ: Phaser.Input.Keyboard.Key;
     private keyW: Phaser.Input.Keyboard.Key;
@@ -39,9 +35,9 @@ export class Player extends Phaser.Physics.Arcade.Sprite
     /* MÉTODOS PRINCIPAIS */
     /*                    */
 
-    constructor (scene: Phaser.Scene, x: number, y: number, texture: string)
+    constructor (scene: Phaser.Scene, x: number, y: number)
     {
-        super(scene, x, y, texture);
+        super(scene, x, y, 'player');
         scene.add.existing(this); // Adiciona o player à cena que chamar o construtor
         scene.physics.add.existing(this); // Habilita a física arcade no player
         this.setCollideWorldBounds(true); // Faz com que o player colida com as bordas da tela
@@ -61,8 +57,6 @@ export class Player extends Phaser.Physics.Arcade.Sprite
         this.activeWeapon.isEquipped = true;
 
         this.currentHealthPoints = this.maxHealthPoints;
-        this.initialBodySize = this.getCurrentBodySize();
-        this.updatePlayerTexture();
 
         let slotPositionX = 700 * ItemSlot.scale; // Posição inicial do primeiro slot de arma na UI
         for (const weapon of Object.values(this.weapons)) {
@@ -156,7 +150,7 @@ export class Player extends Phaser.Physics.Arcade.Sprite
         }
 
         this.energyBar.setWeapon(this.activeWeapon); // Atualiza a barra de energia para mostrar a energia da nova arma equipada
-        this.updatePlayerTexture();
+        //this.updatePlayerHoldingWeapon(); // Método que vai atualizar o container que "guarda" o braço do player ou seila. No caso esse método não vai ser de player, vai ser da referência ao objeto do braço, que vai ser um container filho do player, e vai ser o responsável por mostrar o sprite do braço segurando a arma, e vai ser atualizado toda vez que o player trocar de arma pra mostrar o sprite correto do braço segurando a arma equipada
     }
 
     processMovement (cursors: Phaser.Types.Input.Keyboard.CursorKeys) : void 
@@ -217,82 +211,6 @@ export class Player extends Phaser.Physics.Arcade.Sprite
         const nextVelocity = velocity * this.momentum;
 
         return Math.abs(nextVelocity) < 5 ? 0 : nextVelocity;
-    }
-
-    private updatePlayerTexture () : void
-    {
-        /**
-         *  @description Esse método atualiza a textura do player de acordo com a arma atualmente equipada.
-         */
-
-        const textureKey = this.activeWeapon.spriteName; // Obtém a chave da textura correspondente à arma ativa do player
-
-        if (this.isShowingSwordAttackTexture && this.activeWeapon === this.weapons.Sword) // Se o player estiver mostrando a textura de ataque da espada e a arma ativa for a espada, não atualiza a textura para evitar sobrescrever a animação de ataque
-        {
-            return;
-        }
-
-        if (!textureKey || this.texture.key === textureKey) // Se não houver uma textura correspondente para a arma ativa ou se a textura atual já for a correta, não faz nada
-        {
-            return;
-        }
-
-        this.setTexture(textureKey);
-        this.restoreInitialBodySize(); // Restaura o tamanho original do corpo do player, caso a textura nova tenha um tamanho diferente que possa ter alterado o corpo do player em alguma troca anterior
-    }
-
-    public showSwordAttackTexture (scene: Phaser.Scene) : void
-    {
-        /** 
-         *  @description Esse método mostra a textura de ataque da espada por um período determinado.
-         * 
-         *  @param scene : passado para o construtor do projétil para que ele possa ser adicionado à cena correta
-         */
-
-        this.isShowingSwordAttackTexture = true;
-        this.setTexture(Player.swordAttackTextureKey);
-        this.restoreInitialBodySize();
-
-        scene.time.delayedCall(Player.swordAttackTextureDuration, () => {
-            this.isShowingSwordAttackTexture = false;
-
-            if (this.activeWeapon === this.weapons.Sword)
-            {
-                this.updatePlayerTexture();
-            }
-        });
-    }
-
-    private getCurrentBodySize () : { width: number; height: number; offsetX: number; offsetY: number }
-    {
-        /**
-         *  @description Esse método obtém o tamanho atual do corpo do player, incluindo largura, altura e offset.
-         * 
-         *  @returns um objeto contendo a largura, altura e offset do corpo do player, 
-         *  usado para restaurar o tamanho original do corpo após mudanças de textura que possam alterá-lo.
-         */
-
-        const body = this.body as Phaser.Physics.Arcade.Body;
-
-        return {
-            width: body.width,
-            height: body.height,
-            offsetX: body.offset.x,
-            offsetY: body.offset.y
-        };
-    }
-
-    private restoreInitialBodySize () : void
-    {
-        /**
-         *  @description Esse método restaura o tamanho original do corpo do player, 
-         *  usando as informações armazenadas no momento da criação do player.
-         */
-
-        const body = this.body as Phaser.Physics.Arcade.Body;
-
-        body.setSize(this.initialBodySize.width, this.initialBodySize.height, false);
-        body.setOffset(this.initialBodySize.offsetX, this.initialBodySize.offsetY);
     }
 
     takeDamage(amount: number) : void {

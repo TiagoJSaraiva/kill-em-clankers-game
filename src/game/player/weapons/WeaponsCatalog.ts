@@ -23,7 +23,6 @@ export function Weapons() {
             'player-sword-model',
             10,
             (scene: Phaser.Scene, player: Player) => {
-                player.showSwordAttackTexture(scene);
                 new SwordProjectile(scene, player.x + 100, player.y - 20, 'slash-projectile');
             }
         ),

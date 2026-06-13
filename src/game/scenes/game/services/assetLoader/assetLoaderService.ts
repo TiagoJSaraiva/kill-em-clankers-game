@@ -20,8 +20,7 @@ export function loadAssets(scene: Phaser.Scene): void {
 
     // PLAYER SWORD
     scene.load.image('player-sword-model', './assets/player/sword/sword-model.png');
-    scene.load.image('player-sword-model-attacking', './assets/player/sword/sword-model-attacking.png');
-    scene.load.spritesheet('slash-projectile', './assets/player/projectiles/slash-projectile.png', {
+    scene.load.spritesheet('slash-projectile', './assets/player/sword/sword-projectile.png', {
             frameWidth: 182,
             frameHeight: 95
     });

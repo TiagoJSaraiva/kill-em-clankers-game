@@ -42,7 +42,7 @@ export class Game extends Scene
         this.backgroundNear.setOrigin(0, 0);
         this.backgroundNear.setDepth(-10); // Camada mais "perto"
 
-        this.player = new Player(this, 100, 450, 'player');
+        this.player = new Player(this, 100, 450);
         this.player.setDepth(-1); // Camada do player, afrente dos backgrounds, mas atrás dos projéteis
         this.cursors = this.input.keyboard?.createCursorKeys()!;
     }
