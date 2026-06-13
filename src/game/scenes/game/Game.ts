@@ -112,16 +112,16 @@ export class Game extends Scene
         );
 
         this.physics.add.overlap(
-            this.enemyProjectiles,
             this.player,
+            this.enemyProjectiles,
             this.handleEnemyProjectilePlayerOverlap,
             undefined,
             this
         );
 
         this.physics.add.overlap(
-            this.enemies,
             this.player,
+            this.enemies,
             this.handleEnemyPlayerOverlap,
             undefined,
             this

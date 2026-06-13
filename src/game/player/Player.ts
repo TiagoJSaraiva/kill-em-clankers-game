@@ -219,6 +219,7 @@ export class Player extends Phaser.Physics.Arcade.Sprite
 
         if (this.currentHealthPoints === 0)
         {
+            console.log('Player took damage');
             this.die();
         }
     }

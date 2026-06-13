@@ -19,6 +19,7 @@ const enemyVariations = [
 export default class ShooterRobot extends Enemy
 {
     static readonly scale = 0.8;
+    private static readonly animationKey = 'shooter-robot-body-animation';
 
     private static readonly attackRange = 700;
     private static readonly attackCooldown = 1500;
@@ -33,6 +34,9 @@ export default class ShooterRobot extends Enemy
         const attributes: Attributes = getAttributes(variation, enemyVariations);
 
         super(scene, x, y, texture, target);
+
+        this.createAnimation(texture);
+        this.play(ShooterRobot.animationKey);
 
         this.keepBodyFacingOriginalDirection();
         this.init(attributes.healthPoints, attributes.moveSpeed, attributes.damage);
@@ -140,4 +144,17 @@ export default class ShooterRobot extends Enemy
         this.setScale(ShooterRobot.scale, ShooterRobot.scale);
         this.setFlipX(false);
     }
+
+    private createAnimation(texture: string): void {
+    if (this.scene.anims.exists(ShooterRobot.animationKey)) {
+        return;
+    }
+
+    this.scene.anims.create({
+        key: ShooterRobot.animationKey,
+        frames: this.scene.anims.generateFrameNumbers(texture, { start: 0, end: 3 }),
+        frameRate: 8,
+        repeat: -1
+    });
+}
 }
