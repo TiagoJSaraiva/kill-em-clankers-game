@@ -1,6 +1,7 @@
 import Phaser from 'phaser';
 import { Weapons } from './weapons/WeaponsCatalog';
 import Weapon from './weapons/Weapon';
+import { ItemSlot } from '../UI/ItemSlot';
 
 export class Player extends Phaser.Physics.Arcade.Sprite 
 {
@@ -18,6 +19,9 @@ export class Player extends Phaser.Physics.Arcade.Sprite
     private activeWeapon: Weapon; // Arma atualmente equipada pelo jogador
     private weaponSwitchCooldown: number = 0; // Tempo restante para a próxima troca de arma, usado para evitar trocas muito rápidas
     private maxWeaponSwitchCooldown: number = 60; // Tempo mínimo entre trocas de arma, em frames
+
+    private weaponSlots: ItemSlot[] = []; // Mapeamento das armas do jogador para os slots de UI correspondentes, usado para atualizar a interface quando o jogador troca de arma ou seleciona um slot
+
     private initialBodySize: { width: number; height: number; offsetX: number; offsetY: number };
 
     // Mapeamento de keys do teclado, usado para processar a troca de armas
@@ -54,6 +58,13 @@ export class Player extends Phaser.Physics.Arcade.Sprite
         this.currentHealthPoints = this.maxHealthPoints;
         this.initialBodySize = this.getCurrentBodySize();
         this.updatePlayerTexture();
+
+        let slotPositionX = 50; // Posição inicial do primeiro slot de arma na UI
+        for (const weapon of Object.values(this.weapons)) {
+            const slot = new ItemSlot(scene, slotPositionX, 10, weapon); // Cria um slot de UI para cada arma do jogador
+            this.weaponSlots.push(slot);
+            slotPositionX += 150; // Ajusta a posição do próximo slot
+        }
     }
 
     update (cursors: Phaser.Types.Input.Keyboard.CursorKeys, scene : Phaser.Scene)
@@ -66,6 +77,10 @@ export class Player extends Phaser.Physics.Arcade.Sprite
             this.activeWeapon.tryShoot(scene, this);
         }
         this.processWeaponSwitch(); // Chama o método que processa a troca de armas do player.
+
+        this.weaponSlots.forEach((slot) => {
+            slot.update();
+        });
     }
 
     /*                    */

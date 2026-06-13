@@ -4,36 +4,76 @@ import Weapon from '../player/weapons/Weapon';
 export class ItemSlot extends Phaser.GameObjects.Container
 {
     private static readonly slotTextureKey = 'item-slot';
-    private static readonly iconSize = 64;
+    private static readonly defaultFillTextureKey = 'item-slot-fill';
+    private static readonly selectedFillTextureKey = 'selected-item-slot-fill';
     private static readonly depth = 1000;
+    private static readonly fillCropX = 6;
+    private static readonly fillCropY = 5;
+    private static readonly fillCropWidth = 139;
+    private static readonly fillCropHeight = 141;
 
     private readonly slotImage: Phaser.GameObjects.Image;
-    private readonly equipmentIcon: Phaser.GameObjects.Image;
+    private readonly weaponIcon: Phaser.GameObjects.Image;
+    private readonly slotFillImage: Phaser.GameObjects.Image;
+    private readonly weapon: Weapon;
+    private currentFillTextureKey: string;
 
-    constructor (scene: Phaser.Scene, x: number, y: number, equipment: Weapon)
+    constructor (scene: Phaser.Scene, x: number, y: number, weapon: Weapon)
     {
         super(scene, x, y);
+        this.weapon = weapon;
 
+        this.currentFillTextureKey = ItemSlot.defaultFillTextureKey;
+        this.slotFillImage = scene.add.image(0, 0, this.currentFillTextureKey);
         this.slotImage = scene.add.image(0, 0, ItemSlot.slotTextureKey);
-        this.equipmentIcon = scene.add.image(0, 0, this.getIconTextureKey(equipment.name));
-        this.equipmentIcon.setDisplaySize(ItemSlot.iconSize, ItemSlot.iconSize);
+        this.weaponIcon = scene.add.image(0, 0, this.getIconTextureKey(weapon.name));
 
-        this.add([this.slotImage, this.equipmentIcon]);
+        this.add([this.slotFillImage, this.slotImage, this.weaponIcon]);
         this.setSize(this.slotImage.displayWidth, this.slotImage.displayHeight);
         this.setScrollFactor(0);
         this.setDepth(ItemSlot.depth);
 
         scene.add.existing(this);
+        this.update();
     }
 
-    public setEquipment (equipment: Weapon) : void
+    public update () : void 
     {
-        this.equipmentIcon.setTexture(this.getIconTextureKey(equipment.name));
-        this.equipmentIcon.setDisplaySize(ItemSlot.iconSize, ItemSlot.iconSize);
+        this.updateFill();
     }
 
-    private getIconTextureKey (equipmentName: string) : string
+    private updateFill () : void
     {
-        return `player-${equipmentName.toLowerCase()}-icon`;
+        const nextFillTextureKey = this.weapon.isEquipped
+            ? ItemSlot.selectedFillTextureKey
+            : ItemSlot.defaultFillTextureKey;
+
+        if (this.currentFillTextureKey !== nextFillTextureKey)
+        {
+            this.currentFillTextureKey = nextFillTextureKey;
+            this.slotFillImage.setTexture(this.currentFillTextureKey);
+        }
+
+        const energyRatio = Phaser.Math.Clamp(this.weapon.currentEnergy / this.weapon.maxEnergy, 0, 1);
+        const visibleHeight = Math.round(ItemSlot.fillCropHeight * energyRatio);
+
+        this.slotFillImage.setVisible(visibleHeight > 0);
+
+        if (visibleHeight === 0)
+        {
+            return;
+        }
+
+        this.slotFillImage.setCrop(
+            ItemSlot.fillCropX,
+            ItemSlot.fillCropY + ItemSlot.fillCropHeight - visibleHeight,
+            ItemSlot.fillCropWidth,
+            visibleHeight
+        );
+    }
+
+    private getIconTextureKey (weaponName: string) : string
+    {
+        return `player-${weaponName.toLowerCase()}-icon`;
     }
 }
