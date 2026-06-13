@@ -3,10 +3,15 @@ import { Player } from '../../player/Player';
 import manageSpawn from './services/spawn/spawnService';
 import { loadAssets } from './services/assetLoader/assetLoaderService';
 import Phaser from 'phaser';
+import Enemy from '../../enemies/Enemy';
+import { EnemyProjectile } from '../../enemies/EnemyProjectile';
+import Projectile from '../../player/projectiles/Projectile';
+
+type ArcadeOverlapObject = Parameters<Phaser.Types.Physics.Arcade.ArcadePhysicsCallback>[0];
 
 export class Game extends Scene
 {
-    private static readonly PARALLAX_FAR_SPEED = 0.35;
+    private static readonly PARALLAX_FAR_SPEED = 0.1;
     private static readonly PARALLAX_NEAR_SPEED = 1.1;
 
     camera: Phaser.Cameras.Scene2D.Camera;
@@ -14,6 +19,9 @@ export class Game extends Scene
     cursors: Phaser.Types.Input.Keyboard.CursorKeys;
     backgroundFar: Phaser.GameObjects.TileSprite;
     backgroundNear: Phaser.GameObjects.TileSprite;
+    enemies: Phaser.Physics.Arcade.Group;
+    playerProjectiles: Phaser.Physics.Arcade.Group;
+    enemyProjectiles: Phaser.Physics.Arcade.Group;
 
     constructor ()
     {
@@ -21,43 +29,153 @@ export class Game extends Scene
     }
 
     preload () {
-        // Método para carregar os assets do jogo, como imagens, spritesheets, sons, etc.
         loadAssets(this);
-
     }
 
     create ()
     {
         this.camera = this.cameras.main;
-        this.camera.setBackgroundColor(0x20313e);
+        this.camera.setBackgroundColor(0x2A195C);
 
         const { width, height } = this.scale;
 
-        // Criação dos backgrounds com efeito de parallax
         this.backgroundFar = this.add.tileSprite(0, 0, width, height, 'bg-far');
         this.backgroundFar.setOrigin(0, 0);
-        this.backgroundFar.setDepth(-20); // Camada mais "longe"
+        this.backgroundFar.setDepth(-20);
 
         this.backgroundNear = this.add.tileSprite(0, 0, width, height, 'bg-near');
-        this.backgroundNear.setOrigin(0, 0);
-        this.backgroundNear.setDepth(-10); // Camada mais "perto"
+        this.backgroundNear.setOrigin(0,-0.3);
+        this.backgroundNear.setDepth(-10);
+
+        this.enemies = this.physics.add.group();
+        this.playerProjectiles = this.physics.add.group();
+        this.enemyProjectiles = this.physics.add.group();
 
         this.player = new Player(this, 100, 450);
-        this.player.setDepth(-1); // Camada do player, afrente dos backgrounds, mas atrás dos projéteis
+        this.player.setDepth(-1);
         this.cursors = this.input.keyboard?.createCursorKeys()!;
 
         this.physics.world.setBoundsCollision(true, false, true, true);
-        // left, right, up, down
+        this.configureCollisions();
     }
 
-    update (time: number) { 
+    update (time: number, delta: number) {
         const elapsedTimeInSeconds = Math.floor(time / 1000);
 
         manageSpawn(this, elapsedTimeInSeconds);
 
-        // Atualização do parallax, da esquerda pra direita
         this.backgroundFar.tilePositionX += Game.PARALLAX_FAR_SPEED;
         this.backgroundNear.tilePositionX += Game.PARALLAX_NEAR_SPEED;
         this.player.update(this.cursors, this);
+        this.updateGroup(this.enemies, time, delta);
+        this.updateGroup(this.playerProjectiles, time, delta);
+        this.updateGroup(this.enemyProjectiles, time, delta);
+    }
+
+    registerEnemy(enemy: Enemy): void
+    {
+        this.enemies.add(enemy);
+    }
+
+    registerPlayerProjectile(projectile: Projectile): void
+    {
+        this.playerProjectiles.add(projectile);
+    }
+
+    registerEnemyProjectile(projectile: EnemyProjectile): void
+    {
+        this.enemyProjectiles.add(projectile);
+    }
+
+    private configureCollisions(): void
+    {
+        this.physics.add.overlap(
+            this.playerProjectiles,
+            this.enemies,
+            this.handlePlayerProjectileEnemyOverlap,
+            undefined,
+            this
+        );
+
+        this.physics.add.overlap(
+            this.enemyProjectiles,
+            this.player,
+            this.handleEnemyProjectilePlayerOverlap,
+            undefined,
+            this
+        );
+
+        this.physics.add.overlap(
+            this.enemies,
+            this.player,
+            this.handleEnemyPlayerOverlap,
+            undefined,
+            this
+        );
+    }
+
+    private updateGroup(group: Phaser.Physics.Arcade.Group, time: number, delta: number): void
+    {
+        for (const child of group.getChildren())
+        {
+            if (!child.active)
+            {
+                continue;
+            }
+
+            const updatable = child as Phaser.GameObjects.GameObject & {
+                update?: (time: number, delta: number) => void
+            };
+
+            updatable.update?.(time, delta);
+        }
+    }
+
+    private handlePlayerProjectileEnemyOverlap(
+        projectileObject: ArcadeOverlapObject,
+        enemyObject: ArcadeOverlapObject
+    ): void
+    {
+        const projectile = projectileObject as unknown as Projectile;
+        const enemy = enemyObject as unknown as Enemy;
+
+        if (!projectile.active || !enemy.active)
+        {
+            return;
+        }
+
+        enemy.takeDamage(projectile.damage);
+        projectile.destroy();
+    }
+
+    private handleEnemyProjectilePlayerOverlap(
+        projectileObject: ArcadeOverlapObject,
+        _playerObject: ArcadeOverlapObject
+    ): void
+    {
+        const projectile = projectileObject as unknown as EnemyProjectile;
+
+        if (!projectile.active || !this.player.active)
+        {
+            return;
+        }
+
+        this.player.takeDamage(projectile.damage);
+        projectile.destroy();
+    }
+
+    private handleEnemyPlayerOverlap(
+        enemyObject: ArcadeOverlapObject,
+        _playerObject: ArcadeOverlapObject
+    ): void
+    {
+        const enemy = enemyObject as unknown as Enemy;
+
+        if (!enemy.active || !this.player.active)
+        {
+            return;
+        }
+
+        enemy.tryContactDamage(this.player, this.time.now);
     }
 }

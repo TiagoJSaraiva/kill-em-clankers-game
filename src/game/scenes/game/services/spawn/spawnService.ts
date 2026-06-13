@@ -1,54 +1,60 @@
 import { stages } from "../stage/createStageService";
 import { Stage } from "../stage/types";
 import { Game } from "../../Game";
+import Phaser from "phaser";
 
-let nextStageStartingTime: number = 0;
-let nextSpawnTime: number = 0;
-let currentStageIndex: number = 0; 
+type SpawnState = {
+    nextStageStartingTime: number,
+    nextSpawnTime: number,
+    currentStageIndex: number,
+    activeStage: Stage
+}
 
-// Variável que vai armazenar o estágio ativo, ou seja, o estágio que deve ser usado para spawnar os inimigos.
-// Inicialmente é o primeiro estágio da lista de estágios,
-// mas vai ser atualizada pela função manageSpawn() a cada segundo, quando for necessário mudar de estágio.
-
-let activeStage: Stage = stages[currentStageIndex]; 
+const spawnStates = new WeakMap<Game, SpawnState>();
 
 export default function manageSpawn(scene: Game, elapsedTime: number) {
-    /**
-     * @description O objetivo dessa função é ser chamada em update a cada segundo, recebendo o tempo que já passou no jogo e comparando com o tempo
-     *              de @var nextStageStartingTime, e se for maior ou igual, o próximo estágio na lista de estágios é chamado.
-     */
-    if(elapsedTime >= nextStageStartingTime) { // Se o tempo que já passou no jogo for maior ou igual ao tempo de início do próximo estágio, é hora de mudar de estágio.
-        activeStage = getCurrentStage();
-        nextStageStartingTime = getNextStageStartingTime();
-        currentStageIndex++;
-    }   
+    const state = getSpawnState(scene);
 
-    if(elapsedTime >= nextSpawnTime) { // Se o tempo que já passou no jogo for maior ou igual ao próximo tempo de spawn, é hora de spawnar as unidades.
-        spawnUnits(scene);
-        nextSpawnTime = elapsedTime + activeStage.spawnInterval;
+    if(elapsedTime >= state.nextStageStartingTime) {
+        state.activeStage = getCurrentStage(state);
+        state.nextStageStartingTime = getNextStageStartingTime(state);
+        state.currentStageIndex++;
+    }
+
+    if(elapsedTime >= state.nextSpawnTime) {
+        spawnUnits(scene, state);
+        state.nextSpawnTime = elapsedTime + state.activeStage.spawnInterval;
     }
 }
 
-function getNextStageStartingTime(): number {
-    /**
-     * @description Função que retorna o tempo de início do próximo estágio, ou seja, o tempo a partir do qual o próximo estágio deve entrar em vigor.
-     *              Se não houver um próximo estágio, ou seja, se o estágio atual for o último da lista de estágios, a função retorna infinito, ou seja, 
-     *              o próximo estágio nunca vai entrar em vigor. Uma espécie de fallback pra evitar erros em runtime.
-     */
-    return stages[currentStageIndex + 1] ? stages[currentStageIndex + 1].startTime : Number.POSITIVE_INFINITY;
+function getSpawnState(scene: Game): SpawnState
+{
+    let state = spawnStates.get(scene);
+
+    if (!state)
+    {
+        state = {
+            nextStageStartingTime: 0,
+            nextSpawnTime: 0,
+            currentStageIndex: 0,
+            activeStage: stages[0]
+        };
+        spawnStates.set(scene, state);
+    }
+
+    return state;
 }
 
-function getCurrentStage(): Stage {
-    return stages[currentStageIndex];
+function getNextStageStartingTime(state: SpawnState): number {
+    return stages[state.currentStageIndex + 1] ? stages[state.currentStageIndex + 1].startTime : Number.POSITIVE_INFINITY;
 }
 
-function spawnUnits(scene: Game) {
-    /**
-     * @description Função que é responsável por spawnar as unidades, usando a pool do estágio ativo. 
-     *              A função de spawn de cada unidade é chamada, e o tipo da unidade a ser spawnada é definido com base no peso de cada unidade na pool.
-     *              Quanto maior o peso de uma unidade, mais chances ela tem de ser spawnada.
-     */
-    const pool = activeStage.pool;
+function getCurrentStage(state: SpawnState): Stage {
+    return stages[state.currentStageIndex] ?? state.activeStage;
+}
+
+function spawnUnits(scene: Game, state: SpawnState) {
+    const pool = state.activeStage.pool;
 
     if(pool.length === 0) {
         return;
@@ -73,20 +79,16 @@ function spawnUnits(scene: Game) {
         accumulatedWeight += unit.weight;
 
         if(randomWeight < accumulatedWeight) {
-            console.log('Spawning unit with weight:', unit.weight);
             const { x, y } = getRandomCoordinates();
-            unit.spawnFunction(scene, x, y);
+            const enemy = unit.spawnFunction(scene, x, y);
+            scene.registerEnemy(enemy);
             return;
         }
     }
 }
 
 function getRandomCoordinates(): { x: number, y: number } {
-    /**
-     * @description Função que retorna coordenadas aleatórias dentro dos limites do mundo do jogo, para serem usadas como ponto de spawn das unidades.
-     *              O eixo x é fixado em 2200, para que as unidades sempre spawnem do lado direito da tela, e o eixo y é gerado aleatoriamente entre 100 e 900, para que as unidades possam spawnar em diferentes alturas.
-     */
-    const x = 2200; // Coordenada fixa no eixo x, para que as unidades sempre spawnem do lado direito da tela
-    const y = Phaser.Math.Between(100, 900); // Coordenada aleatória no eixo y, para que as unidades possam spawnar em diferentes alturas
+    const x = 2200;
+    const y = Phaser.Math.Between(100, 900);
     return { x, y }
 }

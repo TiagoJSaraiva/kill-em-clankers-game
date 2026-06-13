@@ -13,32 +13,36 @@ export function Weapons() : Record<WeaponName, Weapon> {
             "Pistol",
             20,
             5,
-            (scene: Phaser.Scene, player: Player) => {
-                new PistolProjectile(scene, player.x + 50, player.y - 40, 'player-pistol-projectile');
+            10,
+            (scene: Phaser.Scene, player: Player, damage: number) => {
+                return new PistolProjectile(scene, player.x + 50, player.y - 40, 'player-pistol-projectile', damage);
             }
         ),
         Sword: new Weapon(
             "Sword",
             40,
             10,
-            (scene: Phaser.Scene, player: Player) => {
-                new SwordProjectile(scene, player.x + 100, player.y - 20, 'slash-projectile');
+            20,
+            (scene: Phaser.Scene, player: Player, damage: number) => {
+                return new SwordProjectile(scene, player.x + 100, player.y - 20, 'slash-projectile', damage);
             }
         ),
         Crossbow: new Weapon(
             "Crossbow",
             70,
             20,
-            (scene: Phaser.Scene, player: Player) => {
-                new CrossbowProjectile(scene, player.x + 70, player.y - 30, 'player-crossbow-projectile');
+            35,
+            (scene: Phaser.Scene, player: Player, damage: number) => {
+                return new CrossbowProjectile(scene, player.x + 70, player.y - 30, 'player-crossbow-projectile', damage);
             }
         ),
         Cannon: new Weapon(
             "Cannon",
             100,
             20,
-            (scene: Phaser.Scene, player: Player) => {
-                new CannonProjectile(scene, player.x + 50, player.y - 40, 'player-cannon-projectile');
+            50,
+            (scene: Phaser.Scene, player: Player, damage: number) => {
+                return new CannonProjectile(scene, player.x + 50, player.y - 40, 'player-cannon-projectile', damage);
             }
         )
     };

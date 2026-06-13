@@ -2,39 +2,19 @@ import Projectile from "./Projectile";
 
 export default class CannonProjectile extends Projectile
 {
-    private static readonly animationKey = 'player-cannon-projectile-animation'; // Chave da animação do projétil
-    private updateListener: Function;
+    private static readonly animationKey = 'player-cannon-projectile-animation';
 
-    constructor (scene: Phaser.Scene, x: number, y: number, texture: string)
+    constructor (scene: Phaser.Scene, x: number, y: number, texture: string, damage: number)
     {
-        super(scene, x, y, texture);
-        this.setVelocityX(200); // Define a velocidade do projetil para cima
-        this.updateListener = () => this.update();
-        this.scene.events.on('update', this.updateListener);
+        super(scene, x, y, texture, damage);
+        this.setVelocityX(200);
 
         this.createAnimation(texture);
         this.play(CannonProjectile.animationKey);
     }
 
-    update(): void
-    {
-        // Destruir se sair dos limites da tela
-        if (this.y < -50 || this.y > 770 || this.x < -50 || this.x > 1350)
-        {
-            console.log("destroyed!");
-            this.scene.events.off('update', this.updateListener);
-            this.destroy();
-        }
-    }
-
     private createAnimation(texture: string): void
     {
-        /** 
-         * @description Cria a animação do projétil 
-         * 
-         * @param texture A textura do projétil, usada para gerar os frames da animação
-         */
-        
         if (this.scene.anims.exists(CannonProjectile.animationKey))
         {
             return;

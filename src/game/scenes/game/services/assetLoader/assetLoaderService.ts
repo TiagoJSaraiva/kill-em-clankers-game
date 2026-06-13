@@ -48,6 +48,8 @@ export function loadAssets(scene: Phaser.Scene): void {
 
     scene.load.image('bg-far', './assets/background/bg-far.png');
     scene.load.image('bg-near', './assets/background/bg-near.png');
+    scene.load.image('bg-middle', './assets/background/bg-middle.png');
+    scene.load.image('bg-very-far', './assets/background/bg-very-far.png');
 
     /// RELATIVAS A INIMIGOS ///
 

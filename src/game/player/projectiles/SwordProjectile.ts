@@ -3,56 +3,41 @@ import Projectile from "./Projectile";
 export default class SwordProjectile extends Projectile
 {
     private static readonly animationKey = 'slash-projectile-animation';
-    private updateListener: Function;
-    private lifespam: number = 12; // Tempo de vida do projétil em frames, usado para destruir o projétil após um certo tempo
-    private age: number = 0; // Idade atual do projétil em frames, incrementada a cada update
+    private readonly lifespan: number = 12;
+    private age: number = 0;
 
-    constructor (scene: Phaser.Scene, x: number, y: number, texture: string)
+    constructor (scene: Phaser.Scene, x: number, y: number, texture: string, damage: number)
     {
-        super(scene, x, y, texture);
-        this.setVelocityX(1500); // Define a velocidade do projétil para cima
-        this.updateListener = () => this.update();
-        this.scene.events.on('update', this.updateListener);
+        super(scene, x, y, texture, damage);
+        this.setVelocityX(1500);
 
         this.createAnimation(texture);
         this.play(SwordProjectile.animationKey);
     }
 
-    update(): void
+    update(time: number, delta: number): void
     {
-        // Destruir se sair dos limites da tela
-        if (this.y < -50 || this.y > 770 || this.x < -50 || this.x > 1350)
+        super.update(time, delta);
+
+        if (!this.active)
         {
-            console.log("destroyed!");
-            this.scene.events.off('update', this.updateListener);
-            this.destroy();
-        } else {
-            this.processLifespam()
+            return;
         }
+
+        this.processLifespan();
     }
 
-    processLifespam(): void
+    private processLifespan(): void
     {
-        /** 
-         *  Esse método é chamado em toda chamada de update() do projétil e
-         *  é responsável por controlar o tempo de vida do projétil, destruindo-o após um certo tempo.
-         */
         this.age++;
-        if (this.age >= this.lifespam)
+        if (this.age >= this.lifespan)
         {
-            this.scene.events.off('update', this.updateListener);
             this.destroy();
         }
     }
 
     private createAnimation(texture: string): void
     {
-        /** 
-         * @description Cria a animação do projétil 
-         * 
-         * @param texture A textura do projétil, usada para gerar os frames da animação
-         */
-        
         if (this.scene.anims.exists(SwordProjectile.animationKey))
         {
             return;

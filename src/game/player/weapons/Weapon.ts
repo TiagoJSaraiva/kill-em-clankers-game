@@ -1,23 +1,36 @@
 
 import Phaser from 'phaser';
 import type { Player } from '../Player';
+import Projectile from '../projectiles/Projectile';
 import type { WeaponName } from './types';
 
+type PlayerProjectileScene = Phaser.Scene & {
+    registerPlayerProjectile?: (projectile: Projectile) => void;
+};
+
 export default class Weapon {
-    private energyRegenRate: number = 0.05; // Quantidade de energia regenerada por frame quando a arma não está equipada
+    private energyRegenRate: number = 0.05; // Quantidade de energia regenerada por frame quando a arma nao esta equipada
     isEquipped: boolean = false;
     maxEnergy: number = 100;
     currentEnergy: number;
     private energySpentPerShot: number = 20;
+    readonly damage: number;
     name: WeaponName;
     attackCooldown: number;
     private attackCooldownTimer: number = 0;
-    emitProjectile: (scene: Phaser.Scene, player: Player) => void;
+    emitProjectile: (scene: Phaser.Scene, player: Player, damage: number) => Projectile;
     
-    constructor(name: WeaponName, attackCooldown: number, energySpentPerShot: number, emitProjectile: (scene: Phaser.Scene, player: Player) => void) {
+    constructor(
+        name: WeaponName,
+        attackCooldown: number,
+        energySpentPerShot: number,
+        damage: number,
+        emitProjectile: (scene: Phaser.Scene, player: Player, damage: number) => Projectile
+    ) {
         this.name = name;
         this.attackCooldown = attackCooldown;
         this.energySpentPerShot = energySpentPerShot;
+        this.damage = damage;
         this.emitProjectile = emitProjectile;
 
         this.currentEnergy = this.maxEnergy;
@@ -37,22 +50,25 @@ export default class Weapon {
 
     private regenerateEnergy() {
         if (this.isEquipped) {
-            return; // Não regenera energia enquanto a arma está equipada
+            return; // Nao regenera energia enquanto a arma esta equipada
         }
         this.currentEnergy = Math.min(this.maxEnergy, this.currentEnergy + this.energyRegenRate);
     }
 
     tryShoot(scene: Phaser.Scene, player: Player): boolean {
         if (this.attackCooldownTimer > 0) {
-            return false; // Ainda está no cooldown, não pode atirar
+            return false; // Ainda esta no cooldown, nao pode atirar
         }
         if(this.currentEnergy < this.energySpentPerShot) {
-            console.log("Not enough energy to shoot!"); // ISSO AQUI VAI VIRAR A CHAMADA DE UMA FUNÇÃO DE FEEDBACK DE QUANDO O PLAYER NÃO PODE ATIRAR COM A ARMA EQUIPADA
-            return false; // Se não houver energia suficiente para atirar, não permite atirar
+            console.log("Not enough energy to shoot!");
+            return false;
         }
         this.spendEnergy();
-        this.emitProjectile(scene, player);
-        this.attackCooldownTimer = this.attackCooldown; // Reseta o cooldown para a próxima tentativa de disparo
+
+        const projectile = this.emitProjectile(scene, player, this.damage);
+        (scene as PlayerProjectileScene).registerPlayerProjectile?.(projectile);
+
+        this.attackCooldownTimer = this.attackCooldown;
         return true;
     }
 }

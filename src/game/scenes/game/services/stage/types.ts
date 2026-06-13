@@ -1,7 +1,8 @@
 import { Game } from "../../Game";
+import Enemy from "../../../../enemies/Enemy";
 
 export type UnitSpawnController = {
-    spawnFunction: (scene: Game, x: number, y: number) => any,
+    spawnFunction: (scene: Game, x: number, y: number) => Enemy,
     weight: number
 }
 
