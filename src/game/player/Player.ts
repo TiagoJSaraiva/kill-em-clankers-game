@@ -15,7 +15,7 @@ export class Player extends Phaser.Physics.Arcade.Sprite
     private readonly hitboxHeight = 236; // Altura manual da hitbox, em pixels antes do setScale
 
     readonly maxHealthPoints: number = 100; // Pontos de vida do jogador, quando chegam a 0 o jogador morre
-    currentHealthPoints: number; // Pontos de vida atuais do jogador, comecam no maximo e vao diminuindo conforme o jogador leva dano
+    currentHealthPoints: number = this.maxHealthPoints; // Pontos de vida atuais do jogador, comecam no maximo e vao diminuindo conforme o jogador leva dano
 
     private weapons: Record<WeaponName, Weapon>; // Catalogo de armas do jogador, carregado a partir do modulo WeaponsCatalog
     private activeWeapon: Weapon; // Arma atualmente equipada pelo jogador
@@ -53,30 +53,23 @@ export class Player extends Phaser.Physics.Arcade.Sprite
 
     private initialize (scene: Phaser.Scene) : void
     {
+        // Configura as teclas de troca de arma, mapeando QWER para as armas do jogador
         this.keyQ = scene.input.keyboard!.addKey(Phaser.Input.Keyboard.KeyCodes.Q);
         this.keyW = scene.input.keyboard!.addKey(Phaser.Input.Keyboard.KeyCodes.W);
         this.keyE = scene.input.keyboard!.addKey(Phaser.Input.Keyboard.KeyCodes.E);
         this.keyR = scene.input.keyboard!.addKey(Phaser.Input.Keyboard.KeyCodes.R);
 
+        // Carrega as armas do jogador a partir do catalogo de armas, e equipa a arma inicial (Pistol)
         this.weapons = Weapons();
         this.activeWeapon = this.weapons.Pistol;
         this.activeWeapon.isEquipped = true;
 
+        // Cria o visual da arma do jogador, que vai ser sincronizado com o corpo do player e atualizado conforme o jogador troca de arma
         this.weaponVisual = new PlayerWeaponVisual(scene, this.x, this.y, this.activeWeapon.name);
         this.weaponVisual.syncWithPlayer(this);
 
-        this.currentHealthPoints = this.maxHealthPoints;
-
-        let slotPositionX = 700 * ItemSlot.scale;
-        for (const weapon of Object.values(this.weapons))
-        {
-            const slot = new ItemSlot(scene, slotPositionX, 150 * ItemSlot.scale, weapon);
-            this.weaponSlots.push(slot);
-            slotPositionX += 200 * ItemSlot.scale;
-        }
-
-        this.healthBar = new HealthBar(scene, 500 * HealthBar.scale, 150 * HealthBar.scale);
-        this.energyBar = new EnergyBar(scene, 500 * EnergyBar.scale, 350 * EnergyBar.scale, this.activeWeapon);
+        // Cria os elementos de UI relacionados ao jogador, como os slots de arma, barra de vida e barra de energia
+        this.instantiateUI(scene);
     }
 
     update (cursors: Phaser.Types.Input.Keyboard.CursorKeys, scene: Phaser.Scene) : void
@@ -106,6 +99,20 @@ export class Player extends Phaser.Physics.Arcade.Sprite
                 this.weaponVisual.applyRecoil();
             }
         }
+    }
+
+    instantiateUI (scene: Phaser.Scene) : void
+    {
+        let slotPositionX = 700 * ItemSlot.scale;
+        for (const weapon of Object.values(this.weapons))
+        {
+            const slot = new ItemSlot(scene, slotPositionX, 150 * ItemSlot.scale, weapon);
+            this.weaponSlots.push(slot);
+            slotPositionX += 200 * ItemSlot.scale;
+        }
+
+        this.healthBar = new HealthBar(scene, 500 * HealthBar.scale, 150 * HealthBar.scale);
+        this.energyBar = new EnergyBar(scene, 500 * EnergyBar.scale, 350 * EnergyBar.scale, this.activeWeapon);
     }
 
     updateUI () : void
