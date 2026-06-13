@@ -13,12 +13,16 @@ export class Game extends Scene
 {
     private static readonly PARALLAX_FAR_SPEED = 0.1;
     private static readonly PARALLAX_NEAR_SPEED = 1.1;
+    private static readonly PARALLAX_MIDDLE_SPEED = 0.5;
+    private static readonly PARALLAX_VERY_FAR_SPEED = 0.05;
 
     camera: Phaser.Cameras.Scene2D.Camera;
     player: Player;
     cursors: Phaser.Types.Input.Keyboard.CursorKeys;
     backgroundFar: Phaser.GameObjects.TileSprite;
     backgroundNear: Phaser.GameObjects.TileSprite;
+    backgroundMiddle: Phaser.GameObjects.TileSprite;
+    backgroundVeryFar: Phaser.GameObjects.TileSprite;
     enemies: Phaser.Physics.Arcade.Group;
     playerProjectiles: Phaser.Physics.Arcade.Group;
     enemyProjectiles: Phaser.Physics.Arcade.Group;
@@ -47,6 +51,14 @@ export class Game extends Scene
         this.backgroundNear.setOrigin(0,-0.3);
         this.backgroundNear.setDepth(-10);
 
+        this.backgroundMiddle = this.add.tileSprite(0, 0, width, height, 'bg-middle');
+        this.backgroundMiddle.setOrigin(0,-0.3);
+        this.backgroundMiddle.setDepth(-15);
+
+        this.backgroundVeryFar = this.add.tileSprite(0, 0, width, height, 'bg-very-far');
+        this.backgroundVeryFar.setOrigin(0, 0);
+        this.backgroundVeryFar.setDepth(-25);
+
         this.enemies = this.physics.add.group();
         this.playerProjectiles = this.physics.add.group();
         this.enemyProjectiles = this.physics.add.group();
@@ -66,6 +78,8 @@ export class Game extends Scene
 
         this.backgroundFar.tilePositionX += Game.PARALLAX_FAR_SPEED;
         this.backgroundNear.tilePositionX += Game.PARALLAX_NEAR_SPEED;
+        this.backgroundMiddle.tilePositionX += Game.PARALLAX_MIDDLE_SPEED;
+        this.backgroundVeryFar.tilePositionX += Game.PARALLAX_VERY_FAR_SPEED;
         this.player.update(this.cursors, this);
         this.updateGroup(this.enemies, time, delta);
         this.updateGroup(this.playerProjectiles, time, delta);
