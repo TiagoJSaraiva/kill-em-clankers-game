@@ -1,5 +1,5 @@
 import Phaser from 'phaser';
-import weapons from './weapons/WeaponsCatalog';
+import { Weapons } from './weapons/WeaponsCatalog';
 import Weapon from './weapons/Weapon';
 
 export class Player extends Phaser.Physics.Arcade.Sprite 
@@ -11,9 +11,10 @@ export class Player extends Phaser.Physics.Arcade.Sprite
 
     private readonly speed = 260; // Velocidade geral do jogador, usada pra movimentação nas 4 direções
     private readonly momentum = 0.9; // Fator de momentum, usado pra suavizar a movimentação do jogador
-    private activeWeapon: Weapon = weapons.Pistol; // Arma atualmente equipada pelo jogador
-    private shootCooldown: number = 0; // Tempo restante para o próximo disparo, usado para controlar a cadência de tiro
-    private maxCooldown: number = 60; // Tempo mínimo entre disparos, em frames
+    private healthPoints: number = 100; // Pontos de vida do jogador, quando chegam a 0 o jogador morre
+
+    private weapons: { [key: string]: Weapon }; // Catálogo de armas do jogador, carregado a partir do módulo WeaponsCatalog
+    private activeWeapon: Weapon; // Arma atualmente equipada pelo jogador
     private weaponSwitchCooldown: number = 0; // Tempo restante para a próxima troca de arma, usado para evitar trocas muito rápidas
     private maxWeaponSwitchCooldown: number = 60; // Tempo mínimo entre trocas de arma, em frames
     private initialBodySize: { width: number; height: number; offsetX: number; offsetY: number };
@@ -36,19 +37,32 @@ export class Player extends Phaser.Physics.Arcade.Sprite
         this.setCollideWorldBounds(true); // Faz com que o player colida com as bordas da tela
         this.setScale(0.8); // Reduz o tamanho do player para melhor visualização
 
-        this.initialBodySize = this.getCurrentBodySize();
-        this.updatePlayerTexture();
+        this.initialize(scene); // Chama o método de criação para inicializar o player, carregar armas e configurar controles
+    }
 
+    private initialize(scene: Phaser.Scene) : void {
         this.keyQ = scene.input.keyboard!.addKey(Phaser.Input.Keyboard.KeyCodes.Q);
         this.keyW = scene.input.keyboard!.addKey(Phaser.Input.Keyboard.KeyCodes.W);
         this.keyE = scene.input.keyboard!.addKey(Phaser.Input.Keyboard.KeyCodes.E);
         this.keyR = scene.input.keyboard!.addKey(Phaser.Input.Keyboard.KeyCodes.R);
+
+        this.weapons = Weapons();
+        this.activeWeapon = this.weapons.Pistol; // Começa com a pistola equipada
+        this.activeWeapon.isEquipped = true;
+
+        this.initialBodySize = this.getCurrentBodySize();
+        this.updatePlayerTexture();
     }
 
     update (cursors: Phaser.Types.Input.Keyboard.CursorKeys, scene : Phaser.Scene)
     {
         this.processMovement(cursors); // Chama o método que processa a movimentação do player.
-        this.processShooting(cursors, scene); // Chama o método que processa o disparo de armas do player.
+        for (const weapon of Object.values(this.weapons)) {
+            weapon.update(); // Atualiza o estado de cada arma do jogador, mesmo as que não estão ativas, para garantir que cooldowns e regeneração de energia funcionem corretamente
+        }
+        if(cursors.space.isDown) {
+            this.activeWeapon.tryShoot(scene, this);
+        }
         this.processWeaponSwitch(); // Chama o método que processa a troca de armas do player.
     }
 
@@ -73,26 +87,33 @@ export class Player extends Phaser.Physics.Arcade.Sprite
 
         if (this.keyQ.isDown)
         {
-            this.activeWeapon = weapons.Pistol;
+            this.activeWeapon.isEquipped = false; // Desequipa a arma atualmente ativa antes de trocar para a nova
+            this.activeWeapon = this.weapons.Pistol;
+            this.activeWeapon.isEquipped = true; // Equipa a nova arma
             this.weaponSwitchCooldown = this.maxWeaponSwitchCooldown; // Reseta o cooldown para a próxima troca de arma
         }
         else if (this.keyW.isDown)
         {
-            this.activeWeapon = weapons.Sword;
+            this.activeWeapon.isEquipped = false; // Desequipa a arma atualmente ativa antes de trocar para a nova
+            this.activeWeapon = this.weapons.Sword;
+            this.activeWeapon.isEquipped = true; // Equipa a nova arma
             this.weaponSwitchCooldown = this.maxWeaponSwitchCooldown; // Reseta o cooldown para a próxima troca de arma
         }
         else if (this.keyE.isDown)
         {
-            this.activeWeapon = weapons.Crossbow;
+            this.activeWeapon.isEquipped = false; // Desequipa a arma atualmente ativa antes de trocar para a nova
+            this.activeWeapon = this.weapons.Crossbow;
+            this.activeWeapon.isEquipped = true; // Equipa a nova arma
             this.weaponSwitchCooldown = this.maxWeaponSwitchCooldown; // Reseta o cooldown para a próxima troca de arma
         }
         else if (this.keyR.isDown)
         {
-            this.activeWeapon = weapons.Cannon;
+            this.activeWeapon.isEquipped = false; // Desequipa a arma atualmente ativa antes de trocar para a nova
+            this.activeWeapon = this.weapons.Cannon;
+            this.activeWeapon.isEquipped = true; // Equipa a nova arma
             this.weaponSwitchCooldown = this.maxWeaponSwitchCooldown; // Reseta o cooldown para a próxima troca de arma
         }
 
-        this.maxCooldown = this.activeWeapon.attackCooldown;
         this.updatePlayerTexture();
     }
 
@@ -156,31 +177,6 @@ export class Player extends Phaser.Physics.Arcade.Sprite
         return Math.abs(nextVelocity) < 5 ? 0 : nextVelocity;
     }
 
-    private processShooting (cursors: Phaser.Types.Input.Keyboard.CursorKeys, scene: Phaser.Scene) : void 
-    {
-
-        /** 
-         *  @description Esse método é chamado em toda chamada de update() do player e
-         *  é responsável por processar a lógica de disparo de armas.
-         * 
-         *  @param cursors : usado para verificar se a tecla de disparo (espaço) está sendo pressionada
-         * 
-         *  @param scene : passado para o método de disparo para que os projéteis possam ser adicionados à cena correta
-         */
-
-        if(this.shootCooldown > 0)
-        {
-            this.shootCooldown--;
-            return; // Se ainda estiver no cooldown, não permite atirar
-        }
-
-        if (cursors.space.isDown)
-        {
-            this.activeWeapon.shoot(scene, this);
-            this.shootCooldown = this.maxCooldown; // Reseta o cooldown para o próximo disparo
-        }
-    }
-
     private updatePlayerTexture () : void
     {
         /**
@@ -189,7 +185,7 @@ export class Player extends Phaser.Physics.Arcade.Sprite
 
         const textureKey = this.activeWeapon.spriteName; // Obtém a chave da textura correspondente à arma ativa do player
 
-        if (this.isShowingSwordAttackTexture && this.activeWeapon === weapons.Sword) // Se o player estiver mostrando a textura de ataque da espada e a arma ativa for a espada, não atualiza a textura para evitar sobrescrever a animação de ataque
+        if (this.isShowingSwordAttackTexture && this.activeWeapon === this.weapons.Sword) // Se o player estiver mostrando a textura de ataque da espada e a arma ativa for a espada, não atualiza a textura para evitar sobrescrever a animação de ataque
         {
             return;
         }
@@ -218,7 +214,7 @@ export class Player extends Phaser.Physics.Arcade.Sprite
         scene.time.delayedCall(Player.swordAttackTextureDuration, () => {
             this.isShowingSwordAttackTexture = false;
 
-            if (this.activeWeapon === weapons.Sword)
+            if (this.activeWeapon === this.weapons.Sword)
             {
                 this.updatePlayerTexture();
             }
