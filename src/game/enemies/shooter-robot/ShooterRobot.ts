@@ -2,6 +2,7 @@ import { Player } from "../../player/Player";
 import Enemy from "../Enemy";
 import { enemyVariation, getTexture, getAttributes } from "../helpers";
 import { Attributes, EnemyVariation, VariationName } from "../types";
+import ShooterRobotProjectile from "./ShooterRobotProjectile";
 import ShooterRobotVisual from "./ShooterRobotVisual";
 
 const enemyVariations = [
@@ -28,6 +29,10 @@ export default class ShooterRobot extends Enemy
         this.visual = new ShooterRobotVisual(scene, this);
     }
 
+    update() {
+
+    }
+
     preUpdate (time: number, delta: number) : void
     {
         super.preUpdate(time, delta);
@@ -42,6 +47,12 @@ export default class ShooterRobot extends Enemy
     {
         console.log('Shooter Robot shoots at the player!');
         this.visual.playShootVfx();
+    }
+
+    shoot() : void
+    {
+        const projectile = new ShooterRobotProjectile(this.scene, this.x, this.y);
+        projectile.setVelocityX(400 * this.scaleX); // Define a velocidade do projétil para a direita ou esquerda, dependendo da direção do robô
     }
 
     playShootVfx () : void

@@ -23,7 +23,7 @@ export default abstract class Enemy extends Phaser.Physics.Arcade.Sprite {
     }
 
     update() {
-
+        return;
     }
 
     init(_health: number, _speed: number, _damage: number) {
@@ -34,6 +34,15 @@ export default abstract class Enemy extends Phaser.Physics.Arcade.Sprite {
 
     attack(): void {
         return; // Método de ataque genérico, pode ser sobrescrito por inimigos específicos para implementar ataques únicos
+    }
+
+    takeDamage(amount: number) {
+        this.health -= amount;
+        if (this.health <= 0) {
+            // Animação de morte pode ser adicionada aqui, mas nos filhos, já que cada um vai ter animação diferente
+            this.scene.events.off('update', this.updateListener);
+            this.destroy();
+        }
     }
 
     move(target: Player | Phaser.Math.Vector2): void {
