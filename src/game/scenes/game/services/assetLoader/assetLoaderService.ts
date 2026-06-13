@@ -1,5 +1,10 @@
 export function loadAssets(scene: Phaser.Scene): void {
-    
+    /** 
+     *  @description Função responsável por carregar todos os assets do jogo.
+     * 
+     *  @param scene : cena do jogo onde os assets serão carregados
+     */
+
     ////  RELATIVAS AO PLAYER ////
 
     scene.load.image('player', './assets/player/player-model.png');

@@ -1,6 +1,7 @@
 
 import Phaser from 'phaser';
-import { Player } from '../Player';
+import type { Player } from '../Player';
+import type { WeaponName } from '../PlayerWeaponVisual';
 
 export default class Weapon {
     private energyRegenRate: number = 0.05; // Quantidade de energia regenerada por frame quando a arma não está equipada
@@ -8,16 +9,14 @@ export default class Weapon {
     maxEnergy: number = 100;
     currentEnergy: number;
     private energySpentPerShot: number = 20;
-    name: string;
+    name: WeaponName;
     attackCooldown: number;
     private attackCooldownTimer: number = 0;
-    spriteName: string;
     emitProjectile: (scene: Phaser.Scene, player: Player) => void;
     
-    constructor(name: string, attackCooldown: number, spriteName: string, energySpentPerShot: number, emitProjectile: (scene: Phaser.Scene, player: Player) => void) {
+    constructor(name: WeaponName, attackCooldown: number, energySpentPerShot: number, emitProjectile: (scene: Phaser.Scene, player: Player) => void) {
         this.name = name;
         this.attackCooldown = attackCooldown;
-        this.spriteName = spriteName;
         this.energySpentPerShot = energySpentPerShot;
         this.emitProjectile = emitProjectile;
 
