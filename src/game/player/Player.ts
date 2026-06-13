@@ -11,6 +11,8 @@ export class Player extends Phaser.Physics.Arcade.Sprite
 {
     private readonly speed = 200; // Velocidade geral do jogador, usada pra movimentacao nas 4 direcoes
     private readonly momentum = 0.9; // Fator de momentum, usado pra suavizar a movimentacao do jogador
+    private readonly hitboxWidth = 189; // Largura manual da hitbox, em pixels antes do setScale
+    private readonly hitboxHeight = 236; // Altura manual da hitbox, em pixels antes do setScale
 
     readonly maxHealthPoints: number = 100; // Pontos de vida do jogador, quando chegam a 0 o jogador morre
     currentHealthPoints: number; // Pontos de vida atuais do jogador, comecam no maximo e vao diminuindo conforme o jogador leva dano
@@ -38,8 +40,15 @@ export class Player extends Phaser.Physics.Arcade.Sprite
         scene.physics.add.existing(this);
         this.setCollideWorldBounds(true);
         this.setScale(0.8);
+        this.configureHitbox();
 
         this.initialize(scene);
+    }
+
+    private configureHitbox () : void
+    {
+        this.setBodySize(this.hitboxWidth, this.hitboxHeight, true);
+        this.setOffset(70, 124);
     }
 
     private initialize (scene: Phaser.Scene) : void
