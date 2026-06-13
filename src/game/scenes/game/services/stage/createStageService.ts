@@ -21,11 +21,11 @@ export const stages = [
        A pool é um array de objetos, onde cada objeto define o nome da classe do inimigo e a variação desse inimigo (por exemplo, "normal", "strong", "impossible", etc).
     */
 
-    stage(0, 60, [ 
+    stage(0, 10, [ 
         { name: 'ShooterRobot', variation: 'normal', weight: 1 }, 
         { name: 'ShooterRobot', variation: 'strong', weight: 1 } 
     ]),
-    stage(30, 50, [
+    stage(30, 10, [
         { name: 'ShooterRobot', variation: 'normal', weight: 1 }, 
         { name: 'ShooterRobot', variation: 'strong', weight: 1 } 
     ]),

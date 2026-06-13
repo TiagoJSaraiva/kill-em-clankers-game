@@ -72,8 +72,20 @@ function spawnUnits(scene: Phaser.Scene) {
         accumulatedWeight += unit.weight;
 
         if(randomWeight < accumulatedWeight) {
-            unit.spawnFunction(scene, 0, 0);
+            console.log('Spawning unit with weight:', unit.weight);
+            const { x, y } = getRandomCoordinates();
+            unit.spawnFunction(scene, x, y);
             return;
         }
     }
+}
+
+function getRandomCoordinates(): { x: number, y: number } {
+    /**
+     * @description Função que retorna coordenadas aleatórias dentro dos limites do mundo do jogo, para serem usadas como ponto de spawn das unidades.
+     *              O eixo x é fixado em 2200, para que as unidades sempre spawnem do lado direito da tela, e o eixo y é gerado aleatoriamente entre 100 e 900, para que as unidades possam spawnar em diferentes alturas.
+     */
+    const x = 2200; // Coordenada fixa no eixo x, para que as unidades sempre spawnem do lado direito da tela
+    const y = Phaser.Math.Between(100, 900); // Coordenada aleatória no eixo y, para que as unidades possam spawnar em diferentes alturas
+    return { x, y }
 }

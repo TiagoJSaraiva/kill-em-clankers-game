@@ -15,6 +15,7 @@ export default abstract class Enemy extends Phaser.Physics.Arcade.Sprite {
         super(scene, x, y, texture);
         scene.add.existing(this);
         scene.physics.add.existing(this);
+        this.setCollideWorldBounds(true);
     }
 
     init(_health: number, _speed: number, _damage: number) {
@@ -23,7 +24,7 @@ export default abstract class Enemy extends Phaser.Physics.Arcade.Sprite {
         this.damage = _damage;
     }
 
-    attack(target: Player): void {
+    attack(): void {
         return; // Método de ataque genérico, pode ser sobrescrito por inimigos específicos para implementar ataques únicos
     }
 

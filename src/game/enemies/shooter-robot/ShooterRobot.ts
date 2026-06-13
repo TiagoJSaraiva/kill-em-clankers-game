@@ -12,6 +12,8 @@ const enemyVariations = [
 
 export default class ShooterRobot extends Enemy
 {
+    static readonly scale = 0.8;
+
     private visual: ShooterRobotVisual;
 
     constructor (scene: Phaser.Scene, x: number, y: number, variation: VariationName)
@@ -21,6 +23,7 @@ export default class ShooterRobot extends Enemy
 
         super(scene, x, y, texture);
 
+        this.setScale(ShooterRobot.scale);
         this.init(attributes.healthPoints, attributes.moveSpeed, attributes.damage);
         this.visual = new ShooterRobotVisual(scene, this);
     }
@@ -32,10 +35,10 @@ export default class ShooterRobot extends Enemy
     }
 
     resolveAi() {
-        
+
     }
 
-    attack (target: Player) : void
+    attack () : void
     {
         console.log('Shooter Robot shoots at the player!');
         this.visual.playShootVfx();

@@ -45,6 +45,9 @@ export class Game extends Scene
         this.player = new Player(this, 100, 450);
         this.player.setDepth(-1); // Camada do player, afrente dos backgrounds, mas atrás dos projéteis
         this.cursors = this.input.keyboard?.createCursorKeys()!;
+
+        this.physics.world.setBoundsCollision(true, false, true, true);
+        // left, right, up, down
     }
 
     update (time: number) { 
