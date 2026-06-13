@@ -11,7 +11,8 @@ export class Player extends Phaser.Physics.Arcade.Sprite
 
     private readonly speed = 260; // Velocidade geral do jogador, usada pra movimentação nas 4 direções
     private readonly momentum = 0.9; // Fator de momentum, usado pra suavizar a movimentação do jogador
-    private healthPoints: number = 100; // Pontos de vida do jogador, quando chegam a 0 o jogador morre
+    private readonly maxHealthPoints: number = 100; // Pontos de vida do jogador, quando chegam a 0 o jogador morre
+    private currentHealthPoints: number; // Pontos de vida atuais do jogador, começam no máximo e vão diminuindo conforme o jogador leva dano
 
     private weapons: { [key: string]: Weapon }; // Catálogo de armas do jogador, carregado a partir do módulo WeaponsCatalog
     private activeWeapon: Weapon; // Arma atualmente equipada pelo jogador
@@ -50,6 +51,7 @@ export class Player extends Phaser.Physics.Arcade.Sprite
         this.activeWeapon = this.weapons.Pistol; // Começa com a pistola equipada
         this.activeWeapon.isEquipped = true;
 
+        this.currentHealthPoints = this.maxHealthPoints;
         this.initialBodySize = this.getCurrentBodySize();
         this.updatePlayerTexture();
     }
@@ -251,5 +253,28 @@ export class Player extends Phaser.Physics.Arcade.Sprite
 
         body.setSize(this.initialBodySize.width, this.initialBodySize.height, false);
         body.setOffset(this.initialBodySize.offsetX, this.initialBodySize.offsetY);
+    }
+
+    takeDamage(amount: number) : void {
+        /** 
+         *  @description Esse método é chamado quando o jogador leva dano, reduzindo seus pontos de vida e verificando se ele morreu.
+         * 
+         *  @param amount : a quantidade de dano que o jogador deve receber, subtraída dos pontos de vida atuais
+         */
+
+        this.currentHealthPoints = Math.max(0, this.currentHealthPoints - amount); // Reduz os pontos de vida do jogador, garantindo que não fiquem abaixo de 0
+
+        if (this.currentHealthPoints === 0) {
+            this.die(); // Se os pontos de vida chegarem a 0, chama o método de morte do jogador
+        }
+    }
+
+    die() : void {
+        /** 
+         *  @description Esse método é chamado quando o jogador morre, podendo ser usado para tocar animações de morte, reiniciar a fase, etc.
+         *  Por enquanto, ele apenas imprime uma mensagem no console.
+         */
+
+        console.log("Player has died!"); // ISSO AQUI VAI VIRAR A CHAMADA DE UMA FUNÇÃO DE GAME OVER QUANDO O JOGO TIVER UMA TELA DE GAME OVER IMPLEMENTADA
     }
 }
