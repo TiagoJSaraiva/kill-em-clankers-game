@@ -6,8 +6,9 @@ export default class ShooterRobotVisual
     private static readonly armTextureKey = 'shooter-robot-arm';
     private static readonly shootVfxTextureKey = 'shooter-robot-shoot-vfx';
 
-    private static readonly rearDepthOffset = -0.1;
-    private static readonly shootVfxDepthOffset = 0.1;
+    private static readonly armDepthOffset = 0.1;
+    private static readonly cloakDepthOffset = 0.2;
+    private static readonly shootVfxDepthOffset = 0.3;
     private static readonly shootVfxDuration = 90;
 
     private static readonly armOriginX = 0.35;
@@ -19,25 +20,22 @@ export default class ShooterRobotVisual
     private static readonly muzzleOffsetY = 0;
 
     private readonly scene: Phaser.Scene;
-    private readonly rearParts: Phaser.GameObjects.Container;
     private readonly cloakImage: Phaser.GameObjects.Image;
     private readonly armImage: Phaser.GameObjects.Image;
     private readonly shootVfxImage: Phaser.GameObjects.Image;
+    private robotDepth: number = 0;
 
     constructor (scene: Phaser.Scene, robot: Phaser.GameObjects.Sprite)
     {
         this.scene = scene;
-        this.rearParts = scene.add.container(robot.x, robot.y);
 
         this.cloakImage = scene.add.image(0, 0, ShooterRobotVisual.cloakTextureKey);
         this.armImage = scene.add.image(
-            ShooterRobotVisual.armOffsetX,
-            ShooterRobotVisual.armOffsetY,
+            0,
+            0,
             ShooterRobotVisual.armTextureKey
         );
         this.armImage.setOrigin(ShooterRobotVisual.armOriginX, ShooterRobotVisual.armOriginY);
-        this.rearParts.add([this.cloakImage, this.armImage]);
-        this.rearParts.setSize(this.cloakImage.width, this.cloakImage.height);
 
         this.shootVfxImage = scene.add.image(0, 0, ShooterRobotVisual.shootVfxTextureKey);
         this.shootVfxImage.setOrigin(1, 0.5);
@@ -49,14 +47,24 @@ export default class ShooterRobotVisual
     public syncWithRobot (robot: Phaser.GameObjects.Sprite) : void
     {
         const visualScaleX = Math.abs(robot.scaleX || 1);
+        this.robotDepth = robot.depth;
 
-        this.rearParts.setPosition(robot.x, robot.y);
-        this.rearParts.setScale(visualScaleX, robot.scaleY);
-        this.rearParts.setDepth(robot.depth + ShooterRobotVisual.rearDepthOffset);
-        this.rearParts.setVisible(robot.visible);
-        this.rearParts.setAlpha(robot.alpha);
+        this.cloakImage.setPosition(robot.x, robot.y);
+        this.cloakImage.setScale(visualScaleX, robot.scaleY);
+        this.cloakImage.setDepth(this.robotDepth + ShooterRobotVisual.cloakDepthOffset);
+        this.cloakImage.setVisible(robot.visible);
+        this.cloakImage.setAlpha(robot.alpha);
 
-        this.syncShootVfxWithMuzzle(robot.alpha, robot.depth);
+        this.armImage.setPosition(
+            robot.x + (ShooterRobotVisual.armOffsetX * visualScaleX),
+            robot.y + (ShooterRobotVisual.armOffsetY * robot.scaleY)
+        );
+        this.armImage.setScale(visualScaleX, robot.scaleY);
+        this.armImage.setDepth(this.robotDepth + ShooterRobotVisual.armDepthOffset);
+        this.armImage.setVisible(robot.visible);
+        this.armImage.setAlpha(robot.alpha);
+
+        this.syncShootVfxWithMuzzle(robot.alpha);
     }
 
     public aimAt (x: number, y: number) : void
@@ -65,7 +73,7 @@ export default class ShooterRobotVisual
         const targetAngle = Phaser.Math.Angle.Between(armOrigin.x, armOrigin.y, x, y);
 
         this.armImage.setRotation(targetAngle - ShooterRobotVisual.armBaseAimAngle);
-        this.syncShootVfxWithMuzzle(this.rearParts.alpha, this.rearParts.depth);
+        this.syncShootVfxWithMuzzle(this.armImage.alpha);
     }
 
     public getMuzzleWorldPosition () : Phaser.Math.Vector2
@@ -73,22 +81,24 @@ export default class ShooterRobotVisual
         const rotation = this.armImage.rotation;
         const cos = Math.cos(rotation);
         const sin = Math.sin(rotation);
-        const localMuzzleX = this.armImage.x
-            + (ShooterRobotVisual.muzzleOffsetX * cos)
-            - (ShooterRobotVisual.muzzleOffsetY * sin);
-        const localMuzzleY = this.armImage.y
-            + (ShooterRobotVisual.muzzleOffsetX * sin)
-            + (ShooterRobotVisual.muzzleOffsetY * cos);
+        const scaledMuzzleOffsetX = ShooterRobotVisual.muzzleOffsetX * this.armImage.scaleX;
+        const scaledMuzzleOffsetY = ShooterRobotVisual.muzzleOffsetY * this.armImage.scaleY;
+        const muzzleX = this.armImage.x
+            + (scaledMuzzleOffsetX * cos)
+            - (scaledMuzzleOffsetY * sin);
+        const muzzleY = this.armImage.y
+            + (scaledMuzzleOffsetX * sin)
+            + (scaledMuzzleOffsetY * cos);
 
-        return this.localToWorld(localMuzzleX, localMuzzleY);
+        return new Phaser.Math.Vector2(muzzleX, muzzleY);
     }
 
     public playShootVfx () : void
     {
-        this.syncShootVfxWithMuzzle(this.rearParts.alpha, this.rearParts.depth);
+        this.syncShootVfxWithMuzzle(this.armImage.alpha);
         this.scene.tweens.killTweensOf(this.shootVfxImage);
         this.shootVfxImage.setVisible(true);
-        this.shootVfxImage.setAlpha(this.rearParts.alpha);
+        this.shootVfxImage.setAlpha(this.armImage.alpha);
 
         this.scene.tweens.add({
             targets: this.shootVfxImage,
@@ -97,7 +107,7 @@ export default class ShooterRobotVisual
             ease: 'Quad.easeOut',
             onComplete: () => {
                 this.shootVfxImage.setVisible(false);
-                this.shootVfxImage.setAlpha(this.rearParts.alpha);
+                this.shootVfxImage.setAlpha(this.armImage.alpha);
             }
         });
     }
@@ -105,31 +115,24 @@ export default class ShooterRobotVisual
     public destroy () : void
     {
         this.scene.tweens.killTweensOf(this.shootVfxImage);
-        this.rearParts.destroy();
+        this.cloakImage.destroy();
+        this.armImage.destroy();
         this.shootVfxImage.destroy();
     }
 
     private getArmOriginWorldPosition () : Phaser.Math.Vector2
     {
-        return this.localToWorld(this.armImage.x, this.armImage.y);
+        return new Phaser.Math.Vector2(this.armImage.x, this.armImage.y);
     }
 
-    private localToWorld (x: number, y: number) : Phaser.Math.Vector2
-    {
-        return new Phaser.Math.Vector2(
-            this.rearParts.x + (x * this.rearParts.scaleX),
-            this.rearParts.y + (y * this.rearParts.scaleY)
-        );
-    }
-
-    private syncShootVfxWithMuzzle (alpha: number, depth: number) : void
+    private syncShootVfxWithMuzzle (alpha: number) : void
     {
         const muzzlePosition = this.getMuzzleWorldPosition();
 
         this.shootVfxImage.setPosition(muzzlePosition.x, muzzlePosition.y);
-        this.shootVfxImage.setScale(this.rearParts.scaleX, this.rearParts.scaleY);
+        this.shootVfxImage.setScale(this.armImage.scaleX, this.armImage.scaleY);
         this.shootVfxImage.setRotation(this.armImage.rotation);
-        this.shootVfxImage.setDepth(depth + ShooterRobotVisual.shootVfxDepthOffset);
+        this.shootVfxImage.setDepth(this.robotDepth + ShooterRobotVisual.shootVfxDepthOffset);
 
         if (!this.shootVfxImage.visible)
         {
