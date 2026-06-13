@@ -269,7 +269,7 @@ export class Player extends Phaser.Physics.Arcade.Sprite
         }
     }
 
-    die() : void {
+    private die() : void {
         /** 
          *  @description Esse método é chamado quando o jogador morre, podendo ser usado para tocar animações de morte, reiniciar a fase, etc.
          *  Por enquanto, ele apenas imprime uma mensagem no console.

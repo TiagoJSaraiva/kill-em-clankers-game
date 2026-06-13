@@ -1,4 +1,5 @@
 import Phaser from 'phaser';
+import Weapon from '../player/weapons/Weapon';
 
 export class ItemSlot extends Phaser.GameObjects.Container
 {
@@ -9,12 +10,12 @@ export class ItemSlot extends Phaser.GameObjects.Container
     private readonly slotImage: Phaser.GameObjects.Image;
     private readonly equipmentIcon: Phaser.GameObjects.Image;
 
-    constructor (scene: Phaser.Scene, x: number, y: number, equipmentName: string)
+    constructor (scene: Phaser.Scene, x: number, y: number, equipment: Weapon)
     {
         super(scene, x, y);
 
         this.slotImage = scene.add.image(0, 0, ItemSlot.slotTextureKey);
-        this.equipmentIcon = scene.add.image(0, 0, this.getIconTextureKey(equipmentName));
+        this.equipmentIcon = scene.add.image(0, 0, this.getIconTextureKey(equipment.name));
         this.equipmentIcon.setDisplaySize(ItemSlot.iconSize, ItemSlot.iconSize);
 
         this.add([this.slotImage, this.equipmentIcon]);
@@ -25,9 +26,9 @@ export class ItemSlot extends Phaser.GameObjects.Container
         scene.add.existing(this);
     }
 
-    public setEquipment (equipmentName: string) : void
+    public setEquipment (equipment: Weapon) : void
     {
-        this.equipmentIcon.setTexture(this.getIconTextureKey(equipmentName));
+        this.equipmentIcon.setTexture(this.getIconTextureKey(equipment.name));
         this.equipmentIcon.setDisplaySize(ItemSlot.iconSize, ItemSlot.iconSize);
     }
 

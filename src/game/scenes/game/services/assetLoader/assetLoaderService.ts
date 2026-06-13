@@ -5,8 +5,13 @@ export function loadAssets(scene: Phaser.Scene): void {
     scene.load.image('player', './assets/player/model.png');
 
     // UI
-
     scene.load.image('item-slot', './assets/ui/item-slot.png');
+    scene.load.image('item-slot-fill', './assets/ui/item-slot-fill.png');
+    scene.load.image('selected-item-slot-fill', './assets/ui/selected-item-slot-fill.png');
+    scene.load.image('health-bar', './assets/ui/health-bar.png');
+    scene.load.image('health-bar-fill', './assets/ui/health-bar-fill.png');
+    scene.load.image('energy-bar', './assets/ui/energy-bar.png');
+    scene.load.image('energy-bar-fill', './assets/ui/energy-bar-fill.png');
 
     // PLAYER PISTOL
     scene.load.image('player-pistol-model', './assets/player/pistol/pistol-model.png');
