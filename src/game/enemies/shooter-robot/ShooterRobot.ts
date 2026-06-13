@@ -16,12 +16,12 @@ export default class ShooterRobot extends Enemy
 
     private visual: ShooterRobotVisual;
 
-    constructor (scene: Phaser.Scene, x: number, y: number, variation: VariationName)
+    constructor (scene: Phaser.Scene, x: number, y: number, variation: VariationName, target: Player | null = null)
     {
         const texture: string = getTexture(variation, enemyVariations);
         const attributes: Attributes = getAttributes(variation, enemyVariations);
 
-        super(scene, x, y, texture);
+        super(scene, x, y, texture, target);
 
         this.setScale(ShooterRobot.scale);
         this.init(attributes.healthPoints, attributes.moveSpeed, attributes.damage);

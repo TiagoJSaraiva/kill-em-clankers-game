@@ -1,6 +1,7 @@
+import { Game } from "../../Game";
 
 export type UnitSpawnController = {
-    spawnFunction: (scene: Phaser.Scene, x: number, y: number) => any,
+    spawnFunction: (scene: Game, x: number, y: number) => any,
     weight: number
 }
 

@@ -1,10 +1,11 @@
 import ShooterRobot from "../../../../enemies/shooter-robot/ShooterRobot";
 import { Stage, Pool, UnitSpawnController } from "./types";
 import { VariationName } from "../../../../enemies/types";
+import { Game } from "../../Game";
 
 const enemyFactories = {
-    ShooterRobot: (scene: Phaser.Scene, x: number, y: number, variation: VariationName) => {
-        return new ShooterRobot(scene, x, y, variation);
+    ShooterRobot: (scene: Game, x: number, y: number, variation: VariationName) => {
+        return new ShooterRobot(scene, x, y, variation, scene.player);
     }
 };
 
@@ -52,7 +53,7 @@ function stage(startTime: number, spawnInterval: number, poolConfig: unitSpawnCo
         let weight: number;
 
         if (factory) {
-            spawnFunction = (scene: Phaser.Scene, x: number, y: number) => {
+            spawnFunction = (scene: Game, x: number, y: number) => {
                 return factory(scene, x, y, item.variation);
             };
 

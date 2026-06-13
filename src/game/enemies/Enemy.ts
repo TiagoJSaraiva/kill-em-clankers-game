@@ -7,15 +7,23 @@ export default abstract class Enemy extends Phaser.Physics.Arcade.Sprite {
     health: number;
     speed: number;
     damage: number;
+    updateListener: Function;
 
     attackingTarget: Player | null = null;
     movingTarget: Player | Phaser.Math.Vector2 | null = null;
 
-    constructor(scene: Phaser.Scene, x: number, y: number, texture: string) {
+    constructor(scene: Phaser.Scene, x: number, y: number, texture: string, target: Player | null = null) {
         super(scene, x, y, texture);
+        this.attackingTarget = target;
         scene.add.existing(this);
         scene.physics.add.existing(this);
         this.setCollideWorldBounds(true);
+        this.updateListener = () => this.update();
+        this.scene.events.on('update', this.updateListener);
+    }
+
+    update() {
+
     }
 
     init(_health: number, _speed: number, _damage: number) {

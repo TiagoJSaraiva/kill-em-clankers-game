@@ -1,5 +1,6 @@
 import { stages } from "../stage/createStageService";
 import { Stage } from "../stage/types";
+import { Game } from "../../Game";
 
 let nextStageStartingTime: number = 0;
 let nextSpawnTime: number = 0;
@@ -11,7 +12,7 @@ let currentStageIndex: number = 0;
 
 let activeStage: Stage = stages[currentStageIndex]; 
 
-export default function manageSpawn(scene: Phaser.Scene, elapsedTime: number) {
+export default function manageSpawn(scene: Game, elapsedTime: number) {
     /**
      * @description O objetivo dessa função é ser chamada em update a cada segundo, recebendo o tempo que já passou no jogo e comparando com o tempo
      *              de @var nextStageStartingTime, e se for maior ou igual, o próximo estágio na lista de estágios é chamado.
@@ -41,7 +42,7 @@ function getCurrentStage(): Stage {
     return stages[currentStageIndex];
 }
 
-function spawnUnits(scene: Phaser.Scene) {
+function spawnUnits(scene: Game) {
     /**
      * @description Função que é responsável por spawnar as unidades, usando a pool do estágio ativo. 
      *              A função de spawn de cada unidade é chamada, e o tipo da unidade a ser spawnada é definido com base no peso de cada unidade na pool.
