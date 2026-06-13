@@ -59,11 +59,11 @@ export class Player extends Phaser.Physics.Arcade.Sprite
         this.initialBodySize = this.getCurrentBodySize();
         this.updatePlayerTexture();
 
-        let slotPositionX = 50; // Posição inicial do primeiro slot de arma na UI
+        let slotPositionX = 1500 * ItemSlot.scale; // Posição inicial do primeiro slot de arma na UI
         for (const weapon of Object.values(this.weapons)) {
-            const slot = new ItemSlot(scene, slotPositionX, 10, weapon); // Cria um slot de UI para cada arma do jogador
+            const slot = new ItemSlot(scene, slotPositionX, 150 * ItemSlot.scale, weapon); // Cria um slot de UI para cada arma do jogador
             this.weaponSlots.push(slot);
-            slotPositionX += 150; // Ajusta a posição do próximo slot
+            slotPositionX += 200 * ItemSlot.scale; // Ajusta a posição do próximo slot
         }
     }
 

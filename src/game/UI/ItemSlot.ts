@@ -3,6 +3,7 @@ import Weapon from '../player/weapons/Weapon';
 
 export class ItemSlot extends Phaser.GameObjects.Container
 {
+    static readonly scale = 0.5;
     private static readonly slotTextureKey = 'item-slot';
     private static readonly defaultFillTextureKey = 'item-slot-fill';
     private static readonly selectedFillTextureKey = 'selected-item-slot-fill';
@@ -30,6 +31,7 @@ export class ItemSlot extends Phaser.GameObjects.Container
 
         this.add([this.slotFillImage, this.slotImage, this.weaponIcon]);
         this.setSize(this.slotImage.displayWidth, this.slotImage.displayHeight);
+        this.setScale(ItemSlot.scale);
         this.setScrollFactor(0);
         this.setDepth(ItemSlot.depth);
 

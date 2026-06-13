@@ -3,7 +3,7 @@ import Phaser from 'phaser';
 import { Player } from '../Player';
 
 export default class Weapon {
-    private energyRegenRate: number = 1; // Quantidade de energia regenerada por frame quando a arma não está equipada
+    private energyRegenRate: number = 0.05; // Quantidade de energia regenerada por frame quando a arma não está equipada
     isEquipped: boolean = false;
     maxEnergy: number = 100;
     currentEnergy: number;

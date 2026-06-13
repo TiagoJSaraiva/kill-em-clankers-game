@@ -2,7 +2,7 @@ export function loadAssets(scene: Phaser.Scene): void {
     
     ////  RELATIVAS AO PLAYER ////
 
-    scene.load.image('player', './assets/player/model.png');
+    scene.load.image('player', './assets/player/player-model.png');
 
     // UI
     scene.load.image('item-slot', './assets/ui/item-slot.png');
