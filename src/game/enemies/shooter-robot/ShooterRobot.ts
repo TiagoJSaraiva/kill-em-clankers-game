@@ -34,12 +34,13 @@ export default class ShooterRobot extends Enemy
 
         super(scene, x, y, texture, target);
 
-        this.setScale(ShooterRobot.scale);
+        this.keepBodyFacingOriginalDirection();
         this.init(attributes.healthPoints, attributes.moveSpeed, attributes.damage);
         this.visual = new ShooterRobotVisual(scene, this);
     }
 
     update(time: number, _delta: number): void {
+        this.keepBodyFacingOriginalDirection();
         this.resolveAi(time);
     }
 
@@ -58,7 +59,8 @@ export default class ShooterRobot extends Enemy
             return;
         }
 
-        this.faceTarget(target);
+        this.visual.syncWithRobot(this);
+        this.visual.aimAt(target.x, target.y);
 
         const distanceToTarget = Phaser.Math.Distance.Between(
             this.x,
@@ -97,9 +99,12 @@ export default class ShooterRobot extends Enemy
             return;
         }
 
+        this.visual.aimAt(target.x, target.y);
+
+        const muzzlePosition = this.visual.getMuzzleWorldPosition();
         const velocity = new Phaser.Math.Vector2(
-            target.x - this.x,
-            target.y - this.y
+            target.x - muzzlePosition.x,
+            target.y - muzzlePosition.y
         );
 
         if (velocity.lengthSq() === 0)
@@ -109,7 +114,13 @@ export default class ShooterRobot extends Enemy
 
         velocity.normalize().scale(ShooterRobot.projectileSpeed);
 
-        const projectile = new ShooterRobotProjectile(this.scene, this.x, this.y, this.damage, velocity);
+        const projectile = new ShooterRobotProjectile(
+            this.scene,
+            muzzlePosition.x,
+            muzzlePosition.y,
+            this.damage,
+            velocity
+        );
         (this.scene as EnemyProjectileScene).registerEnemyProjectile?.(projectile);
     }
 
@@ -122,5 +133,11 @@ export default class ShooterRobot extends Enemy
     {
         this.visual.destroy();
         super.destroy(fromScene);
+    }
+
+    private keepBodyFacingOriginalDirection () : void
+    {
+        this.setScale(ShooterRobot.scale, ShooterRobot.scale);
+        this.setFlipX(false);
     }
 }

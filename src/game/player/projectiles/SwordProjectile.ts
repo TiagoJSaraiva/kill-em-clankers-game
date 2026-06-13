@@ -1,15 +1,17 @@
 import Projectile from "./Projectile";
+import Phaser from "phaser";
 
 export default class SwordProjectile extends Projectile
 {
     private static readonly animationKey = 'slash-projectile-animation';
+    private static readonly speed = 1500;
     private readonly lifespan: number = 12;
     private age: number = 0;
 
     constructor (scene: Phaser.Scene, x: number, y: number, texture: string, damage: number)
     {
-        super(scene, x, y, texture, damage);
-        this.setVelocityX(1500);
+        super(scene, x, y, texture, damage, new Phaser.Math.Vector2(SwordProjectile.speed, 0));
+        this.setFlipX(false);
 
         this.createAnimation(texture);
         this.play(SwordProjectile.animationKey);
