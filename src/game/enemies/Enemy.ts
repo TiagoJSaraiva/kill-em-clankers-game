@@ -1,4 +1,5 @@
 import Phaser from "phaser";
+import { Player } from "../player/Player";
 
 // Classe base de Inimigo, que pode ser estendida para criar diferentes tipos de inimigos
 
@@ -6,6 +7,9 @@ export default abstract class Enemy extends Phaser.Physics.Arcade.Sprite {
     health: number;
     speed: number;
     damage: number;
+
+    attackingTarget: Player | null = null;
+    movingTarget: Player | Phaser.Math.Vector2 | null = null;
 
     constructor(scene: Phaser.Scene, x: number, y: number, texture: string) {
         super(scene, x, y, texture);
@@ -19,10 +23,14 @@ export default abstract class Enemy extends Phaser.Physics.Arcade.Sprite {
         this.damage = _damage;
     }
 
-    move(target: Phaser.GameObjects.Sprite): void {
+    attack(target: Player): void {
+        return; // Método de ataque genérico, pode ser sobrescrito por inimigos específicos para implementar ataques únicos
+    }
+
+    move(target: Player | Phaser.Math.Vector2): void {
         const direction = new Phaser.Math.Vector2(
-            target.x - this.x,
-            target.y - this.y
+            target instanceof Player ? target.x - this.x : target.x - this.x,
+            target instanceof Player ? target.y - this.y : target.y - this.y
         );
 
         if (direction.lengthSq() > 0) {

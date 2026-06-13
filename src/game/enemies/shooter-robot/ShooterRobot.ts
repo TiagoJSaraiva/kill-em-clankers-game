@@ -1,3 +1,4 @@
+import { Player } from "../../player/Player";
 import Enemy from "../Enemy";
 import { enemyVariation, getTexture, getAttributes } from "../helpers";
 import { Attributes, EnemyVariation, VariationName } from "../types";
@@ -30,9 +31,14 @@ export default class ShooterRobot extends Enemy
         this.visual.syncWithRobot(this);
     }
 
-    enemyAI (target: Phaser.GameObjects.Sprite) : void
+    resolveAi() {
+        
+    }
+
+    attack (target: Player) : void
     {
-        this.move(target);
+        console.log('Shooter Robot shoots at the player!');
+        this.visual.playShootVfx();
     }
 
     playShootVfx () : void
