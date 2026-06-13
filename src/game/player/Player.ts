@@ -2,6 +2,8 @@ import Phaser from 'phaser';
 import { Weapons } from './weapons/WeaponsCatalog';
 import Weapon from './weapons/Weapon';
 import { ItemSlot } from '../UI/ItemSlot';
+import { HealthBar } from '../UI/HealthBar';
+import { EnergyBar } from '../UI/EnergyBar';
 
 export class Player extends Phaser.Physics.Arcade.Sprite 
 {
@@ -12,8 +14,9 @@ export class Player extends Phaser.Physics.Arcade.Sprite
 
     private readonly speed = 260; // Velocidade geral do jogador, usada pra movimentação nas 4 direções
     private readonly momentum = 0.9; // Fator de momentum, usado pra suavizar a movimentação do jogador
-    private readonly maxHealthPoints: number = 100; // Pontos de vida do jogador, quando chegam a 0 o jogador morre
-    private currentHealthPoints: number; // Pontos de vida atuais do jogador, começam no máximo e vão diminuindo conforme o jogador leva dano
+    
+    readonly maxHealthPoints: number = 100; // Pontos de vida do jogador, quando chegam a 0 o jogador morre
+    currentHealthPoints: number; // Pontos de vida atuais do jogador, começam no máximo e vão diminuindo conforme o jogador leva dano
 
     private weapons: { [key: string]: Weapon }; // Catálogo de armas do jogador, carregado a partir do módulo WeaponsCatalog
     private activeWeapon: Weapon; // Arma atualmente equipada pelo jogador
@@ -21,6 +24,8 @@ export class Player extends Phaser.Physics.Arcade.Sprite
     private maxWeaponSwitchCooldown: number = 60; // Tempo mínimo entre trocas de arma, em frames
 
     private weaponSlots: ItemSlot[] = []; // Mapeamento das armas do jogador para os slots de UI correspondentes, usado para atualizar a interface quando o jogador troca de arma ou seleciona um slot
+    private healthBar: HealthBar; // Barra de vida do jogador, usada para mostrar a quantidade de vida restante
+    private energyBar: EnergyBar; // Barra de energia do jogador, usada para mostrar a quantidade de energia restante para usar as armas
 
     private initialBodySize: { width: number; height: number; offsetX: number; offsetY: number };
 
@@ -59,33 +64,52 @@ export class Player extends Phaser.Physics.Arcade.Sprite
         this.initialBodySize = this.getCurrentBodySize();
         this.updatePlayerTexture();
 
-        let slotPositionX = 1500 * ItemSlot.scale; // Posição inicial do primeiro slot de arma na UI
+        let slotPositionX = 700 * ItemSlot.scale; // Posição inicial do primeiro slot de arma na UI
         for (const weapon of Object.values(this.weapons)) {
             const slot = new ItemSlot(scene, slotPositionX, 150 * ItemSlot.scale, weapon); // Cria um slot de UI para cada arma do jogador
             this.weaponSlots.push(slot);
             slotPositionX += 200 * ItemSlot.scale; // Ajusta a posição do próximo slot
         }
+        this.healthBar = new HealthBar(scene, 500 * HealthBar.scale, 150 * HealthBar.scale); // Cria a barra de vida
+        this.energyBar = new EnergyBar(scene, 500 * EnergyBar.scale, 350 * EnergyBar.scale, this.activeWeapon); // Cria a barra de energia
     }
 
     update (cursors: Phaser.Types.Input.Keyboard.CursorKeys, scene : Phaser.Scene)
     {
-        this.processMovement(cursors); // Chama o método que processa a movimentação do player.
-        for (const weapon of Object.values(this.weapons)) {
-            weapon.update(); // Atualiza o estado de cada arma do jogador, mesmo as que não estão ativas, para garantir que cooldowns e regeneração de energia funcionem corretamente
-        }
-        if(cursors.space.isDown) {
-            this.activeWeapon.tryShoot(scene, this);
-        }
+        this.processMovement(cursors); // Chama o método que processa a movimentação do player mediante o input do usuário
+        this.updateWeapon(); // Chama update de todas as this.weapons para garantir que cooldowns e regeneração de energia funcionem.
+        this.processShooting(cursors, scene); // Chama o método que processa a lógica de tiro do jogador
         this.processWeaponSwitch(); // Chama o método que processa a troca de armas do player.
-
-        this.weaponSlots.forEach((slot) => {
-            slot.update();
-        });
+        this.updateUI(); // Chama o método que atualiza a UI do jogador, no caso, barra de energia e slots de weapon
     }
 
     /*                    */
     /* MÉTODOS AUXILIARES */
     /*                    */
+
+    updateWeapon(): void
+    {
+         // Chama o método que processa a movimentação do player.
+        for (const weapon of Object.values(this.weapons)) {
+            weapon.update(); // Atualiza o estado de cada arma do jogador, mesmo as que não estão ativas, para garantir que cooldowns e regeneração de energia funcionem corretamente
+        }
+        
+    }
+
+    processShooting(cursors: Phaser.Types.Input.Keyboard.CursorKeys, scene: Phaser.Scene): void
+    {
+        if(cursors.space.isDown) {
+            this.activeWeapon.tryShoot(scene, this);
+        }
+    }
+
+    updateUI() : void 
+    {
+        this.energyBar.updateFill();
+        this.weaponSlots.forEach((slot) => {
+            slot.update();
+        });
+    }
 
     processWeaponSwitch() : void 
     {
@@ -131,6 +155,7 @@ export class Player extends Phaser.Physics.Arcade.Sprite
             this.weaponSwitchCooldown = this.maxWeaponSwitchCooldown; // Reseta o cooldown para a próxima troca de arma
         }
 
+        this.energyBar.setWeapon(this.activeWeapon); // Atualiza a barra de energia para mostrar a energia da nova arma equipada
         this.updatePlayerTexture();
     }
 
