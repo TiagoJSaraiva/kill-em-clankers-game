@@ -9,15 +9,15 @@ export default class ShooterRobotVisual
     private static readonly armDepthOffset = 0.1;
     private static readonly cloakDepthOffset = 0.2;
     private static readonly shootVfxDepthOffset = 0.3;
-    private static readonly shootVfxDuration = 90;
+    private static readonly shootVfxDuration = 200;
 
     private static readonly armOriginX = 0.35;
     private static readonly armOriginY = 0.27;
     private static readonly armOffsetX = -64;
     private static readonly armOffsetY = -45;
     private static readonly armBaseAimAngle = Math.PI;
-    private static readonly muzzleOffsetX = -96;
-    private static readonly muzzleOffsetY = 0;
+    private static readonly muzzleOffsetX = -98;
+    private static readonly muzzleOffsetY = -6;
 
     private readonly scene: Phaser.Scene;
     private readonly cloakImage: Phaser.GameObjects.Image;
