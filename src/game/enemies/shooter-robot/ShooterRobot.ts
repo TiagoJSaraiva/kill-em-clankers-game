@@ -11,7 +11,7 @@ type EnemyProjectileScene = Phaser.Scene & {
 };
 
 const enemyVariations = [
-    enemyVariation("normal", "shooter-robot-body", 40, 30, 250),
+    enemyVariation("normal", "shooter-robot-body", 40, 30, 350),
     enemyVariation("strong", "shooter-robot-body", 40, 30, 120),
     enemyVariation("impossible", "shooter-robot-body", 40, 30, 120),
 ] as EnemyVariation[];
@@ -20,9 +20,9 @@ export default class ShooterRobot extends Enemy
 {
     static readonly scale = 0.8;
     private static readonly animationKey = 'shooter-robot-body-animation';
-    private static readonly momentum = 0.9;
+    private static readonly momentum = 0.99;
 
-    private static readonly attackRange = 1500;
+    private static readonly attackRange = 2000;
     private static readonly attackCooldown = 1500;
     private static readonly projectileSpeed = 500;
 
@@ -74,7 +74,7 @@ export default class ShooterRobot extends Enemy
             target.y
         );
 
-        if (distanceToTarget > ShooterRobot.attackRange)
+        if (distanceToTarget > ShooterRobot.attackRange || this.x > 1900)
         {
             this.moveToward(target);
             return;
