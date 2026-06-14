@@ -20,6 +20,7 @@ export default class ShooterRobot extends Enemy
 {
     static readonly scale = 0.8;
     private static readonly animationKey = 'shooter-robot-body-animation';
+    private static readonly momentum = 0.9;
 
     private static readonly attackRange = 1500;
     private static readonly attackCooldown = 1500;
@@ -75,7 +76,7 @@ export default class ShooterRobot extends Enemy
 
         if (distanceToTarget > ShooterRobot.attackRange)
         {
-            this.moveToward(target);
+            this.moveToward(target, ShooterRobot.momentum);
             return;
         }
 

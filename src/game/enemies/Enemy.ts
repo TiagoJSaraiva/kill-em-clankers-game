@@ -56,11 +56,7 @@ export default abstract class Enemy extends Phaser.Physics.Arcade.Sprite {
         this.nextContactDamageAt = time + Enemy.contactDamageCooldown;
     }
 
-    move(target: Player | Phaser.Math.Vector2): void {
-        this.moveToward(target);
-    }
-
-    moveToward(target: Player | Phaser.Math.Vector2): void {
+    moveToward(target: Player | Phaser.Math.Vector2, momentum: number = 0): void {
         const direction = new Phaser.Math.Vector2(
             target.x - this.x,
             target.y - this.y
@@ -77,6 +73,17 @@ export default abstract class Enemy extends Phaser.Physics.Arcade.Sprite {
 
     stopMoving(): void {
         this.setVelocity(0, 0);
+    }
+
+    moveRandomly(): void {
+        return 
+    }
+
+    protected applyMomentum (velocity: number, momentum: number) : number
+    {
+        const nextVelocity = velocity * momentum;
+
+        return Math.abs(nextVelocity) < 5 ? 0 : nextVelocity;
     }
 
     faceTarget(target: Player | Phaser.Math.Vector2): void {
