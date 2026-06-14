@@ -4,6 +4,15 @@ export function loadAssets(scene: Phaser.Scene): void {
      * 
      *  @param scene : cena do jogo onde os assets serão carregados
      */
+    
+    ////  RELATIVAS AOS MENU ////
+
+    scene.load.image('main-menu-title', './assets/images/menu/main-menu-title.png');
+    scene.load.image('main-menu-subtitle', './assets/images/menu/main-menu-subtitle.png');
+
+    scene.load.image('game-over', './assets/images/menu/game-over.png');
+
+
 
     ////  RELATIVAS AO PLAYER ////
 
@@ -60,7 +69,4 @@ export function loadAssets(scene: Phaser.Scene): void {
         frameHeight: 194
     });
     scene.load.image('shooter-robot-shoot-vfx', './assets/images/enemies/shooter-robot/shoot-vfx.png');
-
-    
-    
 }
