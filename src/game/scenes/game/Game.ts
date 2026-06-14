@@ -80,10 +80,10 @@ export class Game extends Scene
         this.backgroundNear.tilePositionX += Game.PARALLAX_NEAR_SPEED;
         this.backgroundMiddle.tilePositionX += Game.PARALLAX_MIDDLE_SPEED;
         this.backgroundVeryFar.tilePositionX += Game.PARALLAX_VERY_FAR_SPEED;
-        this.player.update(this.cursors, this);
         this.updateGroup(this.enemies, time, delta);
         this.updateGroup(this.playerProjectiles, time, delta);
         this.updateGroup(this.enemyProjectiles, time, delta);
+        this.player.update(this.cursors, this);
     }
 
     registerEnemy(enemy: Enemy): void
@@ -112,16 +112,16 @@ export class Game extends Scene
         );
 
         this.physics.add.overlap(
-            this.player,
             this.enemyProjectiles,
+            this.player,
             this.handleEnemyProjectilePlayerOverlap,
             undefined,
             this
         );
 
         this.physics.add.overlap(
-            this.player,
             this.enemies,
+            this.player,
             this.handleEnemyPlayerOverlap,
             undefined,
             this
@@ -150,8 +150,8 @@ export class Game extends Scene
         enemyObject: ArcadeOverlapObject
     ): void
     {
-        const projectile = projectileObject as unknown as Projectile;
-        const enemy = enemyObject as unknown as Enemy;
+        const projectile = projectileObject as Projectile;
+        const enemy = enemyObject as Enemy;
 
         if (!projectile.active || !enemy.active)
         {
@@ -163,11 +163,11 @@ export class Game extends Scene
     }
 
     private handleEnemyProjectilePlayerOverlap(
-        projectileObject: ArcadeOverlapObject,
-        _playerObject: ArcadeOverlapObject
+        _playerObject: ArcadeOverlapObject,
+        projectileObject: ArcadeOverlapObject
     ): void
     {
-        const projectile = projectileObject as unknown as EnemyProjectile;
+        const projectile = projectileObject as EnemyProjectile;
 
         if (!projectile.active || !this.player.active)
         {
@@ -179,11 +179,11 @@ export class Game extends Scene
     }
 
     private handleEnemyPlayerOverlap(
+        _playerObject: ArcadeOverlapObject,
         enemyObject: ArcadeOverlapObject,
-        _playerObject: ArcadeOverlapObject
     ): void
     {
-        const enemy = enemyObject as unknown as Enemy;
+        const enemy = enemyObject as Enemy;
 
         if (!enemy.active || !this.player.active)
         {

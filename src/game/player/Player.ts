@@ -215,11 +215,11 @@ export class Player extends Phaser.Physics.Arcade.Sprite
 
     takeDamage (amount: number) : void
     {
+        console.log("player took damage!")
         this.currentHealthPoints = Math.max(0, this.currentHealthPoints - amount);
 
         if (this.currentHealthPoints === 0)
         {
-            console.log('Player took damage');
             this.die();
         }
     }
