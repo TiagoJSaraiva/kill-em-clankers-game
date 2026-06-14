@@ -4,6 +4,7 @@ import { Player } from "../player/Player";
 // Classe base de inimigo, estendida por unidades especificas.
 export default abstract class Enemy extends Phaser.Physics.Arcade.Sprite {
     private static readonly contactDamageCooldown = 1000;
+    private static readonly DefaultStopMovingMomentum = 0; // Por enquanto 0 pois pode haver unidades que não querem momentum
 
     health: number = 0;
     speed: number = 0;
@@ -56,7 +57,7 @@ export default abstract class Enemy extends Phaser.Physics.Arcade.Sprite {
         this.nextContactDamageAt = time + Enemy.contactDamageCooldown;
     }
 
-    moveToward(target: Player | Phaser.Math.Vector2, momentum: number = 0): void {
+    moveToward(target: Player | Phaser.Math.Vector2): void {
         const direction = new Phaser.Math.Vector2(
             target.x - this.x,
             target.y - this.y
@@ -71,8 +72,19 @@ export default abstract class Enemy extends Phaser.Physics.Arcade.Sprite {
         this.stopMoving();
     }
 
-    stopMoving(): void {
-        this.setVelocity(0, 0);
+    stopMoving(momentum: number = Enemy.DefaultStopMovingMomentum): void {
+        const body = this.body as Phaser.Physics.Arcade.Body | null;
+
+        if (!body) {
+            return;
+        }
+
+        const clampedMomentum = Phaser.Math.Clamp(momentum, 0, 1);
+
+        this.setVelocity(
+            this.applyMomentum(body.velocity.x, clampedMomentum),
+            this.applyMomentum(body.velocity.y, clampedMomentum)
+        );
     }
 
     moveRandomly(): void {

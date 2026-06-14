@@ -76,11 +76,11 @@ export default class ShooterRobot extends Enemy
 
         if (distanceToTarget > ShooterRobot.attackRange)
         {
-            this.moveToward(target, ShooterRobot.momentum);
+            this.moveToward(target);
             return;
         }
 
-        this.stopMoving();
+        this.stopMoving(ShooterRobot.momentum);
 
         if (time >= this.nextAttackAt)
         {
