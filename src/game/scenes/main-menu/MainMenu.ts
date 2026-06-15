@@ -123,7 +123,7 @@ export class MainMenu extends Scene
             if(time > 2000 && !this.title) {
                 this.title = this.add.image(this.width / 2, 220, 'main-menu-title').setDepth(1);
             }
-            if(time > 4000 && !this.subtitle) {
+            if(time > 3000 && !this.subtitle) {
                 this.subtitle = this.add.image(this.width / 2, 450, 'main-menu-subtitle').setDepth(2).setScale(0.3);
             }
             if(time > 5000 && !this.playButton) {
@@ -146,11 +146,11 @@ export class MainMenu extends Scene
                     ease: 'Linear',
                 });
             }
-            
+
         } else {
             let _time = time - this.timeAtUpdateChange;
             this.playButton.destroy();
-             if(_time > 1600 && this.title) {
+             if(_time > 2000 && this.title) {
                 this.title.destroy();
             }
             if(_time > 1200 && this.subtitle) {
@@ -162,7 +162,7 @@ export class MainMenu extends Scene
             if(_time > 400 && this.exitButton) {
                 this.exitButton.destroy();
             }
-            if(_time > 2200 && this.bgTween && !this.bgTween.isPlaying()) {
+            if(_time > 3000 && this.bgTween && !this.bgTween.isPlaying()) {
                 this.bgTween = this.tweens.add({
                     targets: this.backgroundCover,
                     alpha: 1,
@@ -170,7 +170,7 @@ export class MainMenu extends Scene
                     ease: 'Linear',
                 });
             }
-            if(_time > 4000) {
+            if(_time > 5000) {
                 this.scene.start('Game');
             }
         }
