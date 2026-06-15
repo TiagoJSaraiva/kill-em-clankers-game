@@ -12,7 +12,12 @@ export function loadAssets(scene: Phaser.Scene): void {
 
     scene.load.image('game-over', './assets/images/menu/game-over.png');
 
-
+    scene.load.image('config-button', './assets/images/menu/config-button.png');
+    scene.load.image('config-button-hover', './assets/images/menu/config-button-hover.png');
+    scene.load.image('play-button', './assets/images/menu/play-button.png');
+    scene.load.image('play-button-hover', './assets/images/menu/play-button-hover.png');
+    scene.load.image('exit-button', './assets/images/menu/exit-button.png');
+    scene.load.image('exit-button-hover', './assets/images/menu/exit-button-hover.png');
 
     ////  RELATIVAS AO PLAYER ////
 
