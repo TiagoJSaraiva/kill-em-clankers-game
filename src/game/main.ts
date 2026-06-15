@@ -2,6 +2,7 @@
 import { Game as MainGame } from './scenes/game/Game';
 // import { MainMenu } from './scenes/MainMenu';
 import { AUTO, Game } from 'phaser';
+import { MainMenu } from './scenes/main-menu/MainMenu';
 
 //  Find out more information about the Game Config at:
 //  https://docs.phaser.io/api-documentation/typedef/types-core#gameconfig
@@ -19,7 +20,7 @@ const config: Phaser.Types.Core.GameConfig = {
         }
     },
     scene: [
-        // MainMenu,
+        MainMenu,
         MainGame,
         // GameOver
     ]

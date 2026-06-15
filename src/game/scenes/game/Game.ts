@@ -1,7 +1,7 @@
 import { Scene } from 'phaser';
 import { Player } from '../../player/Player';
 import manageSpawn from './services/spawn/spawnService';
-import { loadAssets } from './services/assetLoader/assetLoaderService';
+import { loadAssets } from '../main-menu/assetLoader/assetLoaderService';
 import Phaser from 'phaser';
 import Enemy from '../../enemies/Enemy';
 import { EnemyProjectile } from '../../enemies/EnemyProjectile';
@@ -52,7 +52,7 @@ export class Game extends Scene
         this.backgroundNear.setDepth(-10);
 
         this.backgroundMiddle = this.add.tileSprite(0, 0, width, height, 'bg-middle');
-        this.backgroundMiddle.setOrigin(0,-0.3);
+        this.backgroundMiddle.setOrigin(0,-0.18);
         this.backgroundMiddle.setDepth(-15);
 
         this.backgroundVeryFar = this.add.tileSprite(0, 0, width, height, 'bg-very-far');

@@ -18,6 +18,7 @@ export function loadAssets(scene: Phaser.Scene): void {
     scene.load.image('play-button-hover', './assets/images/menu/play-button-hover.png');
     scene.load.image('exit-button', './assets/images/menu/exit-button.png');
     scene.load.image('exit-button-hover', './assets/images/menu/exit-button-hover.png');
+    scene.load.image('menu-bg', './assets/images/menu/menu-bg.png');
 
     ////  RELATIVAS AO PLAYER ////
 
