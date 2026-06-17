@@ -17,9 +17,9 @@ export class MainMenu extends Scene
     private timeAtUpdateChange: number = 0;
     private buttonsActive: boolean = false;
 
-    private bgTween!: Phaser.Tweens.Tween;
-    private fadeInStarted: boolean = false;
+    private bgTween?: Phaser.Tweens.Tween;
     private fadeOutStarted: boolean = false;
+    private fadeInStarted: boolean = false;
 
     backgroundFar!: GameObjects.TileSprite;
     backgroundNear!: GameObjects.TileSprite;
@@ -36,10 +36,26 @@ export class MainMenu extends Scene
     constructor ()
     {
         super('MainMenu');
+        this.init();
     }
 
     preload() {
         loadAssets(this);
+    }
+
+    init() {
+        this.updateChange = false;
+        this.timeAtUpdateChange = 0;
+        this.buttonsActive = false;
+        this.bgTween = undefined;
+        this.fadeInStarted = false;
+        this.fadeOutStarted = false;
+
+        this.title = undefined;
+        this.subtitle = undefined;
+        this.playButton = undefined;
+        this.configButton = undefined;
+        this.exitButton = undefined;
     }
 
     setupButtons() {
@@ -143,25 +159,32 @@ export class MainMenu extends Scene
             if(time > 5400 && !this.exitButton) {
                 this.exitButton = this.add.image(this.width / 2 + 500, 800, 'exit-button').setScale(this.buttonScale);
             }
-            if(this.playButton && this.configButton && this.exitButton && !this.buttonsActive) {
-                this.setupButtons();
-            }
-            if(time > 6000 && !this.bgTween && !this.fadeInStarted) {
-                this.fadeInStarted = true;
+            if(time > 6000 && !this.bgTween && !this.fadeOutStarted) {
+                this.fadeOutStarted = true;
+
                 this.bgTween = this.tweens.add({
                     targets: this.backgroundCover,
                     alpha: 0,
                     duration: 500,
                     ease: 'Linear',
                 });
+                
+                if(this.playButton && this.configButton && this.exitButton && !this.buttonsActive) {
+                    this.setupButtons();
+                }
             }
 
         } else {
             let _time = time - this.timeAtUpdateChange;
-            this.playButton!.destroy();
+
+            if(this.playButton) {
+                this.playButton.destroy();
+                this.playButton = undefined;
+            }
+
             this.buttonsActive = false;
-            
-             if(_time > 2000 && this.title) {
+
+            if(_time > 2000 && this.title) {
                 this.title.destroy();
                 this.title = undefined;
             }
@@ -177,8 +200,11 @@ export class MainMenu extends Scene
                 this.exitButton.destroy();
                 this.exitButton = undefined;
             }
-            if(_time > 3000 && this.bgTween && !this.bgTween.isPlaying() && !this.fadeOutStarted) {
-                this.fadeOutStarted = true;
+            if(_time > 3000 && this.bgTween && !this.bgTween.isPlaying() && !this.fadeInStarted) {
+                this.fadeInStarted = true;
+
+                this.bgTween?.stop();
+
                 this.bgTween = this.tweens.add({
                     targets: this.backgroundCover,
                     alpha: 1,
