@@ -11,6 +11,7 @@ export function loadAssets(scene: Phaser.Scene): void {
     scene.load.image('main-menu-subtitle', './assets/images/menu/main-menu-subtitle.png');
 
     scene.load.image('game-over', './assets/images/menu/game-over.png');
+    scene.load.image('score-label', './assets/images/menu/score-label.png');
 
     scene.load.image('config-button', './assets/images/menu/config-button.png');
     scene.load.image('config-button-hover', './assets/images/menu/config-button-hover.png');
