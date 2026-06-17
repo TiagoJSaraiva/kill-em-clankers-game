@@ -15,20 +15,23 @@ export class MainMenu extends Scene
 
     private updateChange: boolean = false
     private timeAtUpdateChange: number = 0;
+    private buttonsActive: boolean = false;
 
-    private bgTween: Phaser.Tweens.Tween;
+    private bgTween!: Phaser.Tweens.Tween;
+    private fadeInStarted: boolean = false;
+    private fadeOutStarted: boolean = false;
 
-    backgroundFar: GameObjects.TileSprite;
-    backgroundNear: GameObjects.TileSprite;
-    backgroundMiddle: GameObjects.TileSprite;
-    backgroundVeryFar: GameObjects.TileSprite;
-    backgroundCover: GameObjects.Image;
+    backgroundFar!: GameObjects.TileSprite;
+    backgroundNear!: GameObjects.TileSprite;
+    backgroundMiddle!: GameObjects.TileSprite;
+    backgroundVeryFar!: GameObjects.TileSprite;
+    backgroundCover!: GameObjects.Image;
 
-    title: GameObjects.Image;
-    subtitle: GameObjects.Image;
-    playButton: GameObjects.Image;
-    configButton: GameObjects.Image;
-    exitButton: GameObjects.Image;
+    title?: GameObjects.Image;
+    subtitle?: GameObjects.Image;
+    playButton?: GameObjects.Image;
+    configButton?: GameObjects.Image;
+    exitButton?: GameObjects.Image;
 
     constructor ()
     {
@@ -39,52 +42,55 @@ export class MainMenu extends Scene
         loadAssets(this);
     }
 
-    setupButtons(time: number) {
-        this.playButton.setInteractive({ useHandCursor: true });
-        this.configButton.setInteractive({ useHandCursor: true });
-        this.exitButton.setInteractive({ useHandCursor: true });
+    setupButtons() {
 
-        this.playButton.on('pointerover', () => {
-            this.playButton.setTexture('play-button-hover');
-            this.playButton.setScale(this.hoverButtonScale);
+        this.buttonsActive = true;
+
+        this.playButton!.setInteractive({ useHandCursor: true });
+        this.configButton!.setInteractive({ useHandCursor: true });
+        this.exitButton!.setInteractive({ useHandCursor: true });
+
+        this.playButton!.on('pointerover', () => {
+            this.playButton!.setTexture('play-button-hover');
+            this.playButton!.setScale(this.hoverButtonScale);
         });
 
-        this.playButton.on('pointerout', () => {
-            this.playButton.setTexture('play-button');
-            this.playButton.setScale(this.buttonScale);
+        this.playButton!.on('pointerout', () => {
+            this.playButton!.setTexture('play-button');
+            this.playButton!.setScale(this.buttonScale);
         });
 
-        this.playButton.on('pointerdown', () => {
-            this.timeAtUpdateChange = time;
+        this.playButton!.on('pointerdown', () => {
+            this.timeAtUpdateChange = this.time.now;
             this.updateChange = true;
         });
 
-        this.configButton.on('pointerover', () => {
-            this.configButton.setTexture('config-button-hover');
-            this.configButton.setScale(this.hoverButtonScale);
+        this.configButton!.on('pointerover', () => {
+            this.configButton!.setTexture('config-button-hover');
+            this.configButton!.setScale(this.hoverButtonScale);
         });
 
-        this.configButton.on('pointerout', () => {
-            this.configButton.setTexture('config-button');
-            this.configButton.setScale(this.buttonScale);
+        this.configButton!.on('pointerout', () => {
+            this.configButton!.setTexture('config-button');
+            this.configButton!.setScale(this.buttonScale);
         });
 
-        this.configButton.on('pointerdown', () => {
+        this.configButton!.on('pointerdown', () => {
             // Lógica para abrir as configurações do jogo
             console.log('Configurações do jogo');
         });
 
-        this.exitButton.on('pointerover', () => {
-            this.exitButton.setTexture('exit-button-hover');
-            this.exitButton.setScale(this.hoverButtonScale);
+        this.exitButton!.on('pointerover', () => {
+            this.exitButton!.setTexture('exit-button-hover');
+            this.exitButton!.setScale(this.hoverButtonScale);
         });
 
-        this.exitButton.on('pointerout', () => {
-            this.exitButton.setTexture('exit-button');
-            this.exitButton.setScale(this.buttonScale);
+        this.exitButton!.on('pointerout', () => {
+            this.exitButton!.setTexture('exit-button');
+            this.exitButton!.setScale(this.buttonScale);
         });
 
-        this.exitButton.on('pointerdown', () => {
+        this.exitButton!.on('pointerdown', () => {
             // Lógica para sair do jogo
             console.log('Sair do jogo');
         });
@@ -113,11 +119,13 @@ export class MainMenu extends Scene
         this.backgroundVeryFar.setDepth(-25);
     }
 
-    update(time: number) {
-        this.backgroundFar.tilePositionX += MainMenu.PARALLAX_FAR_SPEED;
-        this.backgroundNear.tilePositionX += MainMenu.PARALLAX_NEAR_SPEED;
-        this.backgroundMiddle.tilePositionX += MainMenu.PARALLAX_MIDDLE_SPEED;
-        this.backgroundVeryFar.tilePositionX += MainMenu.PARALLAX_VERY_FAR_SPEED;
+    update(time: number, delta: number): void{
+        const dt = delta / 1000;
+
+        this.backgroundFar.tilePositionX += MainMenu.PARALLAX_FAR_SPEED * 60 * dt;
+        this.backgroundNear.tilePositionX += MainMenu.PARALLAX_NEAR_SPEED * 60 * dt;
+        this.backgroundMiddle.tilePositionX += MainMenu.PARALLAX_MIDDLE_SPEED * 60 * dt;
+        this.backgroundVeryFar.tilePositionX += MainMenu.PARALLAX_VERY_FAR_SPEED * 60 * dt;
 
         if(!this.updateChange) {
             if(time > 2000 && !this.title) {
@@ -135,10 +143,11 @@ export class MainMenu extends Scene
             if(time > 5400 && !this.exitButton) {
                 this.exitButton = this.add.image(this.width / 2 + 500, 800, 'exit-button').setScale(this.buttonScale);
             }
-            if(this.playButton && this.configButton && this.exitButton) {
-                this.setupButtons(time);
+            if(this.playButton && this.configButton && this.exitButton && !this.buttonsActive) {
+                this.setupButtons();
             }
-            if(time > 6000 && !this.bgTween) {
+            if(time > 6000 && !this.bgTween && !this.fadeInStarted) {
+                this.fadeInStarted = true;
                 this.bgTween = this.tweens.add({
                     targets: this.backgroundCover,
                     alpha: 0,
@@ -149,20 +158,27 @@ export class MainMenu extends Scene
 
         } else {
             let _time = time - this.timeAtUpdateChange;
-            this.playButton.destroy();
+            this.playButton!.destroy();
+            this.buttonsActive = false;
+            
              if(_time > 2000 && this.title) {
                 this.title.destroy();
+                this.title = undefined;
             }
             if(_time > 1200 && this.subtitle) {
                 this.subtitle.destroy();
+                this.subtitle = undefined;    
             }
             if(_time > 200 && this.configButton) {
                 this.configButton.destroy();
+                this.configButton = undefined;
             }
             if(_time > 400 && this.exitButton) {
                 this.exitButton.destroy();
+                this.exitButton = undefined;
             }
-            if(_time > 3000 && this.bgTween && !this.bgTween.isPlaying()) {
+            if(_time > 3000 && this.bgTween && !this.bgTween.isPlaying() && !this.fadeOutStarted) {
+                this.fadeOutStarted = true;
                 this.bgTween = this.tweens.add({
                     targets: this.backgroundCover,
                     alpha: 1,

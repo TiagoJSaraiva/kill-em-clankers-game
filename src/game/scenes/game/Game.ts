@@ -76,10 +76,11 @@ export class Game extends Scene
 
         manageSpawn(this, elapsedTimeInSeconds);
 
-        this.backgroundFar.tilePositionX += Game.PARALLAX_FAR_SPEED;
-        this.backgroundNear.tilePositionX += Game.PARALLAX_NEAR_SPEED;
-        this.backgroundMiddle.tilePositionX += Game.PARALLAX_MIDDLE_SPEED;
-        this.backgroundVeryFar.tilePositionX += Game.PARALLAX_VERY_FAR_SPEED;
+        const dt = delta / 1000;
+        this.backgroundFar.tilePositionX += Game.PARALLAX_FAR_SPEED * 60 * dt;
+        this.backgroundNear.tilePositionX += Game.PARALLAX_NEAR_SPEED * 60 * dt;
+        this.backgroundMiddle.tilePositionX += Game.PARALLAX_MIDDLE_SPEED * 60 * dt;
+        this.backgroundVeryFar.tilePositionX += Game.PARALLAX_VERY_FAR_SPEED * 60 * dt;
         this.updateGroup(this.enemies, time, delta);
         this.updateGroup(this.playerProjectiles, time, delta);
         this.updateGroup(this.enemyProjectiles, time, delta);
