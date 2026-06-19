@@ -160,7 +160,7 @@ export class Game extends Scene
             return;
         }
 
-        enemy.takeDamage(projectile.damage); // AQUI
+        this.score += enemy.takeDamage(projectile.damage); // AQUI
         projectile.destroy();
     }
 
