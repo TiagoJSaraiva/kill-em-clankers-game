@@ -3,8 +3,10 @@ import { Scene } from 'phaser';
 
 export class GameOver extends Scene
 {
-    private readonly height: number = 1080;
-    private readonly width: number = 1920;
+    private static readonly height: number = 1080;
+    private static readonly width: number = 1920;
+    private static readonly buttonScale: number = 0.2;
+    private static readonly hoverButtonScale: number = 0.22;
 
     private scoreCounter: number = 0;
     
@@ -24,10 +26,10 @@ export class GameOver extends Scene
 
     create ()
     {
-        this.add.image(this.width / 2, 300, 'game-over').setScale(0.8);
-        this.add.image(this.width /2, this.height/2+200, 'score-label').setScale(0.3);
-        this.add.image(this.width / 2, this.height / 2, 'menu-bg').setDepth(-1);
-        this.scoreAmount = this.add.text(this.width / 2, this.height / 2 + 300, "000000", {
+        this.add.image(GameOver.width / 2, 300, 'game-over').setScale(0.8);
+        this.add.image(GameOver.width /2, GameOver.height/2+200, 'score-label').setScale(0.3);
+        this.add.image(GameOver.width / 2, GameOver.height / 2, 'menu-bg').setDepth(-1);
+        this.scoreAmount = this.add.text(GameOver.width / 2, GameOver.height / 2 + 300, "000000", {
             fontFamily: 'Courier New',
             fontSize: '64px',
             fontStyle: 'bold',
@@ -36,11 +38,15 @@ export class GameOver extends Scene
 
         const counter = { value: 0 };
 
+        let duration = 3000;
+        if(this.scoreCounter == 0) duration = 500;
+        if(this.scoreCounter <= 50) duration = 1500;
+
         this.tweens.add({
             targets: counter,
             value: this.scoreCounter,
-            duration: 3000,
-            delay: 5000,
+            duration: duration,
+            delay: 500,
             ease: 'Linear',
             onUpdate: () => {
                 this.scoreAmount.setText(Math.floor(counter.value).toString().padStart(6, '0'));
@@ -53,27 +59,27 @@ export class GameOver extends Scene
 
     private setupButtons(): void
     {
-        this.menuButton = this.add.image(this.width / 2, this.height / 2 + 500, 'menu-button').setScale(0.3).setInteractive();
+        this.menuButton = this.add.image(GameOver.width / 2 + 500, GameOver.height / 2+200, 'menu-button').setScale(GameOver.buttonScale).setInteractive().setScale(GameOver.buttonScale);
         this.menuButton.on('pointerdown', () => {
             this.scene.start('MainMenu');
         });
-        this.restartButton = this.add.image(this.width / 2, this.height / 2 + 400, 'restart-button').setScale(0.3).setInteractive();
+        this.restartButton = this.add.image(GameOver.width / 2 - 500, GameOver.height / 2+200, 'restart-button').setScale(GameOver.buttonScale).setInteractive().setScale(GameOver.buttonScale);
         this.restartButton.on('pointerdown', () => {
             this.scene.start('Game');
         });
 
         this.menuButton.on('pointerover', () => {
-            this.menuButton.setTexture('menu-button-hover');
+            this.menuButton.setTexture('menu-button-hover').setScale(GameOver.hoverButtonScale);
         });
         this.menuButton.on('pointerout', () => {
-            this.menuButton.setTexture('menu-button');
+            this.menuButton.setTexture('menu-button').setScale(GameOver.buttonScale);
         });
 
         this.restartButton.on('pointerover', () => {
-            this.restartButton.setTexture('restart-button-hover');
+            this.restartButton.setTexture('restart-button-hover').setScale(GameOver.hoverButtonScale);
         });
         this.restartButton.on('pointerout', () => {
-            this.restartButton.setTexture('restart-button');
+            this.restartButton.setTexture('restart-button').setScale(GameOver.buttonScale);
         });
     }
 

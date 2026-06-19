@@ -26,7 +26,8 @@ export class Game extends Scene
     enemies: Phaser.Physics.Arcade.Group;
     playerProjectiles: Phaser.Physics.Arcade.Group;
     enemyProjectiles: Phaser.Physics.Arcade.Group;
-    score: number;
+    score: number = 0;
+    scoreText: Phaser.GameObjects.Text;
 
     constructor ()
     {
@@ -67,6 +68,8 @@ export class Game extends Scene
         this.player = new Player(this, 100, 450);
         this.player.setDepth(-1);
         this.cursors = this.input.keyboard?.createCursorKeys()!;
+
+        this.createScoreText();
 
         this.physics.world.setBoundsCollision(true, false, true, true);
         this.configureCollisions();
@@ -161,6 +164,7 @@ export class Game extends Scene
         }
 
         this.score += enemy.takeDamage(projectile.damage); // AQUI
+        this.updateScoreText();
         projectile.destroy();
     }
 
@@ -202,5 +206,19 @@ export class Game extends Scene
     private callGameOver(): void
     {
         this.scene.start('GameOver', { score: this.score }); // AQUI
+    }
+
+    private createScoreText(): void
+    {
+        const style = { font: '20px Arial', fill: '#fff' };
+        this.scoreText = this.add.text(500, 150, `Score: ${this.score}`, style).setScrollFactor(0);
+    }
+
+    private updateScoreText(): void
+    {
+        if (this.scoreText)
+        {
+            this.scoreText.setText(`Score: ${this.score}`);
+        }
     }
 }

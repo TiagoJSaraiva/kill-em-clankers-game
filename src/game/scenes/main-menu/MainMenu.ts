@@ -8,10 +8,10 @@ export class MainMenu extends Scene
     private static readonly PARALLAX_MIDDLE_SPEED = 0.5;
     private static readonly PARALLAX_VERY_FAR_SPEED = 0.05;
 
-    private readonly width: number = 1920;
-    private readonly height: number = 1080;
-    private readonly buttonScale: number = 0.2;
-    private readonly hoverButtonScale: number = 0.22;
+    private static readonly width: number = 1920;
+    private static readonly height: number = 1080;
+    private static readonly buttonScale: number = 0.2;
+    private static readonly hoverButtonScale: number = 0.22;
 
     private updateChange: boolean = false
     private timeAtUpdateChange: number = 0;
@@ -61,7 +61,7 @@ export class MainMenu extends Scene
     {
         const { width, height } = this.scale;
 
-        this.backgroundCover = this.add.image(this.width / 2, this.height / 2, 'menu-bg').setDepth(-1);
+        this.backgroundCover = this.add.image(MainMenu.width / 2, MainMenu.height / 2, 'menu-bg').setDepth(-1);
 
         this.backgroundFar = this.add.tileSprite(0, 0, width, height, 'bg-far');
         this.backgroundFar.setOrigin(0, 0);
@@ -89,25 +89,25 @@ export class MainMenu extends Scene
         this.backgroundVeryFar.tilePositionX += MainMenu.PARALLAX_VERY_FAR_SPEED * 60 * dt;
 
         if(!this.updateChange) {
-            if(time > 2000 && !this.title) {
-                this.title = this.add.image(this.width / 2, 220, 'main-menu-title').setDepth(1);
+            if(time > 3000 && !this.title) {
+                this.title = this.add.image(MainMenu.width / 2, 220, 'main-menu-title').setDepth(1);
             }
-            if(time > 3000 && !this.subtitle) {
-                this.subtitle = this.add.image(this.width / 2, 450, 'main-menu-subtitle').setDepth(2).setScale(0.3);
+            if(time > 3500 && !this.subtitle) {
+                this.subtitle = this.add.image(MainMenu.width / 2, 450, 'main-menu-subtitle').setDepth(2).setScale(0.3);
             }
-            if(time > 5000 && !this.playButton) {
-                this.playButton = this.add.image(this.width / 2, 800, 'play-button').setScale(this.buttonScale);
+            if(time > 4000 && !this.playButton) {
+                this.playButton = this.add.image(MainMenu.width / 2, 800, 'play-button').setScale(MainMenu.buttonScale);
             }
-            if(time > 5200 && !this.configButton) {
-                this.configButton = this.add.image(this.width / 2 - 500, 800, 'config-button').setScale(this.buttonScale);
+            if(time > 4300 && !this.configButton) {
+                this.configButton = this.add.image(MainMenu.width / 2 - 500, 800, 'config-button').setScale(MainMenu.buttonScale);
             }
-            if(time > 5400 && !this.exitButton) {
-                this.exitButton = this.add.image(this.width / 2 + 500, 800, 'exit-button').setScale(this.buttonScale);
+            if(time > 4600 && !this.exitButton) {
+                this.exitButton = this.add.image(MainMenu.width / 2 + 500, 800, 'exit-button').setScale(MainMenu.buttonScale);
             }
             if(this.playButton && this.configButton && this.exitButton && !this.buttonsActive) {
                 this.setupButtons();
             }
-            if(time > 6000 && !this.bgTween && !this.fadeOutStarted) {
+            if(time > 5000 && !this.bgTween && !this.fadeOutStarted) {
                 this.fadeOutStarted = true;
 
                 this.bgTween = this.tweens.add({
@@ -154,10 +154,12 @@ export class MainMenu extends Scene
                     alpha: 1,
                     duration: 500,
                     ease: 'Linear',
+                    onComplete: () => {
+                        setTimeout(() => {
+                            this.scene.start('Game');
+                        }, 500);
+                    }
                 });
-            }
-            if(_time > 5000) {
-                this.scene.start('GameOver', { score: 500000 }); // Colocado como Game over temporariamente pra debug. Valor de score placeholder pra debug
             }
         }
     }
@@ -175,12 +177,12 @@ export class MainMenu extends Scene
 
         this.playButton!.on('pointerover', () => {
             this.playButton!.setTexture('play-button-hover');
-            this.playButton!.setScale(this.hoverButtonScale);
+            this.playButton!.setScale(MainMenu.hoverButtonScale);
         });
 
         this.playButton!.on('pointerout', () => {
             this.playButton!.setTexture('play-button');
-            this.playButton!.setScale(this.buttonScale);
+            this.playButton!.setScale(MainMenu.buttonScale);
         });
 
         this.playButton!.on('pointerdown', () => {
@@ -190,12 +192,12 @@ export class MainMenu extends Scene
 
         this.configButton!.on('pointerover', () => {
             this.configButton!.setTexture('config-button-hover');
-            this.configButton!.setScale(this.hoverButtonScale);
+            this.configButton!.setScale(MainMenu.hoverButtonScale);
         });
 
         this.configButton!.on('pointerout', () => {
             this.configButton!.setTexture('config-button');
-            this.configButton!.setScale(this.buttonScale);
+            this.configButton!.setScale(MainMenu.buttonScale);
         });
 
         this.configButton!.on('pointerdown', () => {
@@ -205,12 +207,12 @@ export class MainMenu extends Scene
 
         this.exitButton!.on('pointerover', () => {
             this.exitButton!.setTexture('exit-button-hover');
-            this.exitButton!.setScale(this.hoverButtonScale);
+            this.exitButton!.setScale(MainMenu.hoverButtonScale);
         });
 
         this.exitButton!.on('pointerout', () => {
             this.exitButton!.setTexture('exit-button');
-            this.exitButton!.setScale(this.buttonScale);
+            this.exitButton!.setScale(MainMenu.buttonScale);
         });
 
         this.exitButton!.on('pointerdown', () => {
