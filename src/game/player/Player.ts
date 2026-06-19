@@ -213,19 +213,16 @@ export class Player extends Phaser.Physics.Arcade.Sprite
         return Math.abs(nextVelocity) < 5 ? 0 : nextVelocity;
     }
 
-    takeDamage (amount: number) : void
+    takeDamage (amount: number) : boolean
     {
-        console.log("player took damage!")
+        let dead: boolean = false;
         this.currentHealthPoints = Math.max(0, this.currentHealthPoints - amount);
 
         if (this.currentHealthPoints === 0)
         {
-            this.die();
+            dead = true;
         }
-    }
-
-    private die () : void
-    {
-        console.log('Player has died!');
+        
+        return dead;
     }
 }

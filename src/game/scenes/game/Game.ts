@@ -176,7 +176,11 @@ export class Game extends Scene
             return;
         }
 
-        this.player.takeDamage(projectile.damage);
+        let dead: boolean = this.player.takeDamage(projectile.damage);
+        if (dead)
+        {
+            this.callGameOver();
+        }
         projectile.destroy();
     }
 
@@ -193,5 +197,10 @@ export class Game extends Scene
         }
 
         enemy.tryContactDamage(this.player, this.time.now);
+    }
+
+    private callGameOver(): void
+    {
+        this.scene.start('GameOver', { score: this.score }); // AQUI
     }
 }

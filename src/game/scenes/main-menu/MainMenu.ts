@@ -157,7 +157,7 @@ export class MainMenu extends Scene
                 });
             }
             if(_time > 5000) {
-                this.scene.start('Game');
+                this.scene.start('GameOver', { score: 500000 }); // Colocado como Game over temporariamente pra debug. Valor de score placeholder pra debug
             }
         }
     }
