@@ -1,18 +1,20 @@
 import Phaser from "phaser";
 import { Player } from "../player/Player";
+import { Attributes } from "./types";
 
 // Classe base de inimigo, estendida por unidades especificas.
 export default abstract class Enemy extends Phaser.Physics.Arcade.Sprite {
     private static readonly contactDamageCooldown = 1000;
     private static readonly DefaultStopMovingMomentum = 0; // Por enquanto 0 pois pode haver unidades que não querem momentum
 
-    health: number = 0;
-    speed: number = 0;
+    healthPoints: number = 0;
+    moveSpeed: number = 0;
     damage: number = 0;
+    scoreValue: number = 0;
 
     attackingTarget: Player | null = null;
     movingTarget: Player | Phaser.Math.Vector2 | null = null;
-
+    
     private nextContactDamageAt: number = 0;
 
     constructor(scene: Phaser.Scene, x: number, y: number, texture: string, target: Player | null = null) {
@@ -27,25 +29,29 @@ export default abstract class Enemy extends Phaser.Physics.Arcade.Sprite {
         return;
     }
 
-    init(_health: number, _speed: number, _damage: number): void {
-        this.health = _health;
-        this.speed = _speed;
-        this.damage = _damage;
+    init(attributes: Attributes): void {
+        this.healthPoints = attributes.healthPoints;
+        this.moveSpeed = attributes.moveSpeed;
+        this.damage = attributes.damage;
+        this.scoreValue = attributes.scoreValue
     }
 
     attack(): void {
         return;
     }
 
-    takeDamage(amount: number): void {
+    takeDamage(amount: number): number {
         if (!this.active) {
-            return;
+            return 0;
         }
 
-        this.health -= amount;
-        if (this.health <= 0) {
+        this.healthPoints -= amount;
+        if (this.healthPoints <= 0) {
             this.destroy();
+            return this.scoreValue;
         }
+
+        return 0;
     }
 
     tryContactDamage(target: Player, time: number): void {
@@ -64,7 +70,7 @@ export default abstract class Enemy extends Phaser.Physics.Arcade.Sprite {
         );
 
         if (direction.lengthSq() > 0) {
-            direction.normalize().scale(this.speed);
+            direction.normalize().scale(this.moveSpeed);
             this.setVelocity(direction.x, direction.y);
             return;
         }

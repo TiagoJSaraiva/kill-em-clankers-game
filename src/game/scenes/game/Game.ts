@@ -26,6 +26,7 @@ export class Game extends Scene
     enemies: Phaser.Physics.Arcade.Group;
     playerProjectiles: Phaser.Physics.Arcade.Group;
     enemyProjectiles: Phaser.Physics.Arcade.Group;
+    score: number;
 
     constructor ()
     {
@@ -159,7 +160,7 @@ export class Game extends Scene
             return;
         }
 
-        enemy.takeDamage(projectile.damage);
+        enemy.takeDamage(projectile.damage); // AQUI
         projectile.destroy();
     }
 

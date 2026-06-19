@@ -11,17 +11,17 @@ type EnemyProjectileScene = Phaser.Scene & {
 };
 
 const enemyVariations = [
-    enemyVariation("normal", "shooter-robot-body", 40, 30, 350),
-    enemyVariation("strong", "shooter-robot-body", 40, 30, 120),
-    enemyVariation("impossible", "shooter-robot-body", 40, 30, 120),
+    enemyVariation("normal", "shooter-robot-body", 40, 30, 350, 100),
+    enemyVariation("strong", "shooter-robot-body", 40, 30, 120, 200),
+    enemyVariation("impossible", "shooter-robot-body", 40, 30, 120, 300),
 ] as EnemyVariation[];
 
 export default class ShooterRobot extends Enemy
 {
     static readonly scale = 0.8;
+
     private static readonly animationKey = 'shooter-robot-body-animation';
     private static readonly momentum = 0.99;
-
     private static readonly attackRange = 2000;
     private static readonly attackCooldown = 1500;
     private static readonly projectileSpeed = 500;
@@ -32,15 +32,13 @@ export default class ShooterRobot extends Enemy
     constructor (scene: Phaser.Scene, x: number, y: number, variation: VariationName, target: Player | null = null)
     {
         const texture: string = getTexture(variation, enemyVariations);
-        const attributes: Attributes = getAttributes(variation, enemyVariations);
-
         super(scene, x, y, texture, target);
-
         this.createAnimation(texture);
         this.play(ShooterRobot.animationKey);
 
         this.keepBodyFacingOriginalDirection();
-        this.init(attributes.healthPoints, attributes.moveSpeed, attributes.damage);
+        const attributes: Attributes = getAttributes(variation, enemyVariations);
+        this.init(attributes);
         this.visual = new ShooterRobotVisual(scene, this);
     }
 

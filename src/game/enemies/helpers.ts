@@ -2,7 +2,7 @@
 
 import { EnemyVariation, Attributes, VariationName } from "./types";
 
-export function enemyVariation(variationName: VariationName, texture: string, healthPoints: number, damage: number, moveSpeed: number): EnemyVariation {
+export function enemyVariation(variationName: VariationName, texture: string, healthPoints: number, damage: number, moveSpeed: number, scoreValue: number): EnemyVariation {
     /**
      * @description Factory function de EnemyVariations, que é um array que vai existir para cada classe de inimigo
      * e que contém objetos definindo cada variação desse inimigo, cada uma possuindo atributos e sprite diferentes.
@@ -14,6 +14,7 @@ export function enemyVariation(variationName: VariationName, texture: string, he
         healthPoints,
         damage,
         moveSpeed,
+        scoreValue
     }
 }
 
@@ -44,13 +45,15 @@ export function getAttributes(variation: VariationName, enemyVariations: EnemyVa
             return {
                 healthPoints: variationType.healthPoints,
                 damage: variationType.damage,
-                moveSpeed: variationType.moveSpeed
+                moveSpeed: variationType.moveSpeed,
+                scoreValue: variationType.scoreValue
             }
         }
     }
     return {
         healthPoints: 0,
         damage: 0,
-        moveSpeed: 0
+        moveSpeed: 0,
+        scoreValue: 0
     }
 }
