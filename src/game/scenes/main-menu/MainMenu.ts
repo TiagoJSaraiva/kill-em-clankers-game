@@ -163,7 +163,10 @@ export class MainMenu extends Scene
     }
 
     setupButtons() {
-
+        if (!this.playButton || !this.configButton || !this.exitButton) {
+            console.error('Botões do menu não estão definidos.');
+            return;
+        }
         this.buttonsActive = true;
 
         this.playButton!.setInteractive({ useHandCursor: true });
