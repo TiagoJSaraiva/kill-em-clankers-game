@@ -9,7 +9,8 @@ export class GameOver extends Scene
     private scoreCounter: number = 0;
     
     scoreAmount: Phaser.GameObjects.Text;
-
+    restartButton: Phaser.GameObjects.Image;
+    menuButton: Phaser.GameObjects.Image;
 
     constructor ()
     {
@@ -43,7 +44,36 @@ export class GameOver extends Scene
             ease: 'Linear',
             onUpdate: () => {
                 this.scoreAmount.setText(Math.floor(counter.value).toString().padStart(6, '0'));
+            },
+            onComplete: () => {
+                this.setupButtons();
             }
+        });
+    }
+
+    private setupButtons(): void
+    {
+        this.menuButton = this.add.image(this.width / 2, this.height / 2 + 500, 'menu-button').setScale(0.3).setInteractive();
+        this.menuButton.on('pointerdown', () => {
+            this.scene.start('MainMenu');
+        });
+        this.restartButton = this.add.image(this.width / 2, this.height / 2 + 400, 'restart-button').setScale(0.3).setInteractive();
+        this.restartButton.on('pointerdown', () => {
+            this.scene.start('Game');
+        });
+
+        this.menuButton.on('pointerover', () => {
+            this.menuButton.setTexture('menu-button-hover');
+        });
+        this.menuButton.on('pointerout', () => {
+            this.menuButton.setTexture('menu-button');
+        });
+
+        this.restartButton.on('pointerover', () => {
+            this.restartButton.setTexture('restart-button-hover');
+        });
+        this.restartButton.on('pointerout', () => {
+            this.restartButton.setTexture('restart-button');
         });
     }
 
