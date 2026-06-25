@@ -6,6 +6,9 @@ import { Attributes } from "./types";
 export default abstract class Enemy extends Phaser.Physics.Arcade.Sprite {
     private static readonly contactDamageCooldown = 1000;
     private static readonly DefaultStopMovingMomentum = 0; // Por enquanto 0 pois pode haver unidades que não querem momentum
+    private readonly immunityTimeAfterDamage = 1000;
+    private immune: boolean = false;
+    private immunityTimer: Phaser.Time.TimerEvent | null = null;
 
     healthPoints: number = 0;
     moveSpeed: number = 0;
@@ -41,11 +44,26 @@ export default abstract class Enemy extends Phaser.Physics.Arcade.Sprite {
     }
 
     takeDamage(amount: number): number {
+        if (this.immune) {
+            return 0;
+        }
+
         if (!this.active) {
             return 0;
         }
 
+        this.immune = true;
+
+        this.immunityTimer = this.scene.time.delayedCall(
+            this.immunityTimeAfterDamage,
+            () => {
+                this.immune = false;
+                this.immunityTimer = null;
+            }
+        );
+
         this.healthPoints -= amount;
+
         if (this.healthPoints <= 0) {
             this.destroy();
             return this.scoreValue;
@@ -113,6 +131,9 @@ export default abstract class Enemy extends Phaser.Physics.Arcade.Sprite {
     }
 
     destroy(fromScene?: boolean): void {
+        this.immunityTimer?.remove(false);
+        this.immunityTimer = null;
+
         this.stopMoving();
         super.destroy(fromScene);
     }

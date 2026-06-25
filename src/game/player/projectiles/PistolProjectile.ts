@@ -5,6 +5,8 @@ export default class PistolProjectile extends Projectile
 {
     private static readonly speed = 400;
 
+    override penetration = 0;
+
     constructor (scene: Phaser.Scene, x: number, y: number, texture: string, damage: number)
     {
         super(scene, x, y, texture, damage, new Phaser.Math.Vector2(PistolProjectile.speed, 0));

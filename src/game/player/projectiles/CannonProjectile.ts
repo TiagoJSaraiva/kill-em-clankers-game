@@ -5,6 +5,8 @@ export default class CannonProjectile extends Projectile
 {
     private static readonly animationKey = 'player-cannon-projectile-animation';
     private static readonly speed = 200;
+    
+    override penetration = 1;
 
     constructor (scene: Phaser.Scene, x: number, y: number, texture: string, damage: number)
     {

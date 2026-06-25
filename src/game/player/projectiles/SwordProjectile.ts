@@ -7,6 +7,7 @@ export default class SwordProjectile extends Projectile
     private static readonly speed = 1500;
     private readonly lifespan: number = 12;
     private age: number = 0;
+    override penetration = 2;
 
     constructor (scene: Phaser.Scene, x: number, y: number, texture: string, damage: number)
     {

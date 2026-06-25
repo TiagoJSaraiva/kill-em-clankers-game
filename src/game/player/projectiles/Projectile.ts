@@ -1,10 +1,11 @@
 import Phaser from "phaser";
 
-export default class Projectile extends Phaser.Physics.Arcade.Sprite
+export default abstract class Projectile extends Phaser.Physics.Arcade.Sprite
 {
     private static readonly offscreenMargin = 400;
 
     readonly damage: number;
+    abstract penetration: number;
     private readonly initialVelocity: Phaser.Math.Vector2;
 
     constructor (scene: Phaser.Scene, x: number, y: number, texture: string, damage: number, velocity: Phaser.Math.Vector2)
