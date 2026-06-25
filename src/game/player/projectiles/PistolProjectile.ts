@@ -3,7 +3,7 @@ import Phaser from "phaser";
 
 export default class PistolProjectile extends Projectile
 {
-    private static readonly speed = 600;
+    private static readonly speed = 800;
     private static readonly penetration = 1;
 
     constructor (scene: Phaser.Scene, x: number, y: number, texture: string, damage: number)

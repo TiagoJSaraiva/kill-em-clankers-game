@@ -11,7 +11,7 @@ export function Weapons() : Record<WeaponName, Weapon> {
     return {
         Pistol: new Weapon(
             "Pistol",
-            20,
+            35,
             5,
             10,
             (scene: Phaser.Scene, player: Player, damage: number) => {

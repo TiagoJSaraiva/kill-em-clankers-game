@@ -6,7 +6,7 @@ import { Attributes } from "./types";
 export default abstract class Enemy extends Phaser.Physics.Arcade.Sprite {
     private static readonly contactDamageCooldown = 1000;
     private static readonly DefaultStopMovingMomentum = 0; // Por enquanto 0 pois pode haver unidades que não querem momentum
-    private readonly immunityTimeAfterDamage = 1000;
+    private readonly immunityTimeAfterDamage = 400;
     private immune: boolean = false;
     private immunityTimer: Phaser.Time.TimerEvent | null = null;
 

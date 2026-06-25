@@ -169,7 +169,6 @@ export class Game extends Scene
 
         if(typeof takeDamageResult === 'number') {
             projectile.penetrationLeft -= 1;
-            console.log(projectile.penetrationLeft);
 
             if (projectile.penetrationLeft <= 0) {
                 projectile.destroy();
