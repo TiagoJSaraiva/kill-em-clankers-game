@@ -43,9 +43,9 @@ export default abstract class Enemy extends Phaser.Physics.Arcade.Sprite {
         return;
     }
 
-    takeDamage(amount: number): number {
+    takeDamage(amount: number): number | boolean {
         if (this.immune) {
-            return 0;
+            return false;
         }
 
         if (!this.active) {

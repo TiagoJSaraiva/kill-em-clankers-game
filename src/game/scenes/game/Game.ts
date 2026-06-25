@@ -158,14 +158,24 @@ export class Game extends Scene
         const projectile = projectileObject as Projectile;
         const enemy = enemyObject as Enemy;
 
+        let takeDamageResult: number | boolean;
+
         if (!projectile.active || !enemy.active)
         {
             return;
         }
 
-        this.score += enemy.takeDamage(projectile.damage); // AQUI
+        takeDamageResult = enemy.takeDamage(projectile.damage); // AQUI
+
+        if(typeof takeDamageResult === 'number') {
+            this.score += takeDamageResult;
+            projectile.penetrationLeft -= 1;
+            if (projectile.penetrationLeft <= 0) {
+                projectile.destroy();
+            }
+        }
+
         this.updateScoreText();
-        projectile.destroy();
     }
 
     private handleEnemyProjectilePlayerOverlap(

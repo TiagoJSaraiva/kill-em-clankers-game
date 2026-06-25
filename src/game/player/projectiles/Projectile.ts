@@ -5,7 +5,10 @@ export default abstract class Projectile extends Phaser.Physics.Arcade.Sprite
     private static readonly offscreenMargin = 400;
 
     readonly damage: number;
-    abstract penetration: number;
+    readonly penetration: number;
+
+    penetrationLeft: number;
+
     private readonly initialVelocity: Phaser.Math.Vector2;
 
     constructor (scene: Phaser.Scene, x: number, y: number, texture: string, damage: number, velocity: Phaser.Math.Vector2)
@@ -16,6 +19,7 @@ export default abstract class Projectile extends Phaser.Physics.Arcade.Sprite
         scene.add.existing(this);
         scene.physics.add.existing(this);
         this.applyInitialVelocity();
+        this.penetrationLeft = this.penetration;
     }
 
     update(_time: number, _delta: number): void
