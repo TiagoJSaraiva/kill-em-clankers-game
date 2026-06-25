@@ -5,12 +5,11 @@ export default class CannonProjectile extends Projectile
 {
     private static readonly animationKey = 'player-cannon-projectile-animation';
     private static readonly speed = 200;
-    
-    override penetration = 1;
+    private static readonly penetration = 1;
 
     constructor (scene: Phaser.Scene, x: number, y: number, texture: string, damage: number)
     {
-        super(scene, x, y, texture, damage, new Phaser.Math.Vector2(CannonProjectile.speed, 0));
+        super(scene, x, y, texture, damage, new Phaser.Math.Vector2(CannonProjectile.speed, 0), CannonProjectile.penetration);
         this.setFlipX(false);
 
         this.createAnimation(texture);

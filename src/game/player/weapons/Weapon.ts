@@ -14,7 +14,7 @@ export default class Weapon {
     maxEnergy: number = 100;
     currentEnergy: number;
     private energySpentPerShot: number = 20;
-    readonly damage: number;
+    damage: number;
     name: WeaponName;
     attackCooldown: number;
     private attackCooldownTimer: number = 0;

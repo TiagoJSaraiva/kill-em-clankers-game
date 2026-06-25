@@ -5,13 +5,14 @@ export default class SwordProjectile extends Projectile
 {
     private static readonly animationKey = 'slash-projectile-animation';
     private static readonly speed = 1500;
-    private readonly lifespan: number = 12;
+    private static readonly penetration = 5;
+
+    private readonly lifespan: number = 24;
     private age: number = 0;
-    override penetration = 2;
 
     constructor (scene: Phaser.Scene, x: number, y: number, texture: string, damage: number)
     {
-        super(scene, x, y, texture, damage, new Phaser.Math.Vector2(SwordProjectile.speed, 0));
+        super(scene, x, y, texture, damage, new Phaser.Math.Vector2(SwordProjectile.speed, 0), SwordProjectile.penetration);
         this.setFlipX(false);
 
         this.createAnimation(texture);

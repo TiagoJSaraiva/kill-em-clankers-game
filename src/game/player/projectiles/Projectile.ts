@@ -1,25 +1,23 @@
 import Phaser from "phaser";
 
-export default abstract class Projectile extends Phaser.Physics.Arcade.Sprite
+export default class Projectile extends Phaser.Physics.Arcade.Sprite
 {
     private static readonly offscreenMargin = 400;
 
     readonly damage: number;
-    readonly penetration: number;
-
-    penetrationLeft: number;
-
     private readonly initialVelocity: Phaser.Math.Vector2;
 
-    constructor (scene: Phaser.Scene, x: number, y: number, texture: string, damage: number, velocity: Phaser.Math.Vector2)
+    penetrationLeft: number = 0;
+
+    constructor (scene: Phaser.Scene, x: number, y: number, texture: string, damage: number, velocity: Phaser.Math.Vector2, penetration: number)
     {
         super(scene, x, y, texture);
         this.damage = damage;
         this.initialVelocity = velocity.clone();
+        this.penetrationLeft = penetration;
         scene.add.existing(this);
         scene.physics.add.existing(this);
         this.applyInitialVelocity();
-        this.penetrationLeft = this.penetration;
     }
 
     update(_time: number, _delta: number): void

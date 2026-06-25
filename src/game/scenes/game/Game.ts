@@ -168,11 +168,13 @@ export class Game extends Scene
         takeDamageResult = enemy.takeDamage(projectile.damage); // AQUI
 
         if(typeof takeDamageResult === 'number') {
-            this.score += takeDamageResult;
             projectile.penetrationLeft -= 1;
+            console.log(projectile.penetrationLeft);
+
             if (projectile.penetrationLeft <= 0) {
                 projectile.destroy();
             }
+            this.score += takeDamageResult;
         }
 
         this.updateScoreText();
