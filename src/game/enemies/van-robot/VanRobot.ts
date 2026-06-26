@@ -28,6 +28,7 @@ export class VanRobot extends Enemy {
     private static readonly sprayShotCooldown = 80;
     private static readonly projectileSpreadAngle = Math.PI / 50;
     private static readonly baseProjectileAngle = Math.PI;
+    private static readonly shotAudioKey = 'pistol-shot-audio';
 
     private visual: VanRobotVisual;
     private nextSprayAt: number = 0;
@@ -117,6 +118,7 @@ export class VanRobot extends Enemy {
         );
 
         (this.scene as EnemyProjectileScene).registerEnemyProjectile?.(projectile);
+        this.playShotAudio();
     }
 
     destroy (fromScene?: boolean) : void
@@ -166,6 +168,16 @@ export class VanRobot extends Enemy {
     {
         this.setScale(VanRobot.scale, VanRobot.scale);
         this.setFlipX(false);
+    }
+
+    private playShotAudio(): void
+    {
+        if (!this.scene.cache.audio.exists(VanRobot.shotAudioKey))
+        {
+            return;
+        }
+
+        this.scene.sound.play(VanRobot.shotAudioKey);
     }
 
     private createAnimation(texture: string): void {

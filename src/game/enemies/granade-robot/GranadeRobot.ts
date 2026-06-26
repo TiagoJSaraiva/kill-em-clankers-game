@@ -33,7 +33,7 @@ export class GranadeRobot extends Enemy
     private static readonly exitOffsetX = 280;
 
     private readonly visual: GranadeRobotVisual;
-    private state: GranadeRobotState = 'approaching';
+    state: GranadeRobotState = 'approaching';
     private grenadeThrown: boolean = false;
 
     constructor (scene: Phaser.Scene, x: number, y: number, variation: VariationName, target: Player | null = null)

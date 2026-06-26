@@ -7,6 +7,7 @@ export default class GranadeRobotProjectile extends EnemyProjectile
     private static readonly textureKey = 'granade-robot-projectile';
     private static readonly explosionTextureKey = 'granade-explosion';
     private static readonly explosionAnimationKey = 'granade-explosion';
+    private static readonly explosionAudioKey = 'granade-explosion-audio';
     private static readonly arcDuration = 900;
     private static readonly arcHeight = 220;
     private static readonly fallSpeed = 700;
@@ -61,7 +62,7 @@ export default class GranadeRobotProjectile extends EnemyProjectile
         if (shouldPlayExplosion)
         {
             this.state = 'exploding';
-            this.playExplosionVfx();
+            this.playExplosionEffects();
         }
 
         super.destroy(fromScene);
@@ -115,6 +116,22 @@ export default class GranadeRobotProjectile extends EnemyProjectile
     {
         this.shouldExplodeOnDestroy = false;
         this.destroy();
+    }
+
+    private playExplosionEffects(): void
+    {
+        this.playExplosionAudio();
+        this.playExplosionVfx();
+    }
+
+    private playExplosionAudio(): void
+    {
+        if (!this.scene.cache.audio.exists(GranadeRobotProjectile.explosionAudioKey))
+        {
+            return;
+        }
+
+        this.scene.sound.play(GranadeRobotProjectile.explosionAudioKey);
     }
 
     private playExplosionVfx(): void

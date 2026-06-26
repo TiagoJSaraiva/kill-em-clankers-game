@@ -9,6 +9,9 @@ type PlayerProjectileScene = Phaser.Scene & {
 };
 
 export default class Weapon {
+    private static readonly pistolShotAudioKey = 'pistol-shot-audio';
+    private static readonly swordAudioKey = 'sword-audio';
+
     private energyRegenRate: number = 0.05; // Quantidade de energia regenerada por frame quando a arma nao esta equipada
     isEquipped: boolean = false;
     maxEnergy: number = 100;
@@ -67,8 +70,23 @@ export default class Weapon {
 
         const projectile = this.emitProjectile(scene, player, this.damage);
         (scene as PlayerProjectileScene).registerPlayerProjectile?.(projectile);
+        this.playShotAudio(scene);
 
         this.attackCooldownTimer = this.attackCooldown;
         return true;
+    }
+
+    private playShotAudio(scene: Phaser.Scene): void
+    {
+        const audioKey = this.name === 'Sword'
+            ? Weapon.swordAudioKey
+            : Weapon.pistolShotAudioKey;
+
+        if (!scene.cache.audio.exists(audioKey))
+        {
+            return;
+        }
+
+        scene.sound.play(audioKey);
     }
 }

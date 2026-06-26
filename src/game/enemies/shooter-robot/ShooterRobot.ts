@@ -25,6 +25,7 @@ export default class ShooterRobot extends Enemy
     private static readonly attackRange = 2000;
     private static readonly attackCooldown = 1500;
     private static readonly projectileSpeed = 500;
+    private static readonly shotAudioKey = 'pistol-shot-audio';
 
     private visual: ShooterRobotVisual;
     private nextAttackAt: number = 0;
@@ -125,6 +126,7 @@ export default class ShooterRobot extends Enemy
             velocity
         );
         (this.scene as EnemyProjectileScene).registerEnemyProjectile?.(projectile);
+        this.playShotAudio();
     }
 
     playShootVfx () : void
@@ -142,6 +144,16 @@ export default class ShooterRobot extends Enemy
     {
         this.setScale(ShooterRobot.scale, ShooterRobot.scale);
         this.setFlipX(false);
+    }
+
+    private playShotAudio(): void
+    {
+        if (!this.scene.cache.audio.exists(ShooterRobot.shotAudioKey))
+        {
+            return;
+        }
+
+        this.scene.sound.play(ShooterRobot.shotAudioKey);
     }
 
     private createAnimation(texture: string): void {

@@ -29,6 +29,9 @@ export function loadAssets(scene: Phaser.Scene): void {
 
     scene.load.audio('menu-ost', './assets/audio/Menu-OST.mp3');
     scene.load.audio('game-ost', './assets/audio/Game-OST.mp3');
+    scene.load.audio('granade-explosion-audio', './assets/audio/Explosion.m4a');
+    scene.load.audio('pistol-shot-audio', './assets/audio/pistol-shot.m4a');
+    scene.load.audio('sword-audio', './assets/audio/sword-audio.m4a');
 
     ////  RELATIVAS AO PLAYER ////
 
@@ -104,7 +107,7 @@ export function loadAssets(scene: Phaser.Scene): void {
     scene.load.image('granade-robot-arm-holding-granade', './assets/images/enemies/granade-robot/holding-granade-arm.png');
     scene.load.image('granade-robot-arm', './assets/images/enemies/granade-robot/arm.png');
     scene.load.image('granade-robot-projectile', './assets/images/enemies/granade-robot/projectile.png');
-    scene.load.spritesheet('granade-explosion', './assets/images/enemies/granade-robot/explosion-vfx.png', {
+    scene.load.spritesheet('granade-explosion', './assets/images/enemies/granade-robot/explosion.png', {
         frameWidth: 333,
         frameHeight: 388
     });
