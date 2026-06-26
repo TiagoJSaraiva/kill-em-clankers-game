@@ -26,6 +26,7 @@ export class Game extends Scene
     enemies: Phaser.Physics.Arcade.Group;
     playerProjectiles: Phaser.Physics.Arcade.Group;
     enemyProjectiles: Phaser.Physics.Arcade.Group;
+    gameOst?: Phaser.Sound.BaseSound;
     score: number = 0;
     scoreText: Phaser.GameObjects.Text;
 
@@ -70,6 +71,8 @@ export class Game extends Scene
         this.cursors = this.input.keyboard?.createCursorKeys()!;
 
         this.createScoreText();
+        this.playGameOst();
+        this.events.once(Phaser.Scenes.Events.SHUTDOWN, this.stopGameOst, this);
 
         this.physics.world.setBoundsCollision(true, false, true, true);
         this.configureCollisions();
@@ -217,6 +220,27 @@ export class Game extends Scene
     private callGameOver(): void
     {
         this.scene.start('GameOver', { score: this.score }); // AQUI
+    }
+
+    private playGameOst(): void
+    {
+        this.gameOst = this.sound.add('game-ost', {
+            loop: true,
+        });
+
+        this.gameOst.play();
+    }
+
+    private stopGameOst(): void
+    {
+        if (!this.gameOst)
+        {
+            return;
+        }
+
+        this.gameOst.stop();
+        this.gameOst.destroy();
+        this.gameOst = undefined;
     }
 
     private createScoreText(): void

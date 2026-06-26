@@ -25,6 +25,10 @@ export function loadAssets(scene: Phaser.Scene): void {
     scene.load.image('exit-button-hover', './assets/images/menu/exit-button-hover.png');
     scene.load.image('menu-bg', './assets/images/menu/menu-bg.png');
 
+    ////  RELATIVAS AO AUDIO ////
+
+    scene.load.audio('game-ost', './assets/audio/Game-OST.mp3');
+
     ////  RELATIVAS AO PLAYER ////
 
     scene.load.image('player', './assets/images/player/player-model.png');
