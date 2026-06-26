@@ -13,15 +13,17 @@ export default class VanRobotVisual
 
     private static readonly armOriginX = 0.5;
     private static readonly armOriginY = 0.5;
-    private static readonly muzzleOffsetX = -98;
-    private static readonly muzzleOffsetY = -6;
+    private static readonly shotOriginOffsetX = -98;
+    private static readonly shotOriginOffsetY = -6;
 
     private readonly scene: Phaser.Scene;
     private readonly armImage: Phaser.GameObjects.Image;
     private readonly shootVfxImage: Phaser.GameObjects.Image;
     private robotDepth: number = 0;
-    private armBaseX: number = 0;
-    private armBaseY: number = 0;
+    private bodyX: number = 0;
+    private bodyY: number = 0;
+    private bodyScaleX: number = 1;
+    private bodyScaleY: number = 1;
     private armRecoilOffsetX: number = 0;
 
     constructor (scene: Phaser.Scene, robot: Phaser.GameObjects.Sprite)
@@ -34,7 +36,6 @@ export default class VanRobotVisual
             VanRobotVisual.armTextureKey
         );
         this.armImage.setOrigin(VanRobotVisual.armOriginX, VanRobotVisual.armOriginY);
-        this.armImage.setRotation(0);
 
         this.shootVfxImage = scene.add.image(0, 0, VanRobotVisual.shootVfxTextureKey);
         this.shootVfxImage.setOrigin(1, 0.5);
@@ -48,38 +49,31 @@ export default class VanRobotVisual
         const visualScaleX = Math.abs(robot.scaleX || 1);
         this.robotDepth = robot.depth;
 
-        this.armBaseX = robot.x;
-        this.armBaseY = robot.y;
+        this.bodyX = robot.x;
+        this.bodyY = robot.y;
+        this.bodyScaleX = visualScaleX;
+        this.bodyScaleY = robot.scaleY;
 
         this.syncArmPosition();
-        this.armImage.setScale(visualScaleX, robot.scaleY);
+        this.armImage.setScale(this.bodyScaleX, this.bodyScaleY);
         this.armImage.setDepth(this.robotDepth + VanRobotVisual.armDepthOffset);
         this.armImage.setVisible(robot.visible);
         this.armImage.setAlpha(robot.alpha);
 
-        this.syncShootVfxWithMuzzle(robot.alpha);
+        this.syncShootVfxWithShotOrigin(robot.alpha);
     }
 
-    public getMuzzleWorldPosition () : Phaser.Math.Vector2
+    public getShotOriginWorldPosition () : Phaser.Math.Vector2
     {
-        const rotation = this.armImage.rotation;
-        const cos = Math.cos(rotation);
-        const sin = Math.sin(rotation);
-        const scaledMuzzleOffsetX = VanRobotVisual.muzzleOffsetX * this.armImage.scaleX;
-        const scaledMuzzleOffsetY = VanRobotVisual.muzzleOffsetY * this.armImage.scaleY;
-        const muzzleX = this.armImage.x
-            + (scaledMuzzleOffsetX * cos)
-            - (scaledMuzzleOffsetY * sin);
-        const muzzleY = this.armImage.y
-            + (scaledMuzzleOffsetX * sin)
-            + (scaledMuzzleOffsetY * cos);
-
-        return new Phaser.Math.Vector2(muzzleX, muzzleY);
+        return new Phaser.Math.Vector2(
+            this.bodyX + (VanRobotVisual.shotOriginOffsetX * this.bodyScaleX),
+            this.bodyY + (VanRobotVisual.shotOriginOffsetY * this.bodyScaleY)
+        );
     }
 
     public playShootVfx () : void
     {
-        this.syncShootVfxWithMuzzle(this.armImage.alpha);
+        this.syncShootVfxWithShotOrigin(this.armImage.alpha);
         this.playArmRecoil();
         this.scene.tweens.killTweensOf(this.shootVfxImage);
         this.shootVfxImage.setVisible(true);
@@ -110,7 +104,7 @@ export default class VanRobotVisual
         this.scene.tweens.killTweensOf(this);
         this.armRecoilOffsetX = VanRobotVisual.armRecoilDistance;
         this.syncArmPosition();
-        this.syncShootVfxWithMuzzle(this.armImage.alpha);
+        this.syncShootVfxWithShotOrigin(this.armImage.alpha);
 
         this.scene.tweens.add({
             targets: this,
@@ -119,7 +113,7 @@ export default class VanRobotVisual
             ease: 'Quad.easeOut',
             onUpdate: () => {
                 this.syncArmPosition();
-                this.syncShootVfxWithMuzzle(this.armImage.alpha);
+                this.syncShootVfxWithShotOrigin(this.armImage.alpha);
             }
         });
     }
@@ -127,18 +121,17 @@ export default class VanRobotVisual
     private syncArmPosition () : void
     {
         this.armImage.setPosition(
-            this.armBaseX + this.armRecoilOffsetX,
-            this.armBaseY
+            this.bodyX + this.armRecoilOffsetX,
+            this.bodyY
         );
     }
 
-    private syncShootVfxWithMuzzle (alpha: number) : void
+    private syncShootVfxWithShotOrigin (alpha: number) : void
     {
-        const muzzlePosition = this.getMuzzleWorldPosition();
+        const shotOrigin = this.getShotOriginWorldPosition();
 
-        this.shootVfxImage.setPosition(muzzlePosition.x, muzzlePosition.y);
-        this.shootVfxImage.setScale(this.armImage.scaleX, this.armImage.scaleY);
-        this.shootVfxImage.setRotation(this.armImage.rotation);
+        this.shootVfxImage.setPosition(shotOrigin.x, shotOrigin.y);
+        this.shootVfxImage.setScale(this.bodyScaleX, this.bodyScaleY);
         this.shootVfxImage.setDepth(this.robotDepth + VanRobotVisual.shootVfxDepthOffset);
 
         if (!this.shootVfxImage.visible)

@@ -21,7 +21,7 @@ export class VanRobot extends Enemy {
     static readonly scale = 0.8;
     
     private static readonly animationKey = 'van-robot-body-animation';
-    private static readonly momentum = 0.99;
+    private static readonly momentum = 0.8;
     private static readonly attackRange = 2000;
     private static readonly projectileSpeed = 500;
     private static readonly sprayPauseDuration = 5000;
@@ -108,11 +108,11 @@ export class VanRobot extends Enemy {
             Math.cos(projectileAngle),
             Math.sin(projectileAngle)
         ).scale(VanRobot.projectileSpeed);
-        const muzzlePosition = this.visual.getMuzzleWorldPosition();
+        const shotOrigin = this.visual.getShotOriginWorldPosition();
         const projectile = new VanRobotProjectile(
             this.scene,
-            muzzlePosition.x,
-            muzzlePosition.y,
+            shotOrigin.x,
+            shotOrigin.y,
             this.damage,
             velocity
         );
