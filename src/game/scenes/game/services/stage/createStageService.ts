@@ -46,9 +46,19 @@ export const stages = [
         { name: 'ShooterRobot', variation: 'normal', weight: 1 } 
     ]),
     stage(30, 10, [
+        { name: 'VanRobot', variation: 'strong', weight: 1 }, 
+        { name: 'GranadeRobot', variation: 'strong', weight: 1 },
+        { name: 'ShooterRobot', variation: 'strong', weight: 1 } 
+    ]),
+    stage(60, 10, [
         { name: 'VanRobot', variation: 'normal', weight: 1 }, 
         { name: 'GranadeRobot', variation: 'normal', weight: 1 },
         { name: 'ShooterRobot', variation: 'normal', weight: 1 } 
+    ]),
+    stage(90, 10, [
+        { name: 'VanRobot', variation: 'impossible', weight: 1 }, 
+        { name: 'GranadeRobot', variation: 'impossible', weight: 1 },
+        { name: 'ShooterRobot', variation: 'impossible', weight: 1 } 
     ]),
 ] as Stage[];
 
