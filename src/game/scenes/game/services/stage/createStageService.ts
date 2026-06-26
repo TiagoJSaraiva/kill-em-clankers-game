@@ -2,10 +2,14 @@ import ShooterRobot from "../../../../enemies/shooter-robot/ShooterRobot";
 import { Stage, Pool, UnitSpawnController } from "./types";
 import { VariationName } from "../../../../enemies/types";
 import { Game } from "../../Game";
+import { VanRobot } from "../../../../enemies/van-robot/VanRobot";
 
 const enemyFactories = {
     ShooterRobot: (scene: Game, x: number, y: number, variation: VariationName) => {
         return new ShooterRobot(scene, x, y, variation, scene.player);
+    },
+    VanRobot: (scene: Game, x: number, y: number, variation: VariationName) => {
+        return new VanRobot(scene, x, y, variation, scene.player);
     }
 };
 
@@ -27,7 +31,7 @@ export const stages = [
         { name: 'ShooterRobot', variation: 'strong', weight: 1 } 
     ]),
     stage(30, 10, [
-        { name: 'ShooterRobot', variation: 'normal', weight: 1 }, 
+        { name: 'VanRobot', variation: 'normal', weight: 1 }, 
         { name: 'ShooterRobot', variation: 'strong', weight: 1 } 
     ]),
 ] as Stage[];
