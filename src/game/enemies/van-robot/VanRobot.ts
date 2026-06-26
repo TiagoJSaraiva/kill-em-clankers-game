@@ -24,7 +24,7 @@ export class VanRobot extends Enemy {
     private static readonly attackRange = 2000;
     private static readonly projectileSpeed = 500;
     private static readonly sprayPauseDuration = 5000;
-    private static readonly sprayDuration = 2000;
+    private static readonly sprayDuration = 1500;
     private static readonly sprayShotCooldown = 80;
     private static readonly projectileSpreadAngle = Math.PI / 50;
     private static readonly baseProjectileAngle = Math.PI;

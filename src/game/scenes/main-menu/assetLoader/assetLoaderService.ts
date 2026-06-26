@@ -88,4 +88,12 @@ export function loadAssets(scene: Phaser.Scene): void {
     });
     scene.load.image('van-robot-arm', './assets/images/enemies/van-robot/model-arm.png');
     // Van robot usa mesmo VFX de tiro do shooter robot (shooter-robot-shoot-vfx)
+
+    scene.load.spritesheet('granade-robot-body', './assets/images/enemies/granade-robot/model-body.png', {
+        frameWidth: 421,
+        frameHeight: 194
+    });
+    scene.load.image('granade-robot-arm-holding-granade', './assets/images/enemies/granade-robot/holding-granade-arm.png');
+    scene.load.image('granade-robot-arm', './assets/images/enemies/granade-robot/arm.png');
+
 }
