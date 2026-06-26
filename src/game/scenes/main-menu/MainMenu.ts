@@ -32,6 +32,7 @@ export class MainMenu extends Scene
     playButton?: GameObjects.Image;
     configButton?: GameObjects.Image;
     exitButton?: GameObjects.Image;
+    menuOst?: Phaser.Sound.BaseSound;
 
     constructor ()
     {
@@ -78,6 +79,9 @@ export class MainMenu extends Scene
         this.backgroundVeryFar = this.add.tileSprite(0, 0, width, height, 'bg-very-far');
         this.backgroundVeryFar.setOrigin(0, 0);
         this.backgroundVeryFar.setDepth(-25);
+
+        this.playMenuOst();
+        this.events.once(Phaser.Scenes.Events.SHUTDOWN, this.stopMenuOst, this);
     }
 
     update(time: number, delta: number): void{
@@ -219,5 +223,26 @@ export class MainMenu extends Scene
             // Lógica para sair do jogo
             console.log('Sair do jogo');
         });
+    }
+
+    private playMenuOst(): void
+    {
+        this.menuOst = this.sound.add('menu-ost', {
+            loop: true,
+        });
+
+        this.menuOst.play();
+    }
+
+    private stopMenuOst(): void
+    {
+        if (!this.menuOst)
+        {
+            return;
+        }
+
+        this.menuOst.stop();
+        this.menuOst.destroy();
+        this.menuOst = undefined;
     }
 }
