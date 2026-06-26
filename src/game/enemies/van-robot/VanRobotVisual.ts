@@ -6,7 +6,6 @@ export default class VanRobotVisual
     private static readonly shootVfxTextureKey = 'shooter-robot-shoot-vfx';
 
     private static readonly armDepthOffset = 0.1;
-    private static readonly cloakDepthOffset = 0.2;
     private static readonly shootVfxDepthOffset = 0.3;
     private static readonly shootVfxDuration = 200;
 
@@ -19,7 +18,6 @@ export default class VanRobotVisual
     private static readonly muzzleOffsetY = -6;
 
     private readonly scene: Phaser.Scene;
-    private readonly cloakImage: Phaser.GameObjects.Image;
     private readonly armImage: Phaser.GameObjects.Image;
     private readonly shootVfxImage: Phaser.GameObjects.Image;
     private robotDepth: number = 0;
@@ -46,12 +44,6 @@ export default class VanRobotVisual
     {
         const visualScaleX = Math.abs(robot.scaleX || 1);
         this.robotDepth = robot.depth;
-
-        this.cloakImage.setPosition(robot.x, robot.y);
-        this.cloakImage.setScale(visualScaleX, robot.scaleY);
-        this.cloakImage.setDepth(this.robotDepth + VanRobotVisual.cloakDepthOffset);
-        this.cloakImage.setVisible(robot.visible);
-        this.cloakImage.setAlpha(robot.alpha);
 
         this.armImage.setPosition(
             robot.x + (VanRobotVisual.armOffsetX * visualScaleX),
@@ -113,7 +105,6 @@ export default class VanRobotVisual
     public destroy () : void
     {
         this.scene.tweens.killTweensOf(this.shootVfxImage);
-        this.cloakImage.destroy();
         this.armImage.destroy();
         this.shootVfxImage.destroy();
     }
