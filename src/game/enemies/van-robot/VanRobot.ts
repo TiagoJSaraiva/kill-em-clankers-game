@@ -17,17 +17,16 @@ const enemyVariations = [
 ] as EnemyVariation[];
 
 export class VanRobot extends Enemy {
-
     static readonly scale = 0.8;
     
     private static readonly animationKey = 'van-robot-body-animation';
-    private static readonly momentum = 0.8;
+    private static readonly momentum = 0.9;
     private static readonly attackRange = 2000;
     private static readonly projectileSpeed = 500;
     private static readonly sprayPauseDuration = 5000;
     private static readonly sprayDuration = 2000;
     private static readonly sprayShotCooldown = 80;
-    private static readonly projectileSpreadAngle = Math.PI / 10;
+    private static readonly projectileSpreadAngle = Math.PI / 50;
     private static readonly baseProjectileAngle = Math.PI;
 
     private visual: VanRobotVisual;

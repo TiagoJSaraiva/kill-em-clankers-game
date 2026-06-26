@@ -13,8 +13,8 @@ export default class VanRobotVisual
 
     private static readonly armOriginX = 0.5;
     private static readonly armOriginY = 0.5;
-    private static readonly shotOriginOffsetX = -98;
-    private static readonly shotOriginOffsetY = -6;
+    private static readonly shotOriginOffsetX = -440;
+    private static readonly shotOriginOffsetY = -25;
 
     private readonly scene: Phaser.Scene;
     private readonly armImage: Phaser.GameObjects.Image;
@@ -39,6 +39,7 @@ export default class VanRobotVisual
 
         this.shootVfxImage = scene.add.image(0, 0, VanRobotVisual.shootVfxTextureKey);
         this.shootVfxImage.setOrigin(1, 0.5);
+        this.shootVfxImage.setScale(1.6);
         this.shootVfxImage.setVisible(false);
 
         this.syncWithRobot(robot);
@@ -131,7 +132,6 @@ export default class VanRobotVisual
         const shotOrigin = this.getShotOriginWorldPosition();
 
         this.shootVfxImage.setPosition(shotOrigin.x, shotOrigin.y);
-        this.shootVfxImage.setScale(this.bodyScaleX, this.bodyScaleY);
         this.shootVfxImage.setDepth(this.robotDepth + VanRobotVisual.shootVfxDepthOffset);
 
         if (!this.shootVfxImage.visible)
