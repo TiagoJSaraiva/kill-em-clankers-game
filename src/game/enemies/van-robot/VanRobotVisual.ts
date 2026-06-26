@@ -11,10 +11,8 @@ export default class VanRobotVisual
     private static readonly armRecoilDistance = 12;
     private static readonly armRecoilReturnDuration = 90;
 
-    private static readonly armOriginX = 0.35;
-    private static readonly armOriginY = 0.27;
-    private static readonly armOffsetX = -64;
-    private static readonly armOffsetY = -45;
+    private static readonly armOriginX = 0.5;
+    private static readonly armOriginY = 0.5;
     private static readonly muzzleOffsetX = -98;
     private static readonly muzzleOffsetY = -6;
 
@@ -50,8 +48,8 @@ export default class VanRobotVisual
         const visualScaleX = Math.abs(robot.scaleX || 1);
         this.robotDepth = robot.depth;
 
-        this.armBaseX = robot.x + (VanRobotVisual.armOffsetX * visualScaleX);
-        this.armBaseY = robot.y + (VanRobotVisual.armOffsetY * robot.scaleY);
+        this.armBaseX = robot.x;
+        this.armBaseY = robot.y;
 
         this.syncArmPosition();
         this.armImage.setScale(visualScaleX, robot.scaleY);

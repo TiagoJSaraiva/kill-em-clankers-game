@@ -27,7 +27,7 @@ export const stages = [
     */
 
     stage(0, 10, [ 
-        { name: 'ShooterRobot', variation: 'normal', weight: 1 }, 
+        { name: 'VanRobot', variation: 'normal', weight: 1 }, 
         { name: 'ShooterRobot', variation: 'strong', weight: 1 } 
     ]),
     stage(30, 10, [
