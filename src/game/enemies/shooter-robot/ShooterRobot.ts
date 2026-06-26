@@ -17,9 +17,9 @@ type EnemyProjectileScene = Phaser.Scene & {
  * Catalogo de variacoes do ShooterRobot.
  */
 const enemyVariations = [
-    enemyVariation("normal", "shooter-robot-body", 150, 30, 350, 100),
-    enemyVariation("strong", "shooter-robot-body", 250, 30, 400, 200),
-    enemyVariation("impossible", "shooter-robot-body", 300, 30, 520, 300),
+    enemyVariation("normal", "shooter-robot-body", 60, 30, 350, 100),
+    enemyVariation("strong", "shooter-robot-body", 70, 30, 400, 200),
+    enemyVariation("impossible", "shooter-robot-body", 80, 30, 520, 300),
 ] as EnemyVariation[];
 
 /**
