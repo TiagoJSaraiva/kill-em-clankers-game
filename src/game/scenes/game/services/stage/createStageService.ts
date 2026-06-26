@@ -3,6 +3,7 @@ import { Stage, Pool, UnitSpawnController } from "./types";
 import { VariationName } from "../../../../enemies/types";
 import { Game } from "../../Game";
 import { VanRobot } from "../../../../enemies/van-robot/VanRobot";
+import { GranadeRobot } from "../../../../enemies/granade-robot/GranadeRobot";
 
 const enemyFactories = {
     ShooterRobot: (scene: Game, x: number, y: number, variation: VariationName) => {
@@ -10,6 +11,9 @@ const enemyFactories = {
     },
     VanRobot: (scene: Game, x: number, y: number, variation: VariationName) => {
         return new VanRobot(scene, x, y, variation, scene.player);
+    },
+    GranadeRobot: (scene: Game, x: number, y: number, variation: VariationName) => {
+        return new GranadeRobot(scene, x, y, variation, scene.player);
     }
 };
 
