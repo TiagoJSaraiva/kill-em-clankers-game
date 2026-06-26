@@ -6,18 +6,31 @@ import { Attributes, EnemyVariation, VariationName } from "../types";
 import GranadeRobotProjectile from "./GranadeRobotProjectile";
 import GranadeRobotVisual from "./GranadeRobotVisual";
 
+/**
+ * Cena que pode receber projeteis disparados por inimigos.
+ */
 type EnemyProjectileScene = Phaser.Scene & {
     registerEnemyProjectile?: (projectile: EnemyProjectile) => void;
 };
 
+/**
+ * Estados de IA do grenadeiro.
+ */
 type GranadeRobotState = 'approaching' | 'exiting';
 
+/**
+ * Catalogo de variacoes do GranadeRobot.
+ */
 const enemyVariations = [
-    enemyVariation("normal", "granade-robot-body", 60, 35, 360, 150),
-    enemyVariation("strong", "granade-robot-body", 90, 45, 390, 250),
-    enemyVariation("impossible", "granade-robot-body", 130, 60, 430, 350),
+    enemyVariation("normal", "granade-robot-body", 100, 35, 230, 150),
+    enemyVariation("strong", "granade-robot-body", 150, 45, 390, 250),
+    enemyVariation("impossible", "granade-robot-body", 200, 60, 430, 350),
 ] as EnemyVariation[];
 
+/**
+ * Inimigo que entra em cena, escolhe uma posicao de arremesso, joga uma
+ * granada contra o jogador e sai pela direita.
+ */
 export class GranadeRobot extends Enemy
 {
     static readonly scale = 0.8;
@@ -36,6 +49,13 @@ export class GranadeRobot extends Enemy
     state: GranadeRobotState = 'approaching';
     private grenadeThrown: boolean = false;
 
+    /**
+     * @param scene Cena onde o inimigo sera criado.
+     * @param x Posicao horizontal inicial.
+     * @param y Posicao vertical inicial.
+     * @param variation Variante de atributos e textura.
+     * @param target Jogador usado para calcular a posicao de arremesso.
+     */
     constructor (scene: Phaser.Scene, x: number, y: number, variation: VariationName, target: Player | null = null)
     {
         const texture: string = getTexture(variation, enemyVariations);
@@ -49,18 +69,27 @@ export class GranadeRobot extends Enemy
         this.visual = new GranadeRobotVisual(scene, this);
     }
 
+    /**
+     * Atualiza orientacao e comportamento de aproximacao/saida.
+     */
     update(_time: number, delta: number): void
     {
         this.keepFacingLeft();
         this.resolveAi(delta);
     }
 
+    /**
+     * Mantem o braco sincronizado com o corpo animado.
+     */
     preUpdate (time: number, delta: number): void
     {
         super.preUpdate(time, delta);
         this.visual.syncWithRobot(this);
     }
 
+    /**
+     * Arremessa uma granada uma unica vez e inicia a saida de cena.
+     */
     attack (): void
     {
         if (this.grenadeThrown)
@@ -92,12 +121,18 @@ export class GranadeRobot extends Enemy
         this.startExit();
     }
 
+    /**
+     * Remove o visual auxiliar antes de destruir o corpo principal.
+     */
     destroy (fromScene?: boolean): void
     {
         this.visual.destroy();
         super.destroy(fromScene);
     }
 
+    /**
+     * Move ate a posicao de arremesso ou continua o fluxo de saida.
+     */
     private resolveAi(delta: number): void
     {
         if (this.state === 'exiting')
@@ -135,6 +170,9 @@ export class GranadeRobot extends Enemy
         this.moveToward(attackPosition);
     }
 
+    /**
+     * Calcula uma posicao de arremesso proxima ao jogador e limitada a tela.
+     */
     private getAttackPosition(target: Player): Phaser.Math.Vector2
     {
         return new Phaser.Math.Vector2(
@@ -151,12 +189,18 @@ export class GranadeRobot extends Enemy
         );
     }
 
+    /**
+     * Troca o estado para saida e fixa a orientacao visual.
+     */
     private startExit(): void
     {
         this.state = 'exiting';
         this.keepFacingLeft();
     }
 
+    /**
+     * Move o inimigo para fora da tela e o destroi ao final.
+     */
     private exitScene(): void
     {
         const exitX = this.scene.scale.width + GranadeRobot.exitOffsetX;
@@ -170,12 +214,18 @@ export class GranadeRobot extends Enemy
         this.setVelocity(this.moveSpeed, 0);
     }
 
+    /**
+     * Mantem a escala e orientacao visual padrao do grenadeiro.
+     */
     private keepFacingLeft(): void
     {
         this.setScale(GranadeRobot.scale, GranadeRobot.scale);
         this.setFlipX(false);
     }
 
+    /**
+     * Registra a animacao do corpo se ela ainda nao existir.
+     */
     private createAnimation(texture: string): void
     {
         if (this.scene.anims.exists(GranadeRobot.animationKey))

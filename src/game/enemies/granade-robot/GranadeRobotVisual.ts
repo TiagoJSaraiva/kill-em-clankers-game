@@ -1,3 +1,9 @@
+/**
+ * Camada visual auxiliar do GranadeRobot.
+ *
+ * Controla o braco separado do corpo e troca sua textura depois que a granada
+ * foi arremessada.
+ */
 export default class GranadeRobotVisual
 {
     private static readonly armHoldingGrenadeTextureKey = 'granade-robot-arm-holding-granade';
@@ -17,6 +23,10 @@ export default class GranadeRobotVisual
     private robotDepth: number = 0;
     private grenadeThrown: boolean = false;
 
+    /**
+     * @param scene Cena onde o braco sera criado.
+     * @param robot Corpo principal usado como referencia.
+     */
     constructor (scene: Phaser.Scene, robot: Phaser.GameObjects.Sprite)
     {
         this.armImage = scene.add.image(0, 0, GranadeRobotVisual.armHoldingGrenadeTextureKey);
@@ -25,6 +35,9 @@ export default class GranadeRobotVisual
         this.syncWithRobot(robot);
     }
 
+    /**
+     * Copia posicao, escala, alpha e profundidade do corpo para o braco.
+     */
     public syncWithRobot (robot: Phaser.GameObjects.Sprite): void
     {
         this.bodyX = robot.x;
@@ -40,6 +53,9 @@ export default class GranadeRobotVisual
         this.armImage.setAlpha(robot.alpha);
     }
 
+    /**
+     * @returns Coordenada mundial de origem do arremesso.
+     */
     public getThrowOriginWorldPosition (): Phaser.Math.Vector2
     {
         return new Phaser.Math.Vector2(
@@ -48,6 +64,9 @@ export default class GranadeRobotVisual
         );
     }
 
+    /**
+     * Atualiza o braco para a textura sem granada apos o arremesso.
+     */
     public setGrenadeThrown (): void
     {
         if (this.grenadeThrown)
@@ -59,6 +78,9 @@ export default class GranadeRobotVisual
         this.armImage.setTexture(GranadeRobotVisual.armTextureKey);
     }
 
+    /**
+     * Destroi o sprite auxiliar do braco.
+     */
     public destroy (): void
     {
         this.armImage.destroy();

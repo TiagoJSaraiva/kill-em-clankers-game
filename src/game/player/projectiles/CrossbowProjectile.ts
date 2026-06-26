@@ -1,6 +1,9 @@
 import Projectile from "./Projectile";
 import Phaser from "phaser";
 
+/**
+ * Projetil da besta, com velocidade alta e varias penetracoes.
+ */
 export default class CrossbowProjectile extends Projectile
 {
     private static readonly speed = 1200;

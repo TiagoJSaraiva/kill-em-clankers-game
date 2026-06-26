@@ -7,6 +7,14 @@ import type { Player } from "../Player";
 import type { WeaponName } from "./types";
 import Weapon from "./Weapon";
 
+/**
+ * Cria o catalogo completo de armas do jogador.
+ *
+ * Cada entrada define cooldown, custo de energia, dano e a factory do projetil
+ * correspondente.
+ *
+ * @returns Mapa de armas indexado por nome logico.
+ */
 export function Weapons() : Record<WeaponName, Weapon> {
     return {
         Pistol: new Weapon(

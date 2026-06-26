@@ -2,6 +2,12 @@ import Phaser from 'phaser';
 
 import { Player } from '../player/Player';
 
+/**
+ * Barra de vida fixa na HUD.
+ *
+ * A imagem de preenchimento e escalada horizontalmente para representar a
+ * proporcao entre vida atual e vida maxima do jogador.
+ */
 export class HealthBar extends Phaser.GameObjects.Container
 {
     private static readonly barTextureKey = 'health-bar';
@@ -17,6 +23,11 @@ export class HealthBar extends Phaser.GameObjects.Container
     private readonly healthBarImage: Phaser.GameObjects.Image;
     private readonly healthBarFill: Phaser.GameObjects.Image;
 
+    /**
+     * @param scene Cena onde a barra sera criada.
+     * @param x Posicao horizontal do container.
+     * @param y Posicao vertical do container.
+     */
     constructor (scene: Phaser.Scene, x: number, y: number)
     {
         super(scene, x, y);
@@ -35,6 +46,11 @@ export class HealthBar extends Phaser.GameObjects.Container
         scene.add.existing(this);
     }
 
+    /**
+     * Atualiza o preenchimento da barra com base na vida do jogador.
+     *
+     * @param player Jogador observado pela HUD.
+     */
     public updateFill (player: Player) : void
     {
         const currentHealth = player.currentHealthPoints;
@@ -45,6 +61,9 @@ export class HealthBar extends Phaser.GameObjects.Container
         this.healthBarFill.setVisible(healthRatio > 0);
     }
 
+    /**
+     * @returns Valor normalizado entre 0 e 1, protegido contra maximo invalido.
+     */
     private getSafeRatio (current: number, max: number) : number
     {
         if (max <= 0)

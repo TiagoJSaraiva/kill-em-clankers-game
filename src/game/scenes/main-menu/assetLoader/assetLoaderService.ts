@@ -1,3 +1,9 @@
+/**
+ * Carrega todos os assets usados pelas cenas do jogo.
+ *
+ * @param scene Cena do Phaser cujo loader recebera imagens, spritesheets e
+ * audios.
+ */
 export function loadAssets(scene: Phaser.Scene): void {
     /** 
      *  @description Função responsável por carregar todos os assets do jogo.

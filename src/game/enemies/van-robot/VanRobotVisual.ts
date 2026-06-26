@@ -1,5 +1,10 @@
 import Phaser from 'phaser';
 
+/**
+ * Camada visual auxiliar do VanRobot.
+ *
+ * Controla braco, recuo e VFX do disparo separadamente do corpo fisico.
+ */
 export default class VanRobotVisual
 {
     private static readonly armTextureKey = 'van-robot-arm';
@@ -26,6 +31,10 @@ export default class VanRobotVisual
     private bodyScaleY: number = 1;
     private armRecoilOffsetX: number = 0;
 
+    /**
+     * @param scene Cena onde os sprites auxiliares serao criados.
+     * @param robot Corpo principal usado como referencia.
+     */
     constructor (scene: Phaser.Scene, robot: Phaser.GameObjects.Sprite)
     {
         this.scene = scene;
@@ -45,6 +54,9 @@ export default class VanRobotVisual
         this.syncWithRobot(robot);
     }
 
+    /**
+     * Copia transformacoes do corpo e reposiciona braco e VFX.
+     */
     public syncWithRobot (robot: Phaser.GameObjects.Sprite) : void
     {
         const visualScaleX = Math.abs(robot.scaleX || 1);
@@ -64,6 +76,9 @@ export default class VanRobotVisual
         this.syncShootVfxWithShotOrigin(robot.alpha);
     }
 
+    /**
+     * @returns Coordenada mundial da origem dos tiros.
+     */
     public getShotOriginWorldPosition () : Phaser.Math.Vector2
     {
         return new Phaser.Math.Vector2(
@@ -72,6 +87,9 @@ export default class VanRobotVisual
         );
     }
 
+    /**
+     * Aplica recuo no braco e exibe o VFX do disparo.
+     */
     public playShootVfx () : void
     {
         this.syncShootVfxWithShotOrigin(this.armImage.alpha);
@@ -92,6 +110,9 @@ export default class VanRobotVisual
         });
     }
 
+    /**
+     * Destroi sprites auxiliares e cancela tweens pendentes.
+     */
     public destroy () : void
     {
         this.scene.tweens.killTweensOf(this);
@@ -100,6 +121,9 @@ export default class VanRobotVisual
         this.shootVfxImage.destroy();
     }
 
+    /**
+     * Anima o deslocamento horizontal curto do braco apos cada tiro.
+     */
     private playArmRecoil () : void
     {
         this.scene.tweens.killTweensOf(this);
@@ -119,6 +143,9 @@ export default class VanRobotVisual
         });
     }
 
+    /**
+     * Reposiciona o braco considerando o deslocamento de recuo atual.
+     */
     private syncArmPosition () : void
     {
         this.armImage.setPosition(
@@ -127,6 +154,9 @@ export default class VanRobotVisual
         );
     }
 
+    /**
+     * Mantem o VFX preso a origem dos tiros.
+     */
     private syncShootVfxWithShotOrigin (alpha: number) : void
     {
         const shotOrigin = this.getShotOriginWorldPosition();

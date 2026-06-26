@@ -1,6 +1,12 @@
 import { Scene } from 'phaser';
 
 
+/**
+ * Cena exibida apos a derrota do jogador.
+ *
+ * Mostra o placar final com animacao de contagem e oferece botoes para voltar
+ * ao menu ou reiniciar a partida.
+ */
 export class GameOver extends Scene
 {
     private static readonly height: number = 1080;
@@ -14,16 +20,27 @@ export class GameOver extends Scene
     restartButton: Phaser.GameObjects.Image;
     menuButton: Phaser.GameObjects.Image;
 
+    /**
+     * Registra a cena com a chave usada pelas transicoes do Phaser.
+     */
     constructor ()
     {
         super('GameOver');
     }
 
+    /**
+     * Recebe a pontuacao final enviada pela cena principal.
+     *
+     * @param data Dados enviados pela transicao para GameOver.
+     */
     init (data: { score: number })
     {
         this.scoreCounter = data.score;
     }
 
+    /**
+     * Cria layout, contador animado de score e botoes ao final da animacao.
+     */
     create ()
     {
         this.add.image(GameOver.width / 2, 300, 'game-over').setScale(0.8);
@@ -57,6 +74,9 @@ export class GameOver extends Scene
         });
     }
 
+    /**
+     * Configura botoes de voltar ao menu e reiniciar a partida.
+     */
     private setupButtons(): void
     {
         this.menuButton = this.add.image(GameOver.width / 2 + 500, GameOver.height / 2+200, 'menu-button').setScale(GameOver.buttonScale).setInteractive().setScale(GameOver.buttonScale);
@@ -83,6 +103,9 @@ export class GameOver extends Scene
         });
     }
 
+    /**
+     * Reservado para futuras animacoes por frame da tela de Game Over.
+     */
     update (time: number)
     {
 

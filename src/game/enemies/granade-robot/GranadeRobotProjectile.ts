@@ -1,7 +1,16 @@
 import { EnemyProjectile } from "../EnemyProjectile";
 
+/**
+ * Estados do projetil de granada.
+ */
 type GranadeRobotProjectileState = 'arc' | 'falling' | 'exploding';
 
+/**
+ * Granada arremessada pelo GranadeRobot.
+ *
+ * Primeiro interpola em arco ate a posicao alvo, depois cai verticalmente e
+ * reproduz explosao quando e destruida por colisao.
+ */
 export default class GranadeRobotProjectile extends EnemyProjectile
 {
     private static readonly textureKey = 'granade-robot-projectile';
@@ -21,6 +30,13 @@ export default class GranadeRobotProjectile extends EnemyProjectile
     private state: GranadeRobotProjectileState = 'arc';
     private shouldExplodeOnDestroy: boolean = true;
 
+    /**
+     * @param scene Cena onde a granada sera criada.
+     * @param x Posicao horizontal inicial.
+     * @param y Posicao vertical inicial.
+     * @param damage Dano aplicado ao jogador.
+     * @param targetPosition Ponto alvo usado no trecho em arco.
+     */
     constructor (
         scene: Phaser.Scene,
         x: number,
@@ -34,6 +50,9 @@ export default class GranadeRobotProjectile extends EnemyProjectile
         this.targetPosition = targetPosition.clone();
     }
 
+    /**
+     * Atualiza a etapa atual do movimento da granada.
+     */
     update(time: number, delta: number): void
     {
         if (this.state === 'exploding')
@@ -50,6 +69,10 @@ export default class GranadeRobotProjectile extends EnemyProjectile
         this.updateArc(time);
     }
 
+    /**
+     * Reproduz explosao ao ser destruida por colisao, mas evita explosao na
+     * limpeza de cena ou quando sai da tela.
+     */
     destroy(fromScene?: boolean): void
     {
         const shouldPlayExplosion = this.shouldExplodeOnDestroy
@@ -68,6 +91,9 @@ export default class GranadeRobotProjectile extends EnemyProjectile
         super.destroy(fromScene);
     }
 
+    /**
+     * Interpola a granada da origem ate o alvo criando a altura do arco.
+     */
     private updateArc(time: number): void
     {
         if (this.startedAt === null)
@@ -91,6 +117,9 @@ export default class GranadeRobotProjectile extends EnemyProjectile
         }
     }
 
+    /**
+     * Mantem a granada caindo verticalmente apos terminar o arco.
+     */
     private updateFalling(delta: number): void
     {
         const nextX = this.targetPosition.x;
@@ -104,6 +133,9 @@ export default class GranadeRobotProjectile extends EnemyProjectile
         }
     }
 
+    /**
+     * Atualiza sprite e body Arcade na mesma coordenada.
+     */
     private syncPosition(x: number, y: number): void
     {
         const body = this.body as Phaser.Physics.Arcade.Body | null;
@@ -112,18 +144,27 @@ export default class GranadeRobotProjectile extends EnemyProjectile
         body?.reset(x, y);
     }
 
+    /**
+     * Destroi a granada sem VFX quando ela apenas sai da area util.
+     */
     private destroyWithoutExplosion(): void
     {
         this.shouldExplodeOnDestroy = false;
         this.destroy();
     }
 
+    /**
+     * Dispara audio e VFX da explosao.
+     */
     private playExplosionEffects(): void
     {
         this.playExplosionAudio();
         this.playExplosionVfx();
     }
 
+    /**
+     * Reproduz o audio de explosao quando carregado.
+     */
     private playExplosionAudio(): void
     {
         if (!this.scene.cache.audio.exists(GranadeRobotProjectile.explosionAudioKey))
@@ -134,6 +175,9 @@ export default class GranadeRobotProjectile extends EnemyProjectile
         this.scene.sound.play(GranadeRobotProjectile.explosionAudioKey);
     }
 
+    /**
+     * Instancia a animacao visual da explosao e agenda sua limpeza.
+     */
     private playExplosionVfx(): void
     {
         if (!this.scene.textures.exists(GranadeRobotProjectile.explosionTextureKey))
@@ -168,6 +212,9 @@ export default class GranadeRobotProjectile extends EnemyProjectile
         });
     }
 
+    /**
+     * Cria a animacao compartilhada da explosao a partir dos frames do asset.
+     */
     private createExplosionAnimation(frameNames: string[]): void
     {
         if (this.scene.anims.exists(GranadeRobotProjectile.explosionAnimationKey))

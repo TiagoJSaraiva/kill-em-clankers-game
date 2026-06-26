@@ -1,5 +1,11 @@
 import Phaser from 'phaser';
 
+/**
+ * Camada visual auxiliar do ShooterRobot.
+ *
+ * Controla capa, braco independente, origem do disparo e VFX de muzzle flash
+ * sem misturar esses sprites com o corpo fisico do inimigo.
+ */
 export default class ShooterRobotVisual
 {
     private static readonly cloakTextureKey = 'shooter-robot-cloak';
@@ -25,6 +31,10 @@ export default class ShooterRobotVisual
     private readonly shootVfxImage: Phaser.GameObjects.Image;
     private robotDepth: number = 0;
 
+    /**
+     * @param scene Cena onde os sprites auxiliares serao criados.
+     * @param robot Corpo principal usado como referencia de transformacao.
+     */
     constructor (scene: Phaser.Scene, robot: Phaser.GameObjects.Sprite)
     {
         this.scene = scene;
@@ -44,6 +54,9 @@ export default class ShooterRobotVisual
         this.syncWithRobot(robot);
     }
 
+    /**
+     * Copia posicao, escala, alpha e profundidade do corpo para os sprites.
+     */
     public syncWithRobot (robot: Phaser.GameObjects.Sprite) : void
     {
         const visualScaleX = Math.abs(robot.scaleX || 1);
@@ -67,6 +80,9 @@ export default class ShooterRobotVisual
         this.syncShootVfxWithMuzzle(robot.alpha);
     }
 
+    /**
+     * Rotaciona o braco para mirar em uma coordenada de mundo.
+     */
     public aimAt (x: number, y: number) : void
     {
         const armOrigin = this.getArmOriginWorldPosition();
@@ -76,6 +92,9 @@ export default class ShooterRobotVisual
         this.syncShootVfxWithMuzzle(this.armImage.alpha);
     }
 
+    /**
+     * @returns Coordenada mundial do cano da arma.
+     */
     public getMuzzleWorldPosition () : Phaser.Math.Vector2
     {
         const rotation = this.armImage.rotation;
@@ -93,6 +112,9 @@ export default class ShooterRobotVisual
         return new Phaser.Math.Vector2(muzzleX, muzzleY);
     }
 
+    /**
+     * Exibe e desvanece rapidamente o VFX de disparo.
+     */
     public playShootVfx () : void
     {
         this.syncShootVfxWithMuzzle(this.armImage.alpha);
@@ -112,6 +134,9 @@ export default class ShooterRobotVisual
         });
     }
 
+    /**
+     * Destroi todos os sprites auxiliares e tweens relacionados.
+     */
     public destroy () : void
     {
         this.scene.tweens.killTweensOf(this.shootVfxImage);
@@ -120,11 +145,17 @@ export default class ShooterRobotVisual
         this.shootVfxImage.destroy();
     }
 
+    /**
+     * @returns Ponto de origem usado para calcular a rotacao do braco.
+     */
     private getArmOriginWorldPosition () : Phaser.Math.Vector2
     {
         return new Phaser.Math.Vector2(this.armImage.x, this.armImage.y);
     }
 
+    /**
+     * Mantem o VFX preso ao cano da arma.
+     */
     private syncShootVfxWithMuzzle (alpha: number) : void
     {
         const muzzlePosition = this.getMuzzleWorldPosition();

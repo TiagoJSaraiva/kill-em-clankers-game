@@ -8,8 +8,17 @@ import { EnemyProjectile } from '../../enemies/EnemyProjectile';
 import Projectile from '../../player/projectiles/Projectile';
 import CannonProjectile from '../../player/projectiles/CannonProjectile';
 
+/**
+ * Tipo comum recebido pelos callbacks de overlap da fisica Arcade.
+ */
 type ArcadeOverlapObject = Parameters<Phaser.Types.Physics.Arcade.ArcadePhysicsCallback>[0];
 
+/**
+ * Cena principal da partida.
+ *
+ * Coordena player, inimigos, projeteis, parallax, pontuacao, spawn e regras de
+ * colisao entre os grupos fisicos.
+ */
 export class Game extends Scene
 {
     private static readonly PARALLAX_FAR_SPEED = 0.1;
@@ -31,15 +40,24 @@ export class Game extends Scene
     score: number = 0;
     scoreText: Phaser.GameObjects.Text;
 
+    /**
+     * Registra a cena com a chave usada pelas transicoes do Phaser.
+     */
     constructor ()
     {
         super('Game');
     }
 
+    /**
+     * Carrega todos os assets compartilhados do jogo.
+     */
     preload () {
         loadAssets(this);
     }
 
+    /**
+     * Monta cenario, grupos fisicos, jogador, HUD de placar, audio e colisoes.
+     */
     create ()
     {
         this.camera = this.cameras.main;
@@ -79,6 +97,12 @@ export class Game extends Scene
         this.configureCollisions();
     }
 
+    /**
+     * Atualiza spawn, parallax, grupos de entidades e jogador.
+     *
+     * @param time Tempo total da cena em milissegundos.
+     * @param delta Tempo desde o ultimo frame em milissegundos.
+     */
     update (time: number, delta: number) {
         const elapsedTimeInSeconds = Math.floor(time / 1000);
 
@@ -95,21 +119,33 @@ export class Game extends Scene
         this.player.update(this.cursors, this);
     }
 
+    /**
+     * Adiciona um inimigo ao grupo fisico controlado pela cena.
+     */
     registerEnemy(enemy: Enemy): void
     {
         this.enemies.add(enemy);
     }
 
+    /**
+     * Adiciona um projetil do jogador ao grupo fisico monitorado por colisoes.
+     */
     registerPlayerProjectile(projectile: Projectile): void
     {
         this.playerProjectiles.add(projectile);
     }
 
+    /**
+     * Adiciona um projetil inimigo ao grupo fisico monitorado por colisoes.
+     */
     registerEnemyProjectile(projectile: EnemyProjectile): void
     {
         this.enemyProjectiles.add(projectile);
     }
 
+    /**
+     * Configura os overlaps que representam dano e contato entre entidades.
+     */
     private configureCollisions(): void
     {
         this.physics.add.overlap(
@@ -137,6 +173,9 @@ export class Game extends Scene
         );
     }
 
+    /**
+     * Chama `update` manualmente nos filhos ativos de um grupo Arcade.
+     */
     private updateGroup(group: Phaser.Physics.Arcade.Group, time: number, delta: number): void
     {
         for (const child of group.getChildren())
@@ -154,6 +193,9 @@ export class Game extends Scene
         }
     }
 
+    /**
+     * Resolve dano de projeteis do jogador contra inimigos e atualiza score.
+     */
     private handlePlayerProjectileEnemyOverlap(
         projectileObject: ArcadeOverlapObject,
         enemyObject: ArcadeOverlapObject
@@ -169,7 +211,7 @@ export class Game extends Scene
             return;
         }
 
-        takeDamageResult = enemy.takeDamage(projectile.damage); // AQUI
+        takeDamageResult = enemy.takeDamage(projectile.damage);
 
         if(typeof takeDamageResult === 'number') {
             if (projectile instanceof CannonProjectile) {
@@ -191,6 +233,9 @@ export class Game extends Scene
         this.updateScoreText();
     }
 
+    /**
+     * Resolve dano de projeteis inimigos contra o jogador.
+     */
     private handleEnemyProjectilePlayerOverlap(
         _playerObject: ArcadeOverlapObject,
         projectileObject: ArcadeOverlapObject
@@ -211,6 +256,9 @@ export class Game extends Scene
         projectile.destroy();
     }
 
+    /**
+     * Resolve dano de contato entre inimigos e jogador.
+     */
     private handleEnemyPlayerOverlap(
         _playerObject: ArcadeOverlapObject,
         enemyObject: ArcadeOverlapObject,
@@ -226,11 +274,17 @@ export class Game extends Scene
         enemy.tryContactDamage(this.player, this.time.now);
     }
 
+    /**
+     * Encerra a partida atual e envia o placar para a cena de Game Over.
+     */
     private callGameOver(): void
     {
-        this.scene.start('GameOver', { score: this.score }); // AQUI
+        this.scene.start('GameOver', { score: this.score });
     }
 
+    /**
+     * Inicia a musica de fundo da partida em loop.
+     */
     private playGameOst(): void
     {
         this.gameOst = this.sound.add('game-ost', {
@@ -240,6 +294,9 @@ export class Game extends Scene
         this.gameOst.play();
     }
 
+    /**
+     * Para e remove a musica quando a cena e desligada.
+     */
     private stopGameOst(): void
     {
         if (!this.gameOst)
@@ -252,12 +309,18 @@ export class Game extends Scene
         this.gameOst = undefined;
     }
 
+    /**
+     * Cria o texto fixo que exibe a pontuacao atual.
+     */
     private createScoreText(): void
     {
         const style = { font: '20px Arial', fill: '#fff' };
         this.scoreText = this.add.text(500, 150, `Score: ${this.score}`, style).setScrollFactor(0);
     }
 
+    /**
+     * Atualiza o texto do placar depois de mudancas de score.
+     */
     private updateScoreText(): void
     {
         if (this.scoreText)

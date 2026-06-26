@@ -3,6 +3,9 @@ import { Stage } from "../stage/types";
 import { Game } from "../../Game";
 import Phaser from "phaser";
 
+/**
+ * Estado interno de spawn associado a uma cena Game especifica.
+ */
 type SpawnState = {
     nextStageStartingTime: number,
     nextSpawnTime: number,
@@ -12,6 +15,12 @@ type SpawnState = {
 
 const spawnStates = new WeakMap<Game, SpawnState>();
 
+/**
+ * Atualiza o estagio ativo e instancia inimigos quando o intervalo permitir.
+ *
+ * @param scene Cena principal da partida.
+ * @param elapsedTime Tempo de partida em segundos.
+ */
 export default function manageSpawn(scene: Game, elapsedTime: number) {
     const state = getSpawnState(scene);
 
@@ -27,6 +36,9 @@ export default function manageSpawn(scene: Game, elapsedTime: number) {
     }
 }
 
+/**
+ * Retorna o estado persistente de spawn da cena, criando-o no primeiro uso.
+ */
 function getSpawnState(scene: Game): SpawnState
 {
     let state = spawnStates.get(scene);
@@ -45,14 +57,23 @@ function getSpawnState(scene: Game): SpawnState
     return state;
 }
 
+/**
+ * @returns Tempo de inicio do proximo estagio ou infinito se nao existir.
+ */
 function getNextStageStartingTime(state: SpawnState): number {
     return stages[state.currentStageIndex + 1] ? stages[state.currentStageIndex + 1].startTime : Number.POSITIVE_INFINITY;
 }
 
+/**
+ * @returns Estagio atual ou o ultimo estagio ativo como fallback.
+ */
 function getCurrentStage(state: SpawnState): Stage {
     return stages[state.currentStageIndex] ?? state.activeStage;
 }
 
+/**
+ * Sorteia uma unidade da pool ponderada e registra o inimigo criado na cena.
+ */
 function spawnUnits(scene: Game, state: SpawnState) {
     const pool = state.activeStage.pool;
 
@@ -87,6 +108,9 @@ function spawnUnits(scene: Game, state: SpawnState) {
     }
 }
 
+/**
+ * @returns Coordenadas iniciais fora da direita da tela e altura aleatoria.
+ */
 function getRandomCoordinates(): { x: number, y: number } {
     const x = 2200;
     const y = Phaser.Math.Between(100, 900);

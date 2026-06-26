@@ -2,6 +2,17 @@
 
 import { EnemyVariation, Attributes, VariationName } from "./types";
 
+/**
+ * Cria a configuracao de uma variante de inimigo.
+ *
+ * @param variationName Nome da variante.
+ * @param texture Chave da textura ou spritesheet usada pela variante.
+ * @param healthPoints Vida inicial.
+ * @param damage Dano causado por ataque ou contato.
+ * @param moveSpeed Velocidade de movimento.
+ * @param scoreValue Pontos concedidos ao derrotar o inimigo.
+ * @returns Objeto de variacao usado pelos helpers de textura e atributos.
+ */
 export function enemyVariation(variationName: VariationName, texture: string, healthPoints: number, damage: number, moveSpeed: number, scoreValue: number): EnemyVariation {
     /**
      * @description Factory function de EnemyVariations, que é um array que vai existir para cada classe de inimigo
@@ -18,6 +29,13 @@ export function enemyVariation(variationName: VariationName, texture: string, he
     }
 }
 
+/**
+ * Busca a textura associada a uma variacao dentro do catalogo do inimigo.
+ *
+ * @param variation Variacao solicitada.
+ * @param enemyVariations Lista de variacoes suportadas por uma classe.
+ * @returns Chave de textura correspondente ou `Default-Texture` como fallback.
+ */
 export function getTexture(variation: VariationName, enemyVariations: EnemyVariation[]): string {
     /**
      * @description Função que recebe uma variação de inimigo e o array de variações do inimigo, 
@@ -39,6 +57,13 @@ export function getTexture(variation: VariationName, enemyVariations: EnemyVaria
     return "Default-Texture";
 }
 
+/**
+ * Extrai os atributos numericos de uma variacao de inimigo.
+ *
+ * @param variation Variacao solicitada.
+ * @param enemyVariations Lista de variacoes suportadas por uma classe.
+ * @returns Atributos da variacao ou valores zerados quando nao encontrada.
+ */
 export function getAttributes(variation: VariationName, enemyVariations: EnemyVariation[]): Attributes {
     for(let variationType of enemyVariations) {
         if(variationType.variationName == variation) {

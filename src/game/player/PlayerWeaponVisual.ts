@@ -1,6 +1,9 @@
 import Phaser from 'phaser';
 import { WeaponName } from '../player/weapons/types';
 
+/**
+ * Relaciona cada arma do jogador a textura usada no visual equipado.
+ */
 const weaponTextureKeys: Record<WeaponName, string> = {
     Pistol: 'player-pistol-model',
     Sword: 'player-sword-model',
@@ -8,6 +11,12 @@ const weaponTextureKeys: Record<WeaponName, string> = {
     Cannon: 'player-cannon-model'
 }; // Catálogo de nome de texturas para cada arma, usado para atualizar a textura do PlayerWeaponVisual quando o jogador troca de arma
 
+/**
+ * Container visual da arma carregada pelo jogador.
+ *
+ * Mantem a textura da arma ativa sincronizada com a posicao, escala, alpha e
+ * profundidade do sprite principal do player.
+ */
 export default class PlayerWeaponVisual extends Phaser.GameObjects.Container
 {
     private static readonly offsetX = 0;
@@ -17,6 +26,12 @@ export default class PlayerWeaponVisual extends Phaser.GameObjects.Container
     private readonly weaponImage: Phaser.GameObjects.Image;
     private currentWeaponName: WeaponName;
 
+    /**
+     * @param scene Cena onde o visual sera renderizado.
+     * @param x Posicao horizontal inicial.
+     * @param y Posicao vertical inicial.
+     * @param weaponName Arma inicialmente equipada.
+     */
     constructor (scene: Phaser.Scene, x: number, y: number, weaponName: WeaponName)
     {
         super(scene, x, y);
@@ -30,6 +45,9 @@ export default class PlayerWeaponVisual extends Phaser.GameObjects.Container
         scene.add.existing(this);
     }
 
+    /**
+     * Aplica a animacao curta de recuo apos um disparo ou ataque.
+     */
     public applyRecoil() {
         let recoilDistance = -12;
         let recoilDuration = 45;
@@ -77,6 +95,11 @@ export default class PlayerWeaponVisual extends Phaser.GameObjects.Container
         });
     }
 
+    /**
+     * Atualiza a textura da arma exibida.
+     *
+     * @param weaponName Nome da nova arma equipada.
+     */
     public equip (weaponName: WeaponName) : void
     {
         if (this.currentWeaponName === weaponName)
@@ -88,6 +111,11 @@ export default class PlayerWeaponVisual extends Phaser.GameObjects.Container
         this.weaponImage.setTexture(weaponTextureKeys[weaponName]);
     }
 
+    /**
+     * Copia transformacoes do corpo do jogador para manter o visual acoplado.
+     *
+     * @param player Sprite principal do jogador.
+     */
     public syncWithPlayer (player: Phaser.GameObjects.Sprite) : void
     {
         this.setPosition(

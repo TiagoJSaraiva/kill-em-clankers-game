@@ -2,6 +2,12 @@ import Projectile from "./Projectile";
 import Phaser from "phaser";
 import Enemy from "../../enemies/Enemy";
 
+/**
+ * Projetil do canhao.
+ *
+ * Ao colidir, pode explodir uma unica vez e aplicar dano reduzido em inimigos
+ * proximos ao ponto de impacto.
+ */
 export default class CannonProjectile extends Projectile
 {
     private static readonly animationKey = 'player-cannon-projectile-animation';
@@ -17,6 +23,13 @@ export default class CannonProjectile extends Projectile
 
     private hasExploded: boolean = false;
 
+    /**
+     * @param scene Cena onde o projetil sera criado.
+     * @param x Posicao horizontal inicial.
+     * @param y Posicao vertical inicial.
+     * @param texture Chave do spritesheet do projetil.
+     * @param damage Dano direto do impacto.
+     */
     constructor (scene: Phaser.Scene, x: number, y: number, texture: string, damage: number)
     {
         super(scene, x, y, texture, damage, new Phaser.Math.Vector2(CannonProjectile.speed, 0), CannonProjectile.penetration);
@@ -26,6 +39,13 @@ export default class CannonProjectile extends Projectile
         this.play(CannonProjectile.animationKey);
     }
 
+    /**
+     * Executa a explosao em area e soma pontos gerados por inimigos abatidos.
+     *
+     * @param enemies Grupo de inimigos ativos na cena.
+     * @param excludedEnemy Inimigo ja atingido pelo impacto direto.
+     * @returns Pontuacao obtida apenas pelo dano em area.
+     */
     public explode(enemies: Phaser.Physics.Arcade.Group, excludedEnemy: Enemy): number
     {
         if (this.hasExploded)
@@ -71,6 +91,9 @@ export default class CannonProjectile extends Projectile
         return scoreFromExplosion;
     }
 
+    /**
+     * Registra a animacao do projetil se ela ainda nao existir.
+     */
     private createAnimation(texture: string): void
     {
         if (this.scene.anims.exists(CannonProjectile.animationKey))
@@ -86,12 +109,18 @@ export default class CannonProjectile extends Projectile
         });
     }
 
+    /**
+     * Dispara audio e VFX da explosao.
+     */
     private playExplosionEffects(): void
     {
         this.playExplosionAudio();
         this.playExplosionVfx();
     }
 
+    /**
+     * Reproduz o som da explosao quando o asset esta carregado.
+     */
     private playExplosionAudio(): void
     {
         if (!this.scene.cache.audio.exists(CannonProjectile.explosionAudioKey))
@@ -102,6 +131,9 @@ export default class CannonProjectile extends Projectile
         this.scene.sound.play(CannonProjectile.explosionAudioKey);
     }
 
+    /**
+     * Instancia e remove automaticamente o sprite da explosao.
+     */
     private playExplosionVfx(): void
     {
         if (!this.scene.textures.exists(CannonProjectile.explosionTextureKey))
@@ -136,6 +168,9 @@ export default class CannonProjectile extends Projectile
         });
     }
 
+    /**
+     * Cria a animacao da explosao a partir dos frames do spritesheet.
+     */
     private createExplosionAnimation(frameNames: string[]): void
     {
         if (this.scene.anims.exists(CannonProjectile.explosionAnimationKey))

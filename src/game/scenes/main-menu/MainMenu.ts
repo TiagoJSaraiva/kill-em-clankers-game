@@ -1,6 +1,12 @@
 import { Scene, GameObjects } from 'phaser';
 import { loadAssets } from './assetLoader/assetLoaderService';
 
+/**
+ * Cena do menu inicial.
+ *
+ * Controla a apresentacao progressiva do titulo, botao de jogar, parallax do
+ * fundo, fade para iniciar a partida e musica do menu.
+ */
 export class MainMenu extends Scene
 {
     private static readonly PARALLAX_FAR_SPEED = 0.1;
@@ -34,19 +40,28 @@ export class MainMenu extends Scene
     exitButton?: GameObjects.Image;
     menuOst?: Phaser.Sound.BaseSound;
 
+    /**
+     * Registra a cena com a chave usada pelas transicoes do Phaser.
+     */
     constructor ()
     {
         super('MainMenu');
     }
 
+    /**
+     * Carrega os assets antes de montar a cena.
+     */
     preload() {
         loadAssets(this);
     }
 
+    /**
+     * Reinicia estado transiente quando a cena e aberta novamente.
+     */
     init() {
         this.updateChange = false;
         this.timeAtUpdateChange = 0;
-        this.buttonsActive = false;
+        //this.buttonsActive = false;
         this.bgTween = undefined;
         this.fadeInStarted = false;
         this.fadeOutStarted = false;
@@ -58,6 +73,9 @@ export class MainMenu extends Scene
         this.exitButton = undefined;
     }
 
+    /**
+     * Cria as camadas de fundo e inicia a trilha do menu.
+     */
     create ()
     {
         const { width, height } = this.scale;
@@ -84,6 +102,12 @@ export class MainMenu extends Scene
         this.events.once(Phaser.Scenes.Events.SHUTDOWN, this.stopMenuOst, this);
     }
 
+    /**
+     * Atualiza o parallax e gerencia a sequencia de entrada/saida do menu.
+     *
+     * @param time Tempo total da cena em milissegundos.
+     * @param delta Tempo desde o ultimo frame em milissegundos.
+     */
     update(time: number, delta: number): void{
         const dt = delta / 1000;
 
@@ -130,7 +154,7 @@ export class MainMenu extends Scene
                 this.playButton = undefined;
             }
 
-            this.buttonsActive = false;
+            //this.buttonsActive = false;
 
             if(_time > 2000 && this.title) {
                 this.title.destroy();
@@ -168,12 +192,15 @@ export class MainMenu extends Scene
         }
     }
 
+    /**
+     * Ativa interacao, hover e transicao para o botao de jogar.
+     */
     setupButtons() {
         if (!this.playButton /*|| !this.configButton || !this.exitButton*/) {
             console.error('Botões do menu não estão definidos.');
             return;
         }
-        this.buttonsActive = true;
+        //this.buttonsActive = true;
 
         this.playButton!.setInteractive({ useHandCursor: true });
         // this.configButton!.setInteractive({ useHandCursor: true });
@@ -225,6 +252,9 @@ export class MainMenu extends Scene
         // });
     }
 
+    /**
+     * Inicia a musica de fundo do menu em loop.
+     */
     private playMenuOst(): void
     {
         this.menuOst = this.sound.add('menu-ost', {
@@ -234,6 +264,9 @@ export class MainMenu extends Scene
         this.menuOst.play();
     }
 
+    /**
+     * Para e remove a musica quando a cena e desligada.
+     */
     private stopMenuOst(): void
     {
         if (!this.menuOst)

@@ -6,16 +6,25 @@ import VanRobotVisual from "./VanRobotVisual";
 import { Player } from "../../player/Player";
 import VanRobotProjectile from "./VanRobotProjectile";
 
+/**
+ * Cena que pode receber projeteis disparados por inimigos.
+ */
 type EnemyProjectileScene = Phaser.Scene & {
     registerEnemyProjectile?: (projectile: EnemyProjectile) => void;
 };
 
+/**
+ * Catalogo de variacoes do VanRobot.
+ */
 const enemyVariations = [
     enemyVariation("normal", "van-robot-body", 100, 30, 100, 100),
     enemyVariation("strong", "van-robot-body", 100, 30, 100, 200),
     enemyVariation("impossible", "van-robot-body", 100, 30, 100, 300),
 ] as EnemyVariation[];
 
+/**
+ * Inimigo pesado que se aproxima e dispara rajadas horizontais com dispersao.
+ */
 export class VanRobot extends Enemy {
     static readonly scale = 0.8;
     
@@ -35,6 +44,13 @@ export class VanRobot extends Enemy {
     private sprayEndAt: number = 0;
     private nextShotAt: number = 0;
 
+    /**
+     * @param scene Cena onde o inimigo sera criado.
+     * @param x Posicao horizontal inicial.
+     * @param y Posicao vertical inicial.
+     * @param variation Variante de atributos e textura.
+     * @param target Jogador perseguido e atacado.
+     */
     constructor (scene: Phaser.Scene, x: number, y: number, variation: VariationName, target: Player | null = null)
     {
         const texture: string = getTexture(variation, enemyVariations);
@@ -49,18 +65,27 @@ export class VanRobot extends Enemy {
         this.nextSprayAt = this.scene.time.now + VanRobot.sprayPauseDuration;
     }
 
+    /**
+     * Atualiza orientacao e estado de IA da rajada.
+     */
     update(time: number, _delta: number): void
     {
         this.keepBodyFacingOriginalDirection();
         this.resolveAi(time);
     }
 
+    /**
+     * Mantem o braco e VFX sincronizados com o corpo animado.
+     */
     preUpdate (time: number, delta: number) : void
     {
         super.preUpdate(time, delta);
         this.visual.syncWithRobot(this);
     }
 
+    /**
+     * Decide quando aproximar, parar ou continuar a rajada.
+     */
     resolveAi(time: number): void
     {
         const target = this.attackingTarget;
@@ -92,12 +117,18 @@ export class VanRobot extends Enemy {
         this.updateSprayAttack(time);
     }
 
+    /**
+     * Dispara um projetil da rajada e toca o VFX correspondente.
+     */
     attack () : void
     {
         this.shoot();
         this.visual.playShootVfx();
     }
 
+    /**
+     * Cria um projetil com leve variacao angular para simular spray.
+     */
     shoot() : void
     {
         const projectileAngle = VanRobot.baseProjectileAngle + Phaser.Math.FloatBetween(
@@ -121,12 +152,18 @@ export class VanRobot extends Enemy {
         this.playShotAudio();
     }
 
+    /**
+     * Remove os sprites auxiliares antes de destruir o corpo principal.
+     */
     destroy (fromScene?: boolean) : void
     {
         this.visual.destroy();
         super.destroy(fromScene);
     }
 
+    /**
+     * Controla janelas de pausa, duracao da rajada e intervalo entre tiros.
+     */
     private updateSprayAttack (time: number) : void
     {
         if (this.sprayEndAt > 0 && time >= this.sprayEndAt)
@@ -153,6 +190,9 @@ export class VanRobot extends Enemy {
         }
     }
 
+    /**
+     * Cancela uma rajada em andamento quando o alvo sai de condicao valida.
+     */
     private cancelActiveSpray (time: number) : void
     {
         if (this.sprayEndAt === 0)
@@ -164,12 +204,18 @@ export class VanRobot extends Enemy {
         this.nextSprayAt = time + VanRobot.sprayPauseDuration;
     }
 
+    /**
+     * Mantem o corpo na orientacao original durante a movimentacao.
+     */
     private keepBodyFacingOriginalDirection () : void
     {
         this.setScale(VanRobot.scale, VanRobot.scale);
         this.setFlipX(false);
     }
 
+    /**
+     * Reproduz o audio de disparo quando carregado.
+     */
     private playShotAudio(): void
     {
         if (!this.scene.cache.audio.exists(VanRobot.shotAudioKey))
@@ -180,6 +226,9 @@ export class VanRobot extends Enemy {
         this.scene.sound.play(VanRobot.shotAudioKey);
     }
 
+    /**
+     * Registra a animacao do corpo se ela ainda nao existir.
+     */
     private createAnimation(texture: string): void {
         if (this.scene.anims.exists(VanRobot.animationKey)) {
             return;

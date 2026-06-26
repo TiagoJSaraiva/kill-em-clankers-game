@@ -7,6 +7,12 @@ import { EnergyBar } from '../UI/EnergyBar';
 import PlayerWeaponVisual from './PlayerWeaponVisual';
 import type { WeaponName } from './weapons/types';
 
+/**
+ * Entidade jogavel principal.
+ *
+ * Centraliza movimento, troca de armas, disparos, vida e os elementos de HUD
+ * associados ao jogador.
+ */
 export class Player extends Phaser.Physics.Arcade.Sprite
 {
     private static readonly animationKey = 'player-body-animation';
@@ -35,6 +41,11 @@ export class Player extends Phaser.Physics.Arcade.Sprite
     private keyE: Phaser.Input.Keyboard.Key;
     private keyR: Phaser.Input.Keyboard.Key;
 
+    /**
+     * @param scene Cena onde o jogador sera criado.
+     * @param x Posicao horizontal inicial.
+     * @param y Posicao vertical inicial.
+     */
     constructor (scene: Phaser.Scene, x: number, y: number)
     {
         super(scene, x, y, 'player');
@@ -49,6 +60,9 @@ export class Player extends Phaser.Physics.Arcade.Sprite
         this.initialize(scene);
     }
 
+    /**
+     * Garante que a animacao base do corpo exista antes de ser reproduzida.
+     */
     private createAnimation () : void
     {
         if (this.scene.anims.exists(Player.animationKey))
@@ -64,12 +78,18 @@ export class Player extends Phaser.Physics.Arcade.Sprite
         });
     }
 
+    /**
+     * Ajusta hitbox manualmente para aproximar a colisao do corpo visivel.
+     */
     private configureHitbox () : void
     {
         this.setBodySize(this.hitboxWidth, this.hitboxHeight, true);
         this.setOffset(70, 124);
     }
 
+    /**
+     * Configura input, armas, visual da arma e HUD do jogador.
+     */
     private initialize (scene: Phaser.Scene) : void
     {
         // Configura as teclas de troca de arma, mapeando QWER para as armas do jogador
@@ -91,6 +111,12 @@ export class Player extends Phaser.Physics.Arcade.Sprite
         this.instantiateUI(scene);
     }
 
+    /**
+     * Atualiza todos os subsistemas do jogador em um frame da cena.
+     *
+     * @param cursors Teclas direcionais e espaco criadas pela cena.
+     * @param scene Cena atual usada para disparos e UI.
+     */
     update (cursors: Phaser.Types.Input.Keyboard.CursorKeys, scene: Phaser.Scene) : void
     {
         this.processMovement(cursors);
@@ -101,6 +127,9 @@ export class Player extends Phaser.Physics.Arcade.Sprite
         this.updateUI();
     }
 
+    /**
+     * Avanca cooldown e regeneracao de energia de todas as armas.
+     */
     updateWeapon () : void
     {
         for (const weapon of Object.values(this.weapons))
@@ -109,6 +138,9 @@ export class Player extends Phaser.Physics.Arcade.Sprite
         }
     }
 
+    /**
+     * Processa o comando de ataque e aciona o recuo visual quando disparar.
+     */
     processShooting (cursors: Phaser.Types.Input.Keyboard.CursorKeys, scene: Phaser.Scene) : void
     {
         if (cursors.space.isDown)
@@ -120,6 +152,9 @@ export class Player extends Phaser.Physics.Arcade.Sprite
         }
     }
 
+    /**
+     * Cria slots de armas e barras de status fixas na tela.
+     */
     instantiateUI (scene: Phaser.Scene) : void
     {
         let slotPositionX = 700 * ItemSlot.scale;
@@ -134,6 +169,9 @@ export class Player extends Phaser.Physics.Arcade.Sprite
         this.energyBar = new EnergyBar(scene, 500 * EnergyBar.scale, 350 * EnergyBar.scale, this.activeWeapon);
     }
 
+    /**
+     * Sincroniza todos os componentes de HUD com o estado atual do jogador.
+     */
     updateUI () : void
     {
         this.healthBar.updateFill(this);
@@ -143,6 +181,9 @@ export class Player extends Phaser.Physics.Arcade.Sprite
         });
     }
 
+    /**
+     * Lida com a troca de arma via QWER respeitando o cooldown entre trocas.
+     */
     processWeaponSwitch () : void
     {
         if (this.weaponSwitchCooldown > 0)
@@ -179,6 +220,11 @@ export class Player extends Phaser.Physics.Arcade.Sprite
         this.weaponSwitchCooldown = this.maxWeaponSwitchCooldown;
     }
 
+    /**
+     * Equipa uma arma e sincroniza a HUD e o visual externo.
+     *
+     * @param weaponName Nome da arma que passara a ser ativa.
+     */
     private equipWeapon (weaponName: WeaponName) : void
     {
         this.activeWeapon.isEquipped = false;
@@ -188,6 +234,9 @@ export class Player extends Phaser.Physics.Arcade.Sprite
         this.weaponVisual.equip(weaponName);
     }
 
+    /**
+     * Converte input direcional em velocidade Arcade com suavizacao.
+     */
     processMovement (cursors: Phaser.Types.Input.Keyboard.CursorKeys) : void
     {
         const direction = new Phaser.Math.Vector2(0, 0);
@@ -225,6 +274,9 @@ export class Player extends Phaser.Physics.Arcade.Sprite
         );
     }
 
+    /**
+     * Reduz gradualmente uma velocidade residual ate parar.
+     */
     private applyMomentum (velocity: number) : number
     {
         const nextVelocity = velocity * this.momentum;
@@ -232,6 +284,12 @@ export class Player extends Phaser.Physics.Arcade.Sprite
         return Math.abs(nextVelocity) < 5 ? 0 : nextVelocity;
     }
 
+    /**
+     * Aplica dano ao jogador.
+     *
+     * @param amount Quantidade de vida removida.
+     * @returns `true` quando a vida chega a zero.
+     */
     takeDamage (amount: number) : boolean
     {
         let dead: boolean = false;

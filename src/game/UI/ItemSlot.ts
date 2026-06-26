@@ -1,6 +1,12 @@
 import Phaser from 'phaser';
 import Weapon from '../player/weapons/Weapon';
 
+/**
+ * Representa um slot fixo da HUD para uma arma do jogador.
+ *
+ * O slot exibe moldura, icone e preenchimento de energia, alternando a
+ * textura do preenchimento quando a arma esta equipada.
+ */
 export class ItemSlot extends Phaser.GameObjects.Container
 {
     static readonly scale = 0.5;
@@ -19,6 +25,12 @@ export class ItemSlot extends Phaser.GameObjects.Container
     private readonly weapon: Weapon;
     private currentFillTextureKey: string;
 
+    /**
+     * @param scene Cena onde o slot sera renderizado.
+     * @param x Posicao horizontal do container na tela.
+     * @param y Posicao vertical do container na tela.
+     * @param weapon Arma usada como fonte de icone, energia e estado equipado.
+     */
     constructor (scene: Phaser.Scene, x: number, y: number, weapon: Weapon)
     {
         super(scene, x, y);
@@ -39,11 +51,17 @@ export class ItemSlot extends Phaser.GameObjects.Container
         this.update();
     }
 
+    /**
+     * Atualiza o estado visual do slot de acordo com a arma vinculada.
+     */
     public update () : void 
     {
         this.updateFill();
     }
 
+    /**
+     * Recalcula o recorte vertical do preenchimento usando a energia atual.
+     */
     private updateFill () : void
     {
         const nextFillTextureKey = this.weapon.isEquipped
@@ -74,6 +92,10 @@ export class ItemSlot extends Phaser.GameObjects.Container
         );
     }
 
+    /**
+     * @param weaponName Nome logico da arma.
+     * @returns Chave da textura do icone cadastrada no loader.
+     */
     private getIconTextureKey (weaponName: string) : string
     {
         return `player-${weaponName.toLowerCase()}-icon`;

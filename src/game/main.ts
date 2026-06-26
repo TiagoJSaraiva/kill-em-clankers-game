@@ -5,8 +5,12 @@ import { AUTO, Game } from 'phaser';
 import { MainMenu } from './scenes/main-menu/MainMenu';
 import { GameOver } from './scenes/game-over/GameOver';
 
-//  Find out more information about the Game Config at:
-//  https://docs.phaser.io/api-documentation/typedef/types-core#gameconfig
+/**
+ * Configuracao base do Phaser.
+ *
+ * Define resolucao, fisica Arcade, cena inicial e lista de cenas usadas pelo
+ * jogo. O parent pode ser sobrescrito por {@link StartGame}.
+ */
 const config: Phaser.Types.Core.GameConfig = {
     type: AUTO,
     width: 1920,
@@ -27,6 +31,12 @@ const config: Phaser.Types.Core.GameConfig = {
     ]
 };
 
+/**
+ * Cria a instancia principal do Phaser dentro do elemento informado.
+ *
+ * @param parent Id do elemento HTML que recebe o canvas do jogo.
+ * @returns Instancia do jogo Phaser.
+ */
 const StartGame = (parent: string) => {
 
     return new Game({ ...config, parent });
