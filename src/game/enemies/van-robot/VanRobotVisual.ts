@@ -8,12 +8,13 @@ export default class VanRobotVisual
     private static readonly armDepthOffset = 0.1;
     private static readonly shootVfxDepthOffset = 0.3;
     private static readonly shootVfxDuration = 200;
+    private static readonly armRecoilDistance = 12;
+    private static readonly armRecoilReturnDuration = 90;
 
     private static readonly armOriginX = 0.35;
     private static readonly armOriginY = 0.27;
     private static readonly armOffsetX = -64;
     private static readonly armOffsetY = -45;
-    private static readonly armBaseAimAngle = Math.PI;
     private static readonly muzzleOffsetX = -98;
     private static readonly muzzleOffsetY = -6;
 
@@ -21,6 +22,9 @@ export default class VanRobotVisual
     private readonly armImage: Phaser.GameObjects.Image;
     private readonly shootVfxImage: Phaser.GameObjects.Image;
     private robotDepth: number = 0;
+    private armBaseX: number = 0;
+    private armBaseY: number = 0;
+    private armRecoilOffsetX: number = 0;
 
     constructor (scene: Phaser.Scene, robot: Phaser.GameObjects.Sprite)
     {
@@ -32,6 +36,7 @@ export default class VanRobotVisual
             VanRobotVisual.armTextureKey
         );
         this.armImage.setOrigin(VanRobotVisual.armOriginX, VanRobotVisual.armOriginY);
+        this.armImage.setRotation(0);
 
         this.shootVfxImage = scene.add.image(0, 0, VanRobotVisual.shootVfxTextureKey);
         this.shootVfxImage.setOrigin(1, 0.5);
@@ -45,25 +50,16 @@ export default class VanRobotVisual
         const visualScaleX = Math.abs(robot.scaleX || 1);
         this.robotDepth = robot.depth;
 
-        this.armImage.setPosition(
-            robot.x + (VanRobotVisual.armOffsetX * visualScaleX),
-            robot.y + (VanRobotVisual.armOffsetY * robot.scaleY)
-        );
+        this.armBaseX = robot.x + (VanRobotVisual.armOffsetX * visualScaleX);
+        this.armBaseY = robot.y + (VanRobotVisual.armOffsetY * robot.scaleY);
+
+        this.syncArmPosition();
         this.armImage.setScale(visualScaleX, robot.scaleY);
         this.armImage.setDepth(this.robotDepth + VanRobotVisual.armDepthOffset);
         this.armImage.setVisible(robot.visible);
         this.armImage.setAlpha(robot.alpha);
 
         this.syncShootVfxWithMuzzle(robot.alpha);
-    }
-
-    public aimAt (x: number, y: number) : void
-    {
-        const armOrigin = this.getArmOriginWorldPosition();
-        const targetAngle = Phaser.Math.Angle.Between(armOrigin.x, armOrigin.y, x, y);
-
-        this.armImage.setRotation(targetAngle - VanRobotVisual.armBaseAimAngle);
-        this.syncShootVfxWithMuzzle(this.armImage.alpha);
     }
 
     public getMuzzleWorldPosition () : Phaser.Math.Vector2
@@ -86,6 +82,7 @@ export default class VanRobotVisual
     public playShootVfx () : void
     {
         this.syncShootVfxWithMuzzle(this.armImage.alpha);
+        this.playArmRecoil();
         this.scene.tweens.killTweensOf(this.shootVfxImage);
         this.shootVfxImage.setVisible(true);
         this.shootVfxImage.setAlpha(this.armImage.alpha);
@@ -104,14 +101,37 @@ export default class VanRobotVisual
 
     public destroy () : void
     {
+        this.scene.tweens.killTweensOf(this);
         this.scene.tweens.killTweensOf(this.shootVfxImage);
         this.armImage.destroy();
         this.shootVfxImage.destroy();
     }
 
-    private getArmOriginWorldPosition () : Phaser.Math.Vector2
+    private playArmRecoil () : void
     {
-        return new Phaser.Math.Vector2(this.armImage.x, this.armImage.y);
+        this.scene.tweens.killTweensOf(this);
+        this.armRecoilOffsetX = VanRobotVisual.armRecoilDistance;
+        this.syncArmPosition();
+        this.syncShootVfxWithMuzzle(this.armImage.alpha);
+
+        this.scene.tweens.add({
+            targets: this,
+            armRecoilOffsetX: 0,
+            duration: VanRobotVisual.armRecoilReturnDuration,
+            ease: 'Quad.easeOut',
+            onUpdate: () => {
+                this.syncArmPosition();
+                this.syncShootVfxWithMuzzle(this.armImage.alpha);
+            }
+        });
+    }
+
+    private syncArmPosition () : void
+    {
+        this.armImage.setPosition(
+            this.armBaseX + this.armRecoilOffsetX,
+            this.armBaseY
+        );
     }
 
     private syncShootVfxWithMuzzle (alpha: number) : void
