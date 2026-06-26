@@ -73,6 +73,10 @@ export function loadAssets(scene: Phaser.Scene): void {
         frameWidth: 40,
         frameHeight: 39
     });
+    scene.load.spritesheet('cannon-explosion', './assets/images/player/cannon/cannon-explosion.png', {
+        frameWidth: 333,
+        frameHeight: 388
+    });
     scene.load.image('player-cannon-icon', './assets/images/player/cannon/cannon-icon.png');
 
     ////  RELATIVAS AO AMBIENTE  ////

@@ -6,6 +6,7 @@ import Phaser from 'phaser';
 import Enemy from '../../enemies/Enemy';
 import { EnemyProjectile } from '../../enemies/EnemyProjectile';
 import Projectile from '../../player/projectiles/Projectile';
+import CannonProjectile from '../../player/projectiles/CannonProjectile';
 
 type ArcadeOverlapObject = Parameters<Phaser.Types.Physics.Arcade.ArcadePhysicsCallback>[0];
 
@@ -171,6 +172,14 @@ export class Game extends Scene
         takeDamageResult = enemy.takeDamage(projectile.damage); // AQUI
 
         if(typeof takeDamageResult === 'number') {
+            if (projectile instanceof CannonProjectile) {
+                this.score += takeDamageResult;
+                this.score += projectile.explode(this.enemies, enemy);
+                projectile.destroy();
+                this.updateScoreText();
+                return;
+            }
+
             projectile.penetrationLeft -= 1;
 
             if (projectile.penetrationLeft <= 0) {
