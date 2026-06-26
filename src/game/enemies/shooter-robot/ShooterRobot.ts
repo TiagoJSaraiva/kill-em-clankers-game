@@ -145,15 +145,15 @@ export default class ShooterRobot extends Enemy
     }
 
     private createAnimation(texture: string): void {
-    if (this.scene.anims.exists(ShooterRobot.animationKey)) {
-        return;
-    }
+        if (this.scene.anims.exists(ShooterRobot.animationKey)) {
+            return;
+        }
 
-    this.scene.anims.create({
-        key: ShooterRobot.animationKey,
-        frames: this.scene.anims.generateFrameNumbers(texture, { start: 0, end: 3 }),
-        frameRate: 8,
-        repeat: -1
-    });
-}
+        this.scene.anims.create({
+            key: ShooterRobot.animationKey,
+            frames: this.scene.anims.generateFrameNumbers(texture, { start: 0, end: 3 }),
+            frameRate: 8,
+            repeat: -1
+        });
+    }
 }
