@@ -31,7 +31,10 @@ export function loadAssets(scene: Phaser.Scene): void {
 
     ////  RELATIVAS AO PLAYER ////
 
-    scene.load.image('player', './assets/images/player/player-model.png');
+    scene.load.spritesheet('player', './assets/images/player/player-model.png', {
+        frameWidth: 379,
+        frameHeight: 364
+    });
 
     // UI
     scene.load.image('item-slot', './assets/images/ui/item-slot.png');

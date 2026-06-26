@@ -9,6 +9,8 @@ import type { WeaponName } from './weapons/types';
 
 export class Player extends Phaser.Physics.Arcade.Sprite
 {
+    private static readonly animationKey = 'player-body-animation';
+
     private readonly speed = 200; // Velocidade geral do jogador, usada pra movimentacao nas 4 direcoes
     private readonly momentum = 0.9; // Fator de momentum, usado pra suavizar a movimentacao do jogador
     private readonly hitboxWidth = 189; // Largura manual da hitbox, em pixels antes do setScale
@@ -41,8 +43,25 @@ export class Player extends Phaser.Physics.Arcade.Sprite
         this.setCollideWorldBounds(true);
         this.setScale(0.8);
         this.configureHitbox();
+        this.createAnimation();
+        this.play(Player.animationKey);
 
         this.initialize(scene);
+    }
+
+    private createAnimation () : void
+    {
+        if (this.scene.anims.exists(Player.animationKey))
+        {
+            return;
+        }
+
+        this.scene.anims.create({
+            key: Player.animationKey,
+            frames: this.scene.anims.generateFrameNumbers('player', { start: 0, end: 3 }),
+            frameRate: 8,
+            repeat: -1
+        });
     }
 
     private configureHitbox () : void
