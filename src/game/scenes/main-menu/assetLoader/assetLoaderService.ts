@@ -35,9 +35,9 @@ export function loadAssets(scene: Phaser.Scene): void {
 
     scene.load.audio('menu-ost', './assets/audio/Menu-OST.mp3');
     scene.load.audio('game-ost', './assets/audio/Game-OST.mp3');
-    scene.load.audio('granade-explosion-audio', './assets/audio/Explosion.m4a');
-    scene.load.audio('pistol-shot-audio', './assets/audio/pistol-shot.m4a');
-    scene.load.audio('sword-audio', './assets/audio/sword-audio.m4a');
+    scene.load.audio('granade-explosion-audio', './assets/audio/Explosion.mp3');
+    scene.load.audio('pistol-shot-audio', './assets/audio/pistol-shot.mp3');
+    scene.load.audio('sword-audio', './assets/audio/sword-audio.mp3');
 
     ////  RELATIVAS AO PLAYER ////
 

@@ -7,19 +7,19 @@ import GranadeRobotProjectile from "./GranadeRobotProjectile";
 import GranadeRobotVisual from "./GranadeRobotVisual";
 
 /**
- * Cena que pode receber projeteis disparados por inimigos.
+ * Cena que pode receber projéteis disparados por inimigos.
  */
 type EnemyProjectileScene = Phaser.Scene & {
     registerEnemyProjectile?: (projectile: EnemyProjectile) => void;
 };
 
 /**
- * Estados de IA do grenadeiro.
+ * Estados de IA do inimigo.
  */
 type GranadeRobotState = 'approaching' | 'exiting';
 
 /**
- * Catalogo de variacoes do GranadeRobot.
+ * Catalogo de variações do GranadeRobot.
  */
 const enemyVariations = [
     enemyVariation("normal", "granade-robot-body", 40, 35, 230, 150),
@@ -36,16 +36,19 @@ export class GranadeRobot extends Enemy
     static readonly scale = 0.8;
 
     private static readonly animationKey = 'granade-robot-body-animation';
-    private static readonly attackPositionOffsetX = 650;
-    private static readonly attackPositionOffsetY = -120;
-    private static readonly minAttackX = 900;
-    private static readonly maxAttackX = 1650;
-    private static readonly minAttackY = 140;
-    private static readonly maxAttackY = 940;
-    private static readonly arrivalDistance = 32;
-    private static readonly exitOffsetX = 280;
+    private static readonly attackPositionOffsetX = 650; // fica 650px à direita do jogador
+    private static readonly attackPositionOffsetY = -120; // fica 120px acima do jogador antes de jogar a granada
 
-    private readonly visual: GranadeRobotVisual;
+    private static readonly minAttackX = 900; // limite mínimo horizontal que a unidae pode ficar pra atacar
+    private static readonly maxAttackX = 1650; // limite máximo horizontal que a unidae pode ficar pra atacar
+
+    private static readonly minAttackY = 140; // limite superior da tela que a unidae pode ficar pra atacar
+    private static readonly maxAttackY = 940; // limite inferior da tela que a unidae pode ficar pra atacar
+
+    private static readonly arrivalDistance = 32; // tolerância para considerar que chegou no alvo (player)
+    private static readonly exitOffsetX = 280; // Quantos px a unidade deve retornar alem do limite da tela pra sumir
+
+    private readonly visual: GranadeRobotVisual; // referencia ao braço da unidade
     state: GranadeRobotState = 'approaching';
     private grenadeThrown: boolean = false;
 
@@ -215,7 +218,7 @@ export class GranadeRobot extends Enemy
     }
 
     /**
-     * Mantem a escala e orientacao visual padrao do grenadeiro.
+     * Mantem a escala e orientacao visual padrãoo da unidade.
      */
     private keepFacingLeft(): void
     {
@@ -233,7 +236,7 @@ export class GranadeRobot extends Enemy
             return;
         }
 
-        this.scene.anims.create({
+        this.scene.anims.create({ // método que anima o negócio na cena
             key: GranadeRobot.animationKey,
             frames: this.scene.anims.generateFrameNumbers(texture, { start: 0, end: 3 }),
             frameRate: 8,

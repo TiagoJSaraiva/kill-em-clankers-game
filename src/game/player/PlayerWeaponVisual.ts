@@ -46,14 +46,14 @@ export default class PlayerWeaponVisual extends Phaser.GameObjects.Container
     }
 
     /**
-     * Aplica a animacao curta de recuo apos um disparo ou ataque.
+     * Aplica o recoilk pós um ataque
      */
     public applyRecoil() {
         let recoilDistance = -12;
         let recoilDuration = 45;
         let recoverDuration = 90;
 
-        switch (this.currentWeaponName) {
+        switch (this.currentWeaponName) { // Define config de recoil por arma.
             case 'Pistol':
                 recoilDistance = -5;
                 recoilDuration = 30;
@@ -79,7 +79,7 @@ export default class PlayerWeaponVisual extends Phaser.GameObjects.Container
         this.scene.tweens.killTweensOf(this.weaponImage);
         this.weaponImage.setX(0);
 
-        this.scene.tweens.add({
+        this.scene.tweens.add({ // Aqui que ocorre o recoil
             targets: this.weaponImage,
             x: recoilDistance,
             duration: recoilDuration,
