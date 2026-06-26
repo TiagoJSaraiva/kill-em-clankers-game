@@ -80,4 +80,12 @@ export function loadAssets(scene: Phaser.Scene): void {
         frameHeight: 194
     });
     scene.load.image('shooter-robot-shoot-vfx', './assets/images/enemies/shooter-robot/shoot-vfx.png');
+
+
+    scene.load.spritesheet('van-robot-body', './assets/images/enemies/van-robot/model-body.png', {
+        frameWidth: 951,
+        frameHeight: 400
+    });
+    scene.load.image('van-robot-arm', './assets/images/enemies/van-robot/model-arm.png');
+    // Van robot usa mesmo VFX de tiro do shooter robot (shooter-robot-shoot-vfx)
 }
