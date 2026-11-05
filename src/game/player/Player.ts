@@ -18,7 +18,7 @@ export class Player extends Phaser.Physics.Arcade.Sprite
     private static readonly animationKey = 'player-body-animation';
 
     private readonly speed = 200; // Velocidade geral do jogador, usada pra movimentacao nas 4 direcoes
-    private readonly momentum = 0.9; // Fator de momentum, usado pra suavizar a movimentacao do jogador
+    private readonly momentum = 0.9; // Fator de momentum por frame a 60 Hz, usado pra suavizar a movimentacao do jogador
     private readonly hitboxWidth = 189; // Largura manual da hitbox, em pixels antes do setScale
     private readonly hitboxHeight = 236; // Altura manual da hitbox, em pixels antes do setScale
 
@@ -28,7 +28,7 @@ export class Player extends Phaser.Physics.Arcade.Sprite
     private weapons: Record<WeaponName, Weapon>; // Catalogo de armas do jogador, carregado a partir do modulo WeaponsCatalog
     private activeWeapon: Weapon; // Arma atualmente equipada pelo jogador
     private weaponSwitchCooldown: number = 0; // Tempo restante para a proxima troca de arma, usado para evitar trocas muito rapidas
-    private maxWeaponSwitchCooldown: number = 60; // Tempo minimo entre trocas de arma, em frames
+    private maxWeaponSwitchCooldown: number = 1000; // Tempo minimo entre trocas de arma, em ms
     private weaponVisual: PlayerWeaponVisual; // Visual de bracos e arma equipada, sincronizado com o corpo do player
 
     private weaponSlots: ItemSlot[] = []; // Mapeamento das armas do jogador para os slots de UI correspondentes
@@ -56,7 +56,6 @@ export class Player extends Phaser.Physics.Arcade.Sprite
         this.configureHitbox();
         this.createAnimation();
         this.play(Player.animationKey);
-
         this.initialize(scene);
     }
 
@@ -116,13 +115,14 @@ export class Player extends Phaser.Physics.Arcade.Sprite
      *
      * @param cursors Teclas direcionais e espaco criadas pela cena.
      * @param scene Cena atual usada para disparos e UI.
+     * @param delta Tempo desde o ultimo frame em milissegundos.
      */
-    update (cursors: Phaser.Types.Input.Keyboard.CursorKeys, scene: Phaser.Scene) : void
+    update (cursors: Phaser.Types.Input.Keyboard.CursorKeys, scene: Phaser.Scene, delta: number) : void
     {
-        this.processMovement(cursors);
-        this.updateWeapon();
+        this.processMovement(cursors, delta);
+        this.updateWeapon(delta);
         this.processShooting(cursors, scene);
-        this.processWeaponSwitch();
+        this.processWeaponSwitch(delta);
         this.weaponVisual.syncWithPlayer(this);
         this.updateUI();
     }
@@ -130,11 +130,11 @@ export class Player extends Phaser.Physics.Arcade.Sprite
     /**
      * Avanca cooldown e regeneracao de energia de todas as armas.
      */
-    updateWeapon () : void
+    updateWeapon (delta: number) : void
     {
         for (const weapon of Object.values(this.weapons))
         {
-            weapon.update();
+            weapon.update(delta);
         }
     }
 
@@ -184,11 +184,11 @@ export class Player extends Phaser.Physics.Arcade.Sprite
     /**
      * Lida com a troca de arma via QWER respeitando o cooldown entre trocas.
      */
-    processWeaponSwitch () : void
+    processWeaponSwitch (delta: number) : void
     {
         if (this.weaponSwitchCooldown > 0)
         {
-            this.weaponSwitchCooldown--;
+            this.weaponSwitchCooldown -= delta;
             return;
         }
 
@@ -237,7 +237,7 @@ export class Player extends Phaser.Physics.Arcade.Sprite
     /**
      * Converte input direcional em velocidade Arcade com suavizacao.
      */
-    processMovement (cursors: Phaser.Types.Input.Keyboard.CursorKeys) : void
+    processMovement (cursors: Phaser.Types.Input.Keyboard.CursorKeys, delta: number) : void
     {
         const direction = new Phaser.Math.Vector2(0, 0);
         const body = this.body as Phaser.Physics.Arcade.Body;
@@ -269,17 +269,18 @@ export class Player extends Phaser.Physics.Arcade.Sprite
         }
 
         this.setVelocity(
-            hasHorizontalInput ? direction.x : this.applyMomentum(body.velocity.x),
-            hasVerticalInput ? direction.y : this.applyMomentum(body.velocity.y)
+            hasHorizontalInput ? direction.x : this.applyMomentum(body.velocity.x, delta),
+            hasVerticalInput ? direction.y : this.applyMomentum(body.velocity.y, delta)
         );
     }
 
     /**
-     * Reduz gradualmente uma velocidade residual ate parar.
+     * Reduz gradualmente uma velocidade residual ate parar, na mesma proporcao
+     * em qualquer taxa de atualizacao.
      */
-    private applyMomentum (velocity: number) : number
+    private applyMomentum (velocity: number, delta: number) : number
     {
-        const nextVelocity = velocity * this.momentum;
+        const nextVelocity = velocity * Math.pow(this.momentum, delta * 60 / 1000);
 
         return Math.abs(nextVelocity) < 5 ? 0 : nextVelocity;
     }

@@ -20,14 +20,14 @@ export default class GranadeRobotProjectile extends EnemyProjectile
     private static readonly arcDuration = 900;
     private static readonly arcHeight = 220;
     private static readonly fallSpeed = 700;
-    private static readonly offscreenMargin = 400;
+    private static readonly fallOffscreenMargin = 400;
     private static readonly explosionFrameRate = 18;
     private static readonly fallbackExplosionDuration = 150;
 
     private readonly startPosition: Phaser.Math.Vector2;
     private readonly targetPosition: Phaser.Math.Vector2;
     private startedAt: number | null = null;
-    private state: GranadeRobotProjectileState = 'arc';
+    private flightState: GranadeRobotProjectileState = 'arc';
     private shouldExplodeOnDestroy: boolean = true;
 
     /**
@@ -55,12 +55,12 @@ export default class GranadeRobotProjectile extends EnemyProjectile
      */
     update(time: number, delta: number): void
     {
-        if (this.state === 'exploding')
+        if (this.flightState === 'exploding')
         {
             return;
         }
 
-        if (this.state === 'falling')
+        if (this.flightState === 'falling')
         {
             this.updateFalling(delta);
             return;
@@ -77,14 +77,14 @@ export default class GranadeRobotProjectile extends EnemyProjectile
     {
         const shouldPlayExplosion = this.shouldExplodeOnDestroy
             && !fromScene
-            && this.state !== 'exploding'
+            && this.flightState !== 'exploding'
             && this.active;
 
         this.shouldExplodeOnDestroy = false;
 
         if (shouldPlayExplosion)
         {
-            this.state = 'exploding';
+            this.flightState = 'exploding';
             this.playExplosionEffects();
         }
 
@@ -113,7 +113,7 @@ export default class GranadeRobotProjectile extends EnemyProjectile
 
         if (progress >= 1)
         {
-            this.state = 'falling';
+            this.flightState = 'falling';
         }
     }
 
@@ -127,7 +127,7 @@ export default class GranadeRobotProjectile extends EnemyProjectile
 
         this.syncPosition(nextX, nextY);
 
-        if (nextY > this.scene.scale.height + GranadeRobotProjectile.offscreenMargin)
+        if (nextY > this.scene.scale.height + GranadeRobotProjectile.fallOffscreenMargin)
         {
             this.destroyWithoutExplosion();
         }

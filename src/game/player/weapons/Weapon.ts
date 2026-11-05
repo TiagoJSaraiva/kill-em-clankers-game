@@ -21,7 +21,7 @@ export default class Weapon {
     private static readonly pistolShotAudioKey = 'pistol-shot-audio';
     private static readonly swordAudioKey = 'sword-audio';
 
-    private energyRegenRate: number = 0.05; // Quantidade de energia regenerada por frame quando a arma nao esta equipada
+    private energyRegenPerSecond: number = 3; // Quantidade de energia regenerada por segundo quando a arma nao esta equipada
     isEquipped: boolean = false;
     maxEnergy: number = 100;
     currentEnergy: number;
@@ -29,12 +29,12 @@ export default class Weapon {
     damage: number;
     name: WeaponName;
     attackCooldown: number;
-    private attackCooldownTimer: number = 0;
+    private attackCooldownTimer: number = 0; // Tempo restante ate o proximo disparo, em ms
     emitProjectile: (scene: Phaser.Scene, player: Player, damage: number) => Projectile;
     
     /**
      * @param name Nome logico da arma.
-     * @param attackCooldown Tempo em frames ate o proximo disparo.
+     * @param attackCooldown Tempo em milissegundos ate o proximo disparo.
      * @param energySpentPerShot Energia consumida por disparo.
      * @param damage Dano base aplicado pelo projetil.
      * @param emitProjectile Factory que instancia o projetil da arma.
@@ -57,13 +57,13 @@ export default class Weapon {
 
     /**
      * Atualiza cooldown e regeneracao de energia a cada frame.
+     *
+     * @param delta Tempo desde o ultimo frame em milissegundos.
      */
-    update() {
-        if (this.attackCooldownTimer > 0) {
-            this.attackCooldownTimer--;
-        }
+    update(delta: number) {
+        this.attackCooldownTimer = Math.max(0, this.attackCooldownTimer - delta);
 
-        this.regenerateEnergy();
+        this.regenerateEnergy(delta);
     }
 
     /**
@@ -76,11 +76,11 @@ export default class Weapon {
     /**
      * Regenera energia apenas quando a arma nao esta equipada.
      */
-    private regenerateEnergy() {
+    private regenerateEnergy(delta: number) {
         if (this.isEquipped) {
             return; // Nao regenera energia enquanto a arma esta equipada
         }
-        this.currentEnergy = Math.min(this.maxEnergy, this.currentEnergy + this.energyRegenRate);
+        this.currentEnergy = Math.min(this.maxEnergy, this.currentEnergy + (this.energyRegenPerSecond * delta / 1000));
     }
 
     /**
@@ -95,7 +95,6 @@ export default class Weapon {
             return false; // Ainda esta no cooldown, nao pode atirar
         }
         if(this.currentEnergy < this.energySpentPerShot) {
-            console.log("Not enough energy to shoot!");
             return false;
         }
         this.spendEnergy();
