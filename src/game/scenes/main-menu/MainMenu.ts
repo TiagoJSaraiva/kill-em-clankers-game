@@ -1,5 +1,4 @@
 import { Scene, GameObjects } from 'phaser';
-import { loadAssets } from './assetLoader/assetLoaderService';
 
 /**
  * Cena do menu inicial.
@@ -16,12 +15,13 @@ export class MainMenu extends Scene
 
     private static readonly width: number = 1920;
     private static readonly height: number = 1080;
-    private static readonly buttonScale: number = 0.2;
-    private static readonly hoverButtonScale: number = 0.22;
+    private static readonly buttonScale: number = 0.836;
+    private static readonly hoverButtonScale: number = 0.92;
 
     private updateChange: boolean = false
     private timeAtUpdateChange: number = 0;
-    //private buttonsActive: boolean = false;
+    private elapsedInScene: number = 0; // Tempo desde a abertura desta cena, em ms; usado na sequencia de entrada
+    private buttonsActive: boolean = false;
 
     private bgTween?: Phaser.Tweens.Tween;
     private fadeOutStarted: boolean = false;
@@ -49,19 +49,13 @@ export class MainMenu extends Scene
     }
 
     /**
-     * Carrega os assets antes de montar a cena.
-     */
-    preload() {
-        loadAssets(this);
-    }
-
-    /**
      * Reinicia estado transiente quando a cena e aberta novamente.
      */
     init() {
         this.updateChange = false;
         this.timeAtUpdateChange = 0;
-        //this.buttonsActive = false;
+        this.elapsedInScene = 0;
+        this.buttonsActive = false;
         this.bgTween = undefined;
         this.fadeInStarted = false;
         this.fadeOutStarted = false;
@@ -110,6 +104,7 @@ export class MainMenu extends Scene
      */
     update(time: number, delta: number): void{
         const dt = delta / 1000;
+        this.elapsedInScene += delta;
 
         this.backgroundFar.tilePositionX += MainMenu.PARALLAX_FAR_SPEED * 60 * dt;
         this.backgroundNear.tilePositionX += MainMenu.PARALLAX_NEAR_SPEED * 60 * dt;
@@ -117,13 +112,13 @@ export class MainMenu extends Scene
         this.backgroundVeryFar.tilePositionX += MainMenu.PARALLAX_VERY_FAR_SPEED * 60 * dt;
 
         if(!this.updateChange) {
-            if(time > 3000 && !this.title) {
+            if(this.elapsedInScene > 3000 && !this.title) {
                 this.title = this.add.image(MainMenu.width / 2, 220, 'main-menu-title').setDepth(1);
             }
-            if(time > 3500 && !this.subtitle) {
-                this.subtitle = this.add.image(MainMenu.width / 2, 450, 'main-menu-subtitle').setDepth(2).setScale(0.3);
+            if(this.elapsedInScene > 3500 && !this.subtitle) {
+                this.subtitle = this.add.image(MainMenu.width / 2, 450, 'main-menu-subtitle').setDepth(2);
             }
-            if(time > 4000 && !this.playButton) {
+            if(this.elapsedInScene > 4000 && !this.playButton) {
                 this.playButton = this.add.image(MainMenu.width / 2, 800, 'play-button').setScale(MainMenu.buttonScale);
             }
             // if(time > 4300 && !this.configButton) {
@@ -132,10 +127,10 @@ export class MainMenu extends Scene
             // if(time > 4600 && !this.exitButton) {
             //     this.exitButton = this.add.image(MainMenu.width / 2 + 500, 800, 'exit-button').setScale(MainMenu.buttonScale);
             // }
-            if(this.playButton /*&& this.configButton && this.exitButton && !this.buttonsActive */) {
+            if(this.playButton && !this.buttonsActive) {
                 this.setupButtons();
             }
-            if(time > 5000 && !this.bgTween && !this.fadeOutStarted) {
+            if(this.elapsedInScene > 5000 && !this.bgTween && !this.fadeOutStarted) {
                 this.fadeOutStarted = true;
 
                 this.bgTween = this.tweens.add({
@@ -154,7 +149,7 @@ export class MainMenu extends Scene
                 this.playButton = undefined;
             }
 
-            //this.buttonsActive = false;
+            this.buttonsActive = false;
 
             if(_time > 2000 && this.title) {
                 this.title.destroy();
@@ -200,7 +195,7 @@ export class MainMenu extends Scene
             console.error('Botões do menu não estão definidos.');
             return;
         }
-        //this.buttonsActive = true;
+        this.buttonsActive = true;
 
         this.playButton!.setInteractive({ useHandCursor: true });
         // this.configButton!.setInteractive({ useHandCursor: true });
