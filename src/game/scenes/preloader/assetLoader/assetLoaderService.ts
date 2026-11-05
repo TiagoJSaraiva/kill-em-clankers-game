@@ -1,5 +1,6 @@
 /**
- * Carrega todos os assets usados pelas cenas do jogo.
+ * Carrega os assets usados pelas cenas do jogo. O titulo do menu nao esta aqui
+ * porque a cena Boot o carrega antes, para exibi-lo durante o carregamento.
  *
  * @param scene Cena do Phaser cujo loader recebera imagens, spritesheets e
  * audios.
@@ -13,7 +14,6 @@ export function loadAssets(scene: Phaser.Scene): void {
     
     ////  RELATIVAS AOS MENU ////
 
-    scene.load.image('main-menu-title', './assets/images/menu/main-menu-title.png');
     scene.load.image('main-menu-subtitle', './assets/images/menu/main-menu-subtitle.png');
 
     scene.load.image('game-over', './assets/images/menu/game-over.png');
@@ -23,12 +23,8 @@ export function loadAssets(scene: Phaser.Scene): void {
     scene.load.image('menu-button', './assets/images/menu/menu-button.png');
     scene.load.image('menu-button-hover', './assets/images/menu/menu-button-hover.png');
 
-    scene.load.image('config-button', './assets/images/menu/config-button.png');
-    scene.load.image('config-button-hover', './assets/images/menu/config-button-hover.png');
     scene.load.image('play-button', './assets/images/menu/play-button.png');
     scene.load.image('play-button-hover', './assets/images/menu/play-button-hover.png');
-    scene.load.image('exit-button', './assets/images/menu/exit-button.png');
-    scene.load.image('exit-button-hover', './assets/images/menu/exit-button-hover.png');
     scene.load.image('menu-bg', './assets/images/menu/menu-bg.png');
 
     ////  RELATIVAS AO AUDIO ////

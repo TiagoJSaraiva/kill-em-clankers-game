@@ -4,7 +4,7 @@ import Phaser from "phaser";
 /**
  * Corte projetado pela espada.
  *
- * Usa animacao propria, vida curta em frames e alta penetracao para atingir
+ * Usa animacao propria, vida curta e alta penetracao para atingir
  * varios inimigos proximos em sequencia.
  */
 export default class SwordProjectile extends Projectile
@@ -13,7 +13,7 @@ export default class SwordProjectile extends Projectile
     private static readonly speed = 1500;
     private static readonly penetration = 5;
 
-    private readonly lifespan: number = 24;
+    private readonly lifespan: number = 400; // Duracao do corte, em ms
     private age: number = 0;
 
     /**
@@ -44,15 +44,15 @@ export default class SwordProjectile extends Projectile
             return;
         }
 
-        this.processLifespan();
+        this.processLifespan(delta);
     }
 
     /**
-     * Conta frames ativos e destroi o corte ao atingir o limite.
+     * Conta o tempo ativo e destroi o corte ao atingir o limite.
      */
-    private processLifespan(): void
+    private processLifespan(delta: number): void
     {
-        this.age++;
+        this.age += delta;
         if (this.age >= this.lifespan)
         {
             this.destroy();

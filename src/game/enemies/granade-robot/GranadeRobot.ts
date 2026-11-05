@@ -22,9 +22,9 @@ type GranadeRobotState = 'approaching' | 'exiting';
  * Catalogo de variações do GranadeRobot.
  */
 const enemyVariations = [
-    enemyVariation("normal", "granade-robot-body", 40, 35, 230, 150),
-    enemyVariation("strong", "granade-robot-body", 60, 45, 390, 250),
-    enemyVariation("impossible", "granade-robot-body", 100, 60, 430, 350),
+    enemyVariation("normal", "granade-robot-body", 20, 25, 230, 150),
+    enemyVariation("strong", "granade-robot-body", 40, 30, 390, 250),
+    enemyVariation("impossible", "granade-robot-body", 60, 40, 430, 350),
 ] as EnemyVariation[];
 
 /**

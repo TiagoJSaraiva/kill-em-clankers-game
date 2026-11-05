@@ -11,8 +11,8 @@ export class GameOver extends Scene
 {
     private static readonly height: number = 1080;
     private static readonly width: number = 1920;
-    private static readonly buttonScale: number = 0.2;
-    private static readonly hoverButtonScale: number = 0.22;
+    private static readonly buttonScale: number = 0.836;
+    private static readonly hoverButtonScale: number = 0.92;
 
     private scoreCounter: number = 0;
     
@@ -44,7 +44,7 @@ export class GameOver extends Scene
     create ()
     {
         this.add.image(GameOver.width / 2, 300, 'game-over').setScale(0.8);
-        this.add.image(GameOver.width /2, GameOver.height/2+200, 'score-label').setScale(0.3);
+        this.add.image(GameOver.width /2, GameOver.height/2+200, 'score-label');
         this.add.image(GameOver.width / 2, GameOver.height / 2, 'menu-bg').setDepth(-1);
         this.scoreAmount = this.add.text(GameOver.width / 2, GameOver.height / 2 + 300, "000000", {
             fontFamily: 'Courier New',
@@ -101,13 +101,5 @@ export class GameOver extends Scene
         this.restartButton.on('pointerout', () => {
             this.restartButton.setTexture('restart-button').setScale(GameOver.buttonScale);
         });
-    }
-
-    /**
-     * Reservado para futuras animacoes por frame da tela de Game Over.
-     */
-    update (time: number)
-    {
-
     }
 }

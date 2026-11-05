@@ -17,9 +17,9 @@ type EnemyProjectileScene = Phaser.Scene & {
  * Catalogo de variacoes do ShooterRobot.
  */
 const enemyVariations = [
-    enemyVariation("normal", "shooter-robot-body", 60, 30, 350, 100),
-    enemyVariation("strong", "shooter-robot-body", 70, 30, 400, 200),
-    enemyVariation("impossible", "shooter-robot-body", 80, 30, 520, 300),
+    enemyVariation("normal", "shooter-robot-body", 40, 10, 350, 100),
+    enemyVariation("strong", "shooter-robot-body", 60, 15, 400, 200),
+    enemyVariation("impossible", "shooter-robot-body", 80, 20, 520, 300),
 ] as EnemyVariation[];
 
 /**
@@ -33,7 +33,7 @@ export default class ShooterRobot extends Enemy
     private static readonly animationKey = 'shooter-robot-body-animation';
     private static readonly momentum = 0.99;
     private static readonly attackRange = 2000;
-    private static readonly attackCooldown = 1500;
+    private static readonly attackCooldown = 2400;
     private static readonly projectileSpeed = 500;
     private static readonly shotAudioKey = 'pistol-shot-audio';
 

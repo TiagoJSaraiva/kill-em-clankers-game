@@ -1,7 +1,6 @@
 import { Scene } from 'phaser';
 import { Player } from '../../player/Player';
-import manageSpawn from './services/spawn/spawnService';
-import { loadAssets } from '../main-menu/assetLoader/assetLoaderService';
+import manageSpawn, { resetSpawnState } from './services/spawn/spawnService';
 import Phaser from 'phaser';
 import Enemy from '../../enemies/Enemy';
 import { EnemyProjectile } from '../../enemies/EnemyProjectile';
@@ -38,6 +37,7 @@ export class Game extends Scene
     enemyProjectiles: Phaser.Physics.Arcade.Group;
     gameOst?: Phaser.Sound.BaseSound;
     score: number = 0;
+    private runElapsedMs: number = 0; // Tempo da partida atual; so avanca com a cena rodando
     scoreText: Phaser.GameObjects.Text;
 
     /**
@@ -49,17 +49,17 @@ export class Game extends Scene
     }
 
     /**
-     * Carrega todos os assets compartilhados do jogo.
-     */
-    preload () {
-        loadAssets(this);
-    }
-
-    /**
      * Monta cenario, grupos fisicos, jogador, HUD de placar, audio e colisoes.
+     *
+     * A instancia da cena e reaproveitada entre partidas, entao o estado da
+     * partida anterior precisa ser zerado aqui.
      */
     create ()
     {
+        this.score = 0;
+        this.runElapsedMs = 0;
+        resetSpawnState(this);
+
         this.camera = this.cameras.main;
         this.camera.setBackgroundColor(0x2A195C);
 
@@ -100,13 +100,14 @@ export class Game extends Scene
     /**
      * Atualiza spawn, parallax, grupos de entidades e jogador.
      *
-     * @param time Tempo total da cena em milissegundos.
+     * @param time Tempo do loop do jogo em milissegundos, contado desde a
+     * abertura da pagina.
      * @param delta Tempo desde o ultimo frame em milissegundos.
      */
     update (time: number, delta: number) {
-        const elapsedTimeInSeconds = Math.floor(time / 1000);
+        this.runElapsedMs += delta;
 
-        manageSpawn(this, elapsedTimeInSeconds);
+        manageSpawn(this, this.runElapsedMs / 1000);
 
         const dt = delta / 1000;
         this.backgroundFar.tilePositionX += Game.PARALLAX_FAR_SPEED * 60 * dt;
@@ -116,7 +117,7 @@ export class Game extends Scene
         this.updateGroup(this.enemies, time, delta);
         this.updateGroup(this.playerProjectiles, time, delta);
         this.updateGroup(this.enemyProjectiles, time, delta);
-        this.player.update(this.cursors, this);
+        this.player.update(this.cursors, this, delta);
     }
 
     /**
@@ -271,7 +272,10 @@ export class Game extends Scene
             return;
         }
 
-        enemy.tryContactDamage(this.player, this.time.now);
+        if (enemy.tryContactDamage(this.player, this.time.now))
+        {
+            this.callGameOver();
+        }
     }
 
     /**

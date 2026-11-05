@@ -103,14 +103,16 @@ export default abstract class Enemy extends Phaser.Physics.Arcade.Sprite {
 
     /**
      * Aplica dano de contato no jogador respeitando cooldown.
+     *
+     * @returns `true` quando o contato matou o jogador.
      */
-    tryContactDamage(target: Player, time: number): void {
+    tryContactDamage(target: Player, time: number): boolean {
         if (time < this.nextContactDamageAt) {
-            return;
+            return false;
         }
 
-        target.takeDamage(this.damage);
         this.nextContactDamageAt = time + Enemy.contactDamageCooldown;
+        return target.takeDamage(this.damage);
     }
 
     /**
@@ -133,6 +135,9 @@ export default abstract class Enemy extends Phaser.Physics.Arcade.Sprite {
 
     /**
      * Reduz a velocidade atual usando momentum opcional.
+     *
+     * O momentum e definido por frame a 60 Hz e convertido pelo tempo real do
+     * frame, para o inimigo parar no mesmo lugar em qualquer monitor.
      */
     stopMoving(momentum: number = Enemy.DefaultStopMovingMomentum): void {
         const body = this.body as Phaser.Physics.Arcade.Body | null;
@@ -141,7 +146,8 @@ export default abstract class Enemy extends Phaser.Physics.Arcade.Sprite {
             return;
         }
 
-        const clampedMomentum = Phaser.Math.Clamp(momentum, 0, 1);
+        const frameDelta = Math.max(this.scene.game.loop.delta, 1);
+        const clampedMomentum = Math.pow(Phaser.Math.Clamp(momentum, 0, 1), frameDelta * 60 / 1000);
 
         this.setVelocity(
             this.applyMomentum(body.velocity.x, clampedMomentum),

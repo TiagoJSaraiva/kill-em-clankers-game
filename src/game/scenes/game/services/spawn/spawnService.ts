@@ -37,6 +37,15 @@ export default function manageSpawn(scene: Game, elapsedTime: number) {
 }
 
 /**
+ * Descarta o progresso de spawn para que a proxima partida comece no primeiro
+ * estagio. Necessario porque o Phaser reaproveita a instancia da cena.
+ */
+export function resetSpawnState(scene: Game): void
+{
+    spawnStates.delete(scene);
+}
+
+/**
  * Retorna o estado persistente de spawn da cena, criando-o no primeiro uso.
  */
 function getSpawnState(scene: Game): SpawnState

@@ -10,7 +10,7 @@ import Weapon from "./Weapon";
 /**
  * Cria o catalogo completo de armas do jogador.
  *
- * Cada entrada define cooldown, custo de energia, dano e a factory do projetil
+ * Cada entrada define cooldown (em ms), custo de energia, dano e a factory do projetil
  * correspondente.
  *
  * @returns Mapa de armas indexado por nome logico.
@@ -19,7 +19,7 @@ export function Weapons() : Record<WeaponName, Weapon> {
     return {
         Pistol: new Weapon(
             "Pistol",
-            35,
+            583,
             5,
             10,
             (scene: Phaser.Scene, player: Player, damage: number) => {
@@ -28,7 +28,7 @@ export function Weapons() : Record<WeaponName, Weapon> {
         ),
         Sword: new Weapon(
             "Sword",
-            40,
+            667,
             10,
             20,
             (scene: Phaser.Scene, player: Player, damage: number) => {
@@ -37,7 +37,7 @@ export function Weapons() : Record<WeaponName, Weapon> {
         ),
         Crossbow: new Weapon(
             "Crossbow",
-            70,
+            1167,
             20,
             20,
             (scene: Phaser.Scene, player: Player, damage: number) => {
@@ -46,7 +46,7 @@ export function Weapons() : Record<WeaponName, Weapon> {
         ),
         Cannon: new Weapon(
             "Cannon",
-            100,
+            1667,
             20,
             30,
             (scene: Phaser.Scene, player: Player, damage: number) => {

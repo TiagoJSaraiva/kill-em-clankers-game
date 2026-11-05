@@ -24,8 +24,8 @@ const enemyFactories = {
  * Configuracao declarativa de uma unidade dentro da pool de um estagio.
  */
 type unitSpawnConfig = {
-    name: keyof typeof enemyFactories, 
-    variation: VariationName, 
+    name: keyof typeof enemyFactories,
+    variation: VariationName,
     weight: number
 }
 
@@ -40,25 +40,39 @@ export const stages = [
        A pool é um array de objetos, onde cada objeto define o nome da classe do inimigo e a variação desse inimigo (por exemplo, "normal", "strong", "impossible", etc).
     */
 
-    stage(0, 10, [ 
-        { name: 'VanRobot', variation: 'normal', weight: 1 }, 
-        { name: 'GranadeRobot', variation: 'normal', weight: 1 },
-        { name: 'ShooterRobot', variation: 'normal', weight: 1 } 
+    stage(0, 6, [
+        { name: 'ShooterRobot', variation: 'normal', weight: 3 },
+        { name: 'GranadeRobot', variation: 'normal', weight: 1 }
     ]),
-    stage(30, 10, [
-        { name: 'VanRobot', variation: 'strong', weight: 1 }, 
-        { name: 'GranadeRobot', variation: 'strong', weight: 1 },
-        { name: 'ShooterRobot', variation: 'strong', weight: 1 } 
+    stage(30, 5, [
+        { name: 'ShooterRobot', variation: 'normal', weight: 2 },
+        { name: 'GranadeRobot', variation: 'normal', weight: 2 },
+        { name: 'VanRobot', variation: 'normal', weight: 1 }
     ]),
-    stage(60, 10, [
-        { name: 'VanRobot', variation: 'normal', weight: 1 }, 
-        { name: 'GranadeRobot', variation: 'normal', weight: 1 },
-        { name: 'ShooterRobot', variation: 'normal', weight: 1 } 
+    stage(75, 4, [
+        { name: 'ShooterRobot', variation: 'normal', weight: 2 },
+        { name: 'GranadeRobot', variation: 'normal', weight: 2 },
+        { name: 'VanRobot', variation: 'normal', weight: 1 },
+        { name: 'ShooterRobot', variation: 'strong', weight: 1 },
+        { name: 'GranadeRobot', variation: 'strong', weight: 1 }
     ]),
-    stage(90, 10, [
-        { name: 'VanRobot', variation: 'impossible', weight: 1 }, 
+    stage(120, 4, [
+        { name: 'ShooterRobot', variation: 'strong', weight: 2 },
+        { name: 'GranadeRobot', variation: 'strong', weight: 2 },
+        { name: 'VanRobot', variation: 'strong', weight: 1 }
+    ]),
+    stage(180, 3, [
+        { name: 'ShooterRobot', variation: 'strong', weight: 2 },
+        { name: 'GranadeRobot', variation: 'strong', weight: 2 },
+        { name: 'VanRobot', variation: 'strong', weight: 1 },
+        { name: 'ShooterRobot', variation: 'impossible', weight: 1 },
         { name: 'GranadeRobot', variation: 'impossible', weight: 1 },
-        { name: 'ShooterRobot', variation: 'impossible', weight: 1 } 
+        { name: 'VanRobot', variation: 'impossible', weight: 1 }
+    ]),
+    stage(240, 2.5, [
+        { name: 'ShooterRobot', variation: 'impossible', weight: 2 },
+        { name: 'GranadeRobot', variation: 'impossible', weight: 2 },
+        { name: 'VanRobot', variation: 'impossible', weight: 1 }
     ]),
 ] as Stage[];
 
@@ -77,12 +91,12 @@ export const stages = [
 function stage(startTime: number, spawnInterval: number, poolConfig: unitSpawnConfig[] ): Stage
 {
     /**
-     * @description Construtor usado para gerar os objetos que representam cada estágio do jogo. 
-     *  
+     * @description Construtor usado para gerar os objetos que representam cada estágio do jogo.
+     *
      * @param startTime     A partir de quantos segundos desde o início de uma partida, o estágio entra em vigor
      * @param spawnInterval Em segundos, o tempo entre o spawn de cada unidade.
      * @param poolConfig    Dados de configuração da pool de um certo estágio. @var poolConfig[number].name e @var poolConfig[number].variation são usados pra gerar
-     *                      dinâmicamente a função de spawn da unidade, com base no nome e na variante dela.      
+     *                      dinâmicamente a função de spawn da unidade, com base no nome e na variante dela.
      */
 
     let pool: Pool = []; // Variável que vai armazenar de fato a pool referente a um Stage, criada com base em @var poolConfig

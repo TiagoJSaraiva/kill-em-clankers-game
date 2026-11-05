@@ -17,9 +17,9 @@ type EnemyProjectileScene = Phaser.Scene & {
  * Catalogo de variacoes do VanRobot.
  */
 const enemyVariations = [
-    enemyVariation("normal", "van-robot-body", 100, 30, 100, 100),
-    enemyVariation("strong", "van-robot-body", 100, 30, 100, 200),
-    enemyVariation("impossible", "van-robot-body", 100, 30, 100, 300),
+    enemyVariation("normal", "van-robot-body", 80, 5, 100, 100),
+    enemyVariation("strong", "van-robot-body", 120, 7, 100, 200),
+    enemyVariation("impossible", "van-robot-body", 160, 9, 100, 300),
 ] as EnemyVariation[];
 
 /**
