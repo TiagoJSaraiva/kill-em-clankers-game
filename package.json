@@ -1,23 +1,23 @@
 {
-    "name": "template-vite-ts",
-    "description": "A Phaser 3 TypeScript template using Vite.",
-    "version": "1.4.0",
+    "name": "kill-em-clankers",
+    "description": "Jogo de navegador em Phaser 3: enfrente ondas de robôs e sobreviva o máximo que puder.",
+    "version": "0.1.0",
+    "private": true,
     "repository": {
         "type": "git",
-        "url": "git+https://github.com/phaserjs/template-vite-ts.git"
+        "url": "git+https://github.com/TiagoJSaraiva/kill-em-clankers-game.git"
     },
-    "author": "Phaser Studio <support@phaser.io> (https://phaser.io/)",
+    "author": "TiagoJSaraiva",
     "license": "MIT",
-    "licenseUrl": "http://www.opensource.org/licenses/mit-license.php",
     "bugs": {
-        "url": "https://github.com/phaserjs/template-vite-ts/issues"
+        "url": "https://github.com/TiagoJSaraiva/kill-em-clankers-game/issues"
     },
-    "homepage": "https://github.com/phaserjs/template-vite-ts#readme",
+    "homepage": "https://tiagojsaraiva.github.io/kill-em-clankers-game/",
+    "packageManager": "pnpm@9.12.3",
     "scripts": {
-        "dev": "node log.js dev & vite --config vite/config.dev.mjs",
-        "build": "node log.js build & vite build --config vite/config.prod.mjs",
-        "dev-nolog": "vite --config vite/config.dev.mjs",
-        "build-nolog": "vite build --config vite/config.prod.mjs"
+        "dev": "vite --config vite/config.dev.mjs",
+        "build": "vite build --config vite/config.prod.mjs",
+        "typecheck": "tsc --noEmit"
     },
     "devDependencies": {
         "typescript": "~5.7.2",
