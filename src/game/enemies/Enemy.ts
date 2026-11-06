@@ -71,10 +71,11 @@ export default abstract class Enemy extends Phaser.Physics.Arcade.Sprite {
      * Aplica dano respeitando a janela de imunidade.
      *
      * @param amount Quantidade de vida removida.
+     * @param ignoreImmunity Aplica o dano mesmo durante a imunidade.
      * @returns Pontuacao ao morrer, `0` se sobreviver ou `false` se imune.
      */
-    takeDamage(amount: number): number | boolean {
-        if (this.immune) {
+    takeDamage(amount: number, ignoreImmunity: boolean = false): number | boolean {
+        if (this.immune && !ignoreImmunity) {
             return false;
         }
 
@@ -84,6 +85,8 @@ export default abstract class Enemy extends Phaser.Physics.Arcade.Sprite {
 
         this.immune = true;
 
+        // Um timer anterior encerraria a nova imunidade antes da hora.
+        this.immunityTimer?.remove(false);
         this.immunityTimer = this.scene.time.delayedCall(
             this.immunityTimeAfterDamage,
             () => {

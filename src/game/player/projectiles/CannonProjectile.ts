@@ -17,7 +17,8 @@ export default class CannonProjectile extends Projectile
     private static readonly speed = 600;
     private static readonly penetration = 1;
     private static readonly explosionRadius = 180;
-    private static readonly explosionDamageMultiplier = 0.5;
+    private static readonly explosionVisibleRadius = 132; // Raio do maior quadro desenhado, em pixels antes do setScale
+    private static readonly explosionDamageMultiplier = 0.7;
     private static readonly explosionFrameRate = 18;
     private static readonly fallbackExplosionDuration = 150;
 
@@ -42,6 +43,9 @@ export default class CannonProjectile extends Projectile
     /**
      * Executa a explosao em area e soma pontos gerados por inimigos abatidos.
      *
+     * Cada inimigo cuja hitbox toca o circulo da explosao recebe o dano uma vez,
+     * mesmo se estiver imune ou atras de outro inimigo.
+     *
      * @param enemies Grupo de inimigos ativos na cena.
      * @param excludedEnemy Inimigo ja atingido pelo impacto direto.
      * @returns Pontuacao obtida apenas pelo dano em area.
@@ -58,8 +62,10 @@ export default class CannonProjectile extends Projectile
 
         let scoreFromExplosion = 0;
         const explosionDamage = this.damage * CannonProjectile.explosionDamageMultiplier;
+        const explosionArea = new Phaser.Geom.Circle(this.x, this.y, CannonProjectile.explosionRadius);
 
-        for (const child of enemies.getChildren())
+        // Percorre uma copia porque cada morte remove o inimigo da lista do grupo.
+        for (const child of [...enemies.getChildren()])
         {
             const enemy = child as Enemy;
 
@@ -68,19 +74,15 @@ export default class CannonProjectile extends Projectile
                 continue;
             }
 
-            const distanceToEnemy = Phaser.Math.Distance.Between(
-                this.x,
-                this.y,
-                enemy.x,
-                enemy.y
-            );
+            const body = enemy.body as Phaser.Physics.Arcade.Body;
+            const hitbox = new Phaser.Geom.Rectangle(body.x, body.y, body.width, body.height);
 
-            if (distanceToEnemy > CannonProjectile.explosionRadius)
+            if (!Phaser.Geom.Intersects.CircleToRectangle(explosionArea, hitbox))
             {
                 continue;
             }
 
-            const takeDamageResult = enemy.takeDamage(explosionDamage);
+            const takeDamageResult = enemy.takeDamage(explosionDamage, true);
 
             if (typeof takeDamageResult === 'number')
             {
@@ -151,6 +153,7 @@ export default class CannonProjectile extends Projectile
             .getFrameNames(false);
 
         explosion.setDepth(this.depth + 1);
+        explosion.setScale(CannonProjectile.explosionRadius / CannonProjectile.explosionVisibleRadius);
 
         if (frameNames.length === 0)
         {

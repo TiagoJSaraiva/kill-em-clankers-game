@@ -1,4 +1,5 @@
 import { Scene, GameObjects } from 'phaser';
+import { menuOstVolume } from '../../audio/volumes';
 
 /**
  * Cena do menu inicial.
@@ -271,6 +272,7 @@ export class MainMenu extends Scene
     {
         this.menuOst = this.sound.add('menu-ost', {
             loop: true,
+            volume: menuOstVolume,
         });
 
         this.menuOst.play();

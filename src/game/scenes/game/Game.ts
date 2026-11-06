@@ -6,6 +6,7 @@ import Enemy from '../../enemies/Enemy';
 import { EnemyProjectile } from '../../enemies/EnemyProjectile';
 import Projectile from '../../player/projectiles/Projectile';
 import CannonProjectile from '../../player/projectiles/CannonProjectile';
+import { gameOstVolume } from '../../audio/volumes';
 
 /**
  * Tipo comum recebido pelos callbacks de overlap da fisica Arcade.
@@ -218,15 +219,19 @@ export class Game extends Scene
 
         takeDamageResult = enemy.takeDamage(projectile.damage);
 
-        if(typeof takeDamageResult === 'number') {
-            if (projectile instanceof CannonProjectile) {
+        // O canhao explode ao tocar qualquer inimigo, mesmo um alvo imune.
+        if (projectile instanceof CannonProjectile) {
+            if (typeof takeDamageResult === 'number') {
                 this.score += takeDamageResult;
-                this.score += projectile.explode(this.enemies, enemy);
-                projectile.destroy();
-                this.updateScoreText();
-                return;
             }
 
+            this.score += projectile.explode(this.enemies, enemy);
+            projectile.destroy();
+            this.updateScoreText();
+            return;
+        }
+
+        if(typeof takeDamageResult === 'number') {
             projectile.penetrationLeft -= 1;
 
             if (projectile.penetrationLeft <= 0) {
@@ -299,6 +304,7 @@ export class Game extends Scene
     {
         this.gameOst = this.sound.add('game-ost', {
             loop: true,
+            volume: gameOstVolume,
         });
 
         this.gameOst.play();
