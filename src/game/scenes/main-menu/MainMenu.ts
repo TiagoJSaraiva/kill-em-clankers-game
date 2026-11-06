@@ -17,6 +17,7 @@ export class MainMenu extends Scene
     private static readonly height: number = 1080;
     private static readonly buttonScale: number = 0.836;
     private static readonly hoverButtonScale: number = 0.92;
+    private static readonly explosionAudioKey = 'granade-explosion-audio';
 
     private updateChange: boolean = false
     private timeAtUpdateChange: number = 0;
@@ -114,12 +115,15 @@ export class MainMenu extends Scene
         if(!this.updateChange) {
             if(this.elapsedInScene > 3000 && !this.title) {
                 this.title = this.add.image(MainMenu.width / 2, 220, 'main-menu-title').setDepth(1);
+                this.playExplosionAudio();
             }
             if(this.elapsedInScene > 3500 && !this.subtitle) {
                 this.subtitle = this.add.image(MainMenu.width / 2, 473, 'main-menu-subtitle').setDepth(2);
+                this.playExplosionAudio();
             }
             if(this.elapsedInScene > 4000 && !this.playButton) {
                 this.playButton = this.add.image(MainMenu.width / 2, 800, 'play-button').setScale(MainMenu.buttonScale);
+                this.playExplosionAudio();
             }
             // if(time > 4300 && !this.configButton) {
             //     this.configButton = this.add.image(MainMenu.width / 2 - 500, 800, 'config-button').setScale(MainMenu.buttonScale);
@@ -245,6 +249,19 @@ export class MainMenu extends Scene
         //     // Lógica para sair do jogo
         //     console.log('Sair do jogo');
         // });
+    }
+
+    /**
+     * Reproduz o audio de explosao quando carregado.
+     */
+    private playExplosionAudio(): void
+    {
+        if (!this.cache.audio.exists(MainMenu.explosionAudioKey))
+        {
+            return;
+        }
+
+        this.sound.play(MainMenu.explosionAudioKey);
     }
 
     /**

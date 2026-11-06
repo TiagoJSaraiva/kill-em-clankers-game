@@ -19,6 +19,7 @@ const flashHalfDuration = 110;
 
 const explosionTextureKey = 'death-explosion';
 const explosionAnimationKey = 'death-explosion';
+const explosionAudioKey = 'granade-explosion-audio';
 const explosionFrameRate = 14;
 const explosionFrameSize = 280;
 const explosionVisibleSize = 273; // Maior medida visivel entre os quadros
@@ -88,8 +89,8 @@ export function playHitFlash (owner: Phaser.GameObjects.Sprite, targets: FlashTa
 }
 
 /**
- * Toca a explosao de morte, com o desenho mais largo do tamanho da maior
- * dimensao do sprite da unidade.
+ * Toca a explosao de morte e seu audio, com o desenho mais largo do tamanho da
+ * maior dimensao do sprite da unidade.
  *
  * @param unit Unidade que morreu; precisa estar ativa ao chamar esta funcao.
  * @param onComplete Chamado quando a animacao termina.
@@ -110,6 +111,11 @@ export function playDeathExplosion (unit: Phaser.GameObjects.Sprite, onComplete?
         onComplete?.();
     });
     explosion.play(explosionAnimationKey);
+
+    if (scene.cache.audio.exists(explosionAudioKey))
+    {
+        scene.sound.play(explosionAudioKey);
+    }
 }
 
 /**
