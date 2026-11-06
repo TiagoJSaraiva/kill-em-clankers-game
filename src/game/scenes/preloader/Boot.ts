@@ -17,11 +17,12 @@ export class Boot extends Scene
     }
 
     /**
-     * Carrega o titulo exibido durante o carregamento dos demais assets.
+     * Carrega o logo exibido durante o carregamento dos demais assets.
      */
     preload ()
     {
         this.load.image('main-menu-title', './assets/images/menu/main-menu-title.png');
+        this.load.image('main-menu-subtitle', './assets/images/menu/main-menu-subtitle.png');
     }
 
     /**

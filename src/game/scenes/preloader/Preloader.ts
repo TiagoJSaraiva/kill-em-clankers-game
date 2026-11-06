@@ -11,6 +11,8 @@ import { loadAssets } from './assetLoader/assetLoaderService';
 export class Preloader extends Scene
 {
     private static readonly centerX = 960;
+    private static readonly titleY = 330;
+    private static readonly subtitleOffsetY = 230; // Mesma distancia entre titulo e subtitulo usada no menu
     private static readonly barY = 700;
     private static readonly barWidth = 900;
     private static readonly barHeight = 24;
@@ -37,7 +39,8 @@ export class Preloader extends Scene
     preload ()
     {
         this.loadFailed = false;
-        this.add.image(Preloader.centerX, 360, 'main-menu-title');
+        this.add.image(Preloader.centerX, Preloader.titleY, 'main-menu-title');
+        this.add.image(Preloader.centerX, Preloader.titleY + Preloader.subtitleOffsetY, 'main-menu-subtitle');
         this.createProgressBar();
 
         this.load.on(Phaser.Loader.Events.PROGRESS, this.updateProgress, this);
