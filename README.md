@@ -87,6 +87,8 @@ Desenvolvido por [TiagoJSaraiva](https://github.com/TiagoJSaraiva) com [Phaser 3
 
 **Arte:** criada com IA generativa e editada por TiagoJSaraiva. Não está sob a licença MIT.
 
-**Música e efeitos sonoros:** de terceiros, com licenças próprias, e não estão sob a licença MIT.
+**Efeitos sonoros:** gravados por TiagoJSaraiva. Não estão sob a licença MIT.
 
-<!-- TODO: faixa, artista, link e licença de cada música e efeito sonoro. -->
+**Música:** de terceiros, com licenças próprias. Não está sob a licença MIT.
+
+<!-- TODO: faixa, artista, link e licença de cada música. -->
