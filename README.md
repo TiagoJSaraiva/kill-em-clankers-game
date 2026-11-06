@@ -83,6 +83,10 @@ O workflow [`.github/workflows/deploy.yml`](.github/workflows/deploy.yml) verifi
 
 Desenvolvido por [TiagoJSaraiva](https://github.com/TiagoJSaraiva) com [Phaser 3](https://phaser.io), [TypeScript](https://www.typescriptlang.org) e [Vite](https://vitejs.dev), a partir do [template oficial do Phaser](https://github.com/phaserjs/template-vite-ts).
 
-<!-- TODO: informar aqui a origem e a licenca das musicas e das artes. -->
+**Código:** licença MIT; veja [LICENSE](LICENSE).
 
-Código sob licença MIT; veja [LICENSE](LICENSE).
+**Arte:** criada com IA generativa e editada por TiagoJSaraiva. Não está sob a licença MIT.
+
+**Música e efeitos sonoros:** de terceiros, com licenças próprias, e não estão sob a licença MIT.
+
+<!-- TODO: faixa, artista, link e licença de cada música e efeito sonoro. -->
