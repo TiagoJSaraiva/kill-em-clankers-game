@@ -3,13 +3,13 @@ import { EnemyProjectile } from "../EnemyProjectile";
 /**
  * Estados do projetil de granada.
  */
-type GranadeRobotProjectileState = 'arc' | 'falling' | 'exploding';
+type GranadeRobotProjectileState = 'arc' | 'exploding';
 
 /**
  * Granada arremessada pelo GranadeRobot.
  *
- * Primeiro interpola em arco ate a posicao alvo, depois cai verticalmente e
- * reproduz explosao quando e destruida por colisao.
+ * Voa em uma unica parabola que passa pela posicao alvo e continua ate sair da
+ * tela, e reproduz explosao quando e destruida por colisao.
  */
 export default class GranadeRobotProjectile extends EnemyProjectile
 {
@@ -19,7 +19,6 @@ export default class GranadeRobotProjectile extends EnemyProjectile
     private static readonly explosionAudioKey = 'granade-explosion-audio';
     private static readonly arcDuration = 900;
     private static readonly arcHeight = 220;
-    private static readonly fallSpeed = 700;
     private static readonly fallOffscreenMargin = 400;
     private static readonly explosionFrameRate = 18;
     private static readonly fallbackExplosionDuration = 150;
@@ -53,16 +52,10 @@ export default class GranadeRobotProjectile extends EnemyProjectile
     /**
      * Atualiza a etapa atual do movimento da granada.
      */
-    update(time: number, delta: number): void
+    update(time: number, _delta: number): void
     {
         if (this.flightState === 'exploding')
         {
-            return;
-        }
-
-        if (this.flightState === 'falling')
-        {
-            this.updateFalling(delta);
             return;
         }
 
@@ -92,7 +85,10 @@ export default class GranadeRobotProjectile extends EnemyProjectile
     }
 
     /**
-     * Interpola a granada da origem ate o alvo criando a altura do arco.
+     * Move a granada pela parabola que passa pelo alvo.
+     *
+     * O progresso nao para em 1: depois do alvo, a mesma curva continua e a
+     * queda segue acelerando ate a granada sair da tela.
      */
     private updateArc(time: number): void
     {
@@ -101,47 +97,19 @@ export default class GranadeRobotProjectile extends EnemyProjectile
             this.startedAt = time;
         }
 
-        const elapsed = time - this.startedAt;
-        const progress = Phaser.Math.Clamp(elapsed / GranadeRobotProjectile.arcDuration, 0, 1);
+        const progress = (time - this.startedAt) / GranadeRobotProjectile.arcDuration;
         const nextX = Phaser.Math.Linear(this.startPosition.x, this.targetPosition.x, progress);
         const nextY = Phaser.Math.Linear(this.startPosition.y, this.targetPosition.y, progress)
-            - (Math.sin(progress * Math.PI) * GranadeRobotProjectile.arcHeight);
+            - (4 * progress * (1 - progress) * GranadeRobotProjectile.arcHeight);
         const body = this.body as Phaser.Physics.Arcade.Body | null;
 
         this.setPosition(nextX, nextY);
         body?.reset(nextX, nextY);
 
-        if (progress >= 1)
-        {
-            this.flightState = 'falling';
-        }
-    }
-
-    /**
-     * Mantem a granada caindo verticalmente apos terminar o arco.
-     */
-    private updateFalling(delta: number): void
-    {
-        const nextX = this.targetPosition.x;
-        const nextY = this.y + (GranadeRobotProjectile.fallSpeed * (delta / 1000));
-
-        this.syncPosition(nextX, nextY);
-
         if (nextY > this.scene.scale.height + GranadeRobotProjectile.fallOffscreenMargin)
         {
             this.destroyWithoutExplosion();
         }
-    }
-
-    /**
-     * Atualiza sprite e body Arcade na mesma coordenada.
-     */
-    private syncPosition(x: number, y: number): void
-    {
-        const body = this.body as Phaser.Physics.Arcade.Body | null;
-
-        this.setPosition(x, y);
-        body?.reset(x, y);
     }
 
     /**
