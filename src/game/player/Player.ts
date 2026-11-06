@@ -6,6 +6,7 @@ import { HealthBar } from '../UI/HealthBar';
 import { EnergyBar } from '../UI/EnergyBar';
 import PlayerWeaponVisual from './PlayerWeaponVisual';
 import type { WeaponName } from './weapons/types';
+import { playDeathExplosion, playHitFlash } from '../effects/unitEffects';
 
 /**
  * Entidade jogavel principal.
@@ -300,7 +301,28 @@ export class Player extends Phaser.Physics.Arcade.Sprite
         {
             dead = true;
         }
-        
+        else
+        {
+            playHitFlash(this, [this, this.weaponVisual.getFlashTarget()]);
+        }
+
         return dead;
+    }
+
+    /**
+     * Tira o jogador de cena e toca a explosao de morte.
+     *
+     * Inativo, ele deixa de receber dano e os inimigos param de mira-lo.
+     *
+     * @param onComplete Chamado quando a explosao termina.
+     */
+    die (onComplete: () => void) : void
+    {
+        this.updateUI();
+        playDeathExplosion(this, onComplete);
+        this.setActive(false);
+        this.setVisible(false);
+        this.weaponVisual.setVisible(false);
+        (this.body as Phaser.Physics.Arcade.Body).enable = false;
     }
 }

@@ -1,5 +1,6 @@
 import { Player } from "../../player/Player";
 import Enemy from "../Enemy";
+import type { FlashTarget } from "../../effects/unitEffects";
 import { EnemyProjectile } from "../EnemyProjectile";
 import { enemyVariation, getAttributes, getTexture } from "../helpers";
 import { Attributes, EnemyVariation, VariationName } from "../types";
@@ -122,6 +123,14 @@ export class GranadeRobot extends Enemy
         this.grenadeThrown = true;
         this.visual.setGrenadeThrown();
         this.startExit();
+    }
+
+    /**
+     * @returns Corpo e partes auxiliares que clareiam ao receber dano.
+     */
+    protected getFlashTargets (): FlashTarget[]
+    {
+        return [this, ...this.visual.getFlashTargets()];
     }
 
     /**

@@ -46,6 +46,14 @@ export default class PlayerWeaponVisual extends Phaser.GameObjects.Container
     }
 
     /**
+     * @returns Imagem da arma, que clareia junto com o corpo do jogador.
+     */
+    public getFlashTarget () : Phaser.GameObjects.Image
+    {
+        return this.weaponImage;
+    }
+
+    /**
      * Aplica o recoilk pós um ataque
      */
     public applyRecoil() {

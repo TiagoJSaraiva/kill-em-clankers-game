@@ -135,6 +135,14 @@ export default class ShooterRobotVisual
     }
 
     /**
+     * @returns Partes que clareiam junto com o corpo ao receber dano.
+     */
+    public getFlashTargets () : Phaser.GameObjects.Image[]
+    {
+        return [this.cloakImage, this.armImage];
+    }
+
+    /**
      * Destroi todos os sprites auxiliares e tweens relacionados.
      */
     public destroy () : void

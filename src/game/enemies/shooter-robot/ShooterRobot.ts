@@ -1,5 +1,6 @@
 import { Player } from "../../player/Player";
 import Enemy from "../Enemy";
+import type { FlashTarget } from "../../effects/unitEffects";
 import { EnemyProjectile } from "../EnemyProjectile";
 import { enemyVariation, getTexture, getAttributes } from "../helpers";
 import { Attributes, EnemyVariation, VariationName } from "../types";
@@ -167,6 +168,14 @@ export default class ShooterRobot extends Enemy
     playShootVfx () : void
     {
         this.visual.playShootVfx();
+    }
+
+    /**
+     * @returns Corpo e partes auxiliares que clareiam ao receber dano.
+     */
+    protected getFlashTargets () : FlashTarget[]
+    {
+        return [this, ...this.visual.getFlashTargets()];
     }
 
     /**

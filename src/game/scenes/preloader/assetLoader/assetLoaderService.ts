@@ -115,4 +115,6 @@ export function loadAssets(scene: Phaser.Scene): void {
         frameWidth: 333,
         frameHeight: 388
     });
+    // Os quadros sao recortados em effects/unitEffects.ts
+    scene.load.image('death-explosion', './assets/images/enemies/death-explosion.png');
 }

@@ -1,4 +1,5 @@
 import Enemy from "../Enemy";
+import type { FlashTarget } from "../../effects/unitEffects";
 import { EnemyProjectile } from "../EnemyProjectile";
 import { enemyVariation, getTexture, getAttributes } from "../helpers";
 import { Attributes, EnemyVariation, VariationName } from "../types";
@@ -150,6 +151,14 @@ export class VanRobot extends Enemy {
 
         (this.scene as EnemyProjectileScene).registerEnemyProjectile?.(projectile);
         this.playShotAudio();
+    }
+
+    /**
+     * @returns Corpo e partes auxiliares que clareiam ao receber dano.
+     */
+    protected getFlashTargets () : FlashTarget[]
+    {
+        return [this, ...this.visual.getFlashTargets()];
     }
 
     /**

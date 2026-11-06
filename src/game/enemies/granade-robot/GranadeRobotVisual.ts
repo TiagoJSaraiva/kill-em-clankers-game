@@ -79,6 +79,14 @@ export default class GranadeRobotVisual
     }
 
     /**
+     * @returns Partes que clareiam junto com o corpo ao receber dano.
+     */
+    public getFlashTargets (): Phaser.GameObjects.Image[]
+    {
+        return [this.armImage];
+    }
+
+    /**
      * Destroi o sprite auxiliar do braco.
      */
     public destroy (): void

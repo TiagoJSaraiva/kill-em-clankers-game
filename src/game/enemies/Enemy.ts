@@ -1,6 +1,7 @@
 import Phaser from "phaser";
 import { Player } from "../player/Player";
 import { Attributes } from "./types";
+import { FlashTarget, playDeathExplosion, playHitFlash } from "../effects/unitEffects";
 
 /**
  * Classe base de inimigo, estendida por unidades especificas.
@@ -94,11 +95,20 @@ export default abstract class Enemy extends Phaser.Physics.Arcade.Sprite {
         this.healthPoints -= amount;
 
         if (this.healthPoints <= 0) {
+            playDeathExplosion(this);
             this.destroy();
             return this.scoreValue;
         }
 
+        playHitFlash(this, this.getFlashTargets());
         return 0;
+    }
+
+    /**
+     * @returns Partes visuais que clareiam ao receber dano.
+     */
+    protected getFlashTargets(): FlashTarget[] {
+        return [this];
     }
 
     /**

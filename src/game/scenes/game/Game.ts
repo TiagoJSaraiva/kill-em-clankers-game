@@ -117,7 +117,11 @@ export class Game extends Scene
         this.updateGroup(this.enemies, time, delta);
         this.updateGroup(this.playerProjectiles, time, delta);
         this.updateGroup(this.enemyProjectiles, time, delta);
-        this.player.update(this.cursors, this, delta);
+
+        if (this.player.active)
+        {
+            this.player.update(this.cursors, this, delta);
+        }
     }
 
     /**
@@ -279,11 +283,13 @@ export class Game extends Scene
     }
 
     /**
-     * Encerra a partida atual e envia o placar para a cena de Game Over.
+     * Toca a morte do jogador e, ao terminar, envia o placar para o Game Over.
      */
     private callGameOver(): void
     {
-        this.scene.start('GameOver', { score: this.score });
+        this.player.die(() => {
+            this.scene.start('GameOver', { score: this.score });
+        });
     }
 
     /**

@@ -111,6 +111,14 @@ export default class VanRobotVisual
     }
 
     /**
+     * @returns Partes que clareiam junto com o corpo ao receber dano.
+     */
+    public getFlashTargets () : Phaser.GameObjects.Image[]
+    {
+        return [this.armImage];
+    }
+
+    /**
      * Destroi sprites auxiliares e cancela tweens pendentes.
      */
     public destroy () : void
