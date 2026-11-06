@@ -11,8 +11,8 @@ import { loadAssets } from './assetLoader/assetLoaderService';
 export class Preloader extends Scene
 {
     private static readonly centerX = 960;
-    private static readonly titleY = 330;
-    private static readonly subtitleOffsetY = 230; // Mesma distancia entre titulo e subtitulo usada no menu
+    private static readonly titleY = 300;
+    private static readonly subtitleOffsetY = 253; // Mesma distancia entre titulo e subtitulo usada no menu
     private static readonly barY = 700;
     private static readonly barWidth = 900;
     private static readonly barHeight = 24;

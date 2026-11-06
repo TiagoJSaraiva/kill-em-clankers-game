@@ -116,7 +116,7 @@ export class MainMenu extends Scene
                 this.title = this.add.image(MainMenu.width / 2, 220, 'main-menu-title').setDepth(1);
             }
             if(this.elapsedInScene > 3500 && !this.subtitle) {
-                this.subtitle = this.add.image(MainMenu.width / 2, 450, 'main-menu-subtitle').setDepth(2);
+                this.subtitle = this.add.image(MainMenu.width / 2, 473, 'main-menu-subtitle').setDepth(2);
             }
             if(this.elapsedInScene > 4000 && !this.playButton) {
                 this.playButton = this.add.image(MainMenu.width / 2, 800, 'play-button').setScale(MainMenu.buttonScale);
