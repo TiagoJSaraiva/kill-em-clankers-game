@@ -14,7 +14,7 @@ const whiteColorMatrix = [
     0, 0, 0, 0, 255,
     0, 0, 0, 1, 0
 ];
-const flashPeakStrength = 0.75;
+const flashPeakStrength = 0.55;
 const flashHalfDuration = 110;
 
 const explosionTextureKey = 'death-explosion';
