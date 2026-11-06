@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="public/assets/images/menu/main-menu-title.png" alt="Kill'em Clankers" width="520">
+  <img src=".github/media/logo.png" alt="Kill'em Clankers" width="520">
 </p>
 
 <p align="center">
